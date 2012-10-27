@@ -35,6 +35,7 @@ public class GPXSerializer {
 	static final String LATITUDE = 			"lat";
 	static final String LONGITUDE = 		"lon";
 	static final String ALTITUDE = 			"ele";
+	static final String SPEED = 			"speed";
 	
 	boolean mStopped=false;
 	
@@ -45,6 +46,7 @@ public class GPXSerializer {
 	DocumentBuilder docBuilder = null;
 	
 	Document mDoc = null;
+	Element mRootElement = null;
 	Element mTrack = null;
 	Element mTrackSegment = null;
 	
@@ -59,27 +61,24 @@ public class GPXSerializer {
 		Attr attr;
 		// root element
 		mDoc = docBuilder.newDocument();
-		Element rootElement = mDoc.createElement(GPX_STR);
-		mDoc.appendChild(rootElement);
+		mRootElement = mDoc.createElement(GPX_STR);
+		mDoc.appendChild(mRootElement);
 		
 		attr = mDoc.createAttribute(VERSION_STR);
 		attr.setValue(VERSION_VALUE);
-		rootElement.setAttributeNode(attr);
+		mRootElement.setAttributeNode(attr);
 		attr = mDoc.createAttribute(CREATOR_STR);
 		attr.setValue(CREATOR_VALUE);
-		rootElement.setAttributeNode(attr);
+		mRootElement.setAttributeNode(attr);
 		
 		// no metadata here
 		
-		// start new Track and new Track segment
-		mTrack = mDoc.createElement(TRACK_STR);
-		rootElement.appendChild(mTrack);
-		mTrackSegment = mDoc.createElement(TRKSEG_STR);
-		mTrack.appendChild(mTrackSegment);
+		// start new Track
+		NewTrack();
 	}
 	
 	public void AddFix(Location loc) {
-		if (mDoc!=null && mTrackSegment!=null) {
+		if (mDoc==null || mTrackSegment==null) {
 			return; // we got a problem
 		}
 		Attr attr=null;
@@ -99,7 +98,29 @@ public class GPXSerializer {
 			secondary.setNodeValue(Double.toString(loc.getAltitude()));
 			point.appendChild(secondary);
 		}
+		if (loc.hasSpeed()) { // add speed if available
+			secondary = mDoc.createElement(SPEED);
+			secondary.setNodeValue(Double.toString(loc.getSpeed()));
+			point.appendChild(secondary);
+		}
 		mTrackSegment.appendChild(point); // attach point to segment
+	}
+	
+	public void NewSegment() {
+		if (mDoc==null || mTrack==null) {
+			return; // we got a problem
+		}
+		mTrackSegment = mDoc.createElement(TRKSEG_STR);
+		mTrack.appendChild(mTrackSegment);
+	}
+	
+	public void NewTrack() {
+		if (mDoc==null || mRootElement==null) {
+			return; // we got a problem
+		}
+		mTrack = mDoc.createElement(TRACK_STR);
+		mRootElement.appendChild(mTrack);
+		NewSegment();
 	}
 	
 	public void Stop() {
@@ -109,7 +130,7 @@ public class GPXSerializer {
 			// write the content into xml file
 			mFile = new File(mFilename);
 			try {
-				// if file doesnt exists, then create it
+				// if file doesn't exists, then create it
 				if (!mFile.exists()) {
 					mFile.createNewFile();
 				}
