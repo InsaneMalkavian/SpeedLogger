@@ -9,4 +9,5 @@ public interface TrackingSessionListener {
 	void onSessionFinished(Location[] mLocArray);
 	void onSessionError();
 	void onSessionLocationUpdate(Location location);
+	void onSessionStopped();
 }

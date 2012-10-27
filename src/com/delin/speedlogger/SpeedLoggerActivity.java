@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -79,5 +80,11 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
     	mTextView.setText("Lat/lon: "+Double.toString(location.getLatitude())+" : "+Double.toString(location.getLongitude())+
     			"\nProvider: "+location.getProvider()+"\nAccuracy (m): "+location.getAccuracy()+"\nSpeed (kph): "+location.getSpeed()*3.6+
     			"\nAltitude (m): "+location.getAltitude()+"\nBearing: "+location.getBearing()+"\nTime: "+location.getTime());
+	}
+
+	@Override
+	public void onSessionStopped() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -1,44 +1,45 @@
 package com.delin.speedlogger;
 
 import java.util.Vector;
-
 import android.location.*;
 import android.os.Bundle;
 import android.content.Context;
 
 public class TrackingSession implements LocationListener {
-	enum TrackingState { WARMUP, READY, TRACKING, ERROR, IDLE }
-	static int MAX_LOC_COUNT = 300; // 300/60 fixes per minute = 5 min
-	static float HOR_ACCURACY = 20.f; // horizontal accuracy, in meters
-	static float SPEED_THRESHOLD = 6.f; // speed threshold to detect start, in kmph
+	enum TrackingState { WARMUP, READY, TRACKING, ERROR, DONE, IDLE }
+	
+	final static String UNCERT_LOC = "uncertainty";
+	final static int MAX_LOC_COUNT = 300; // 300/60 fixes per minute = 5 min
+	final static float HOR_ACCURACY = 20.f; // horizontal accuracy, in meters
+	final static float SPEED_THRESHOLD = 6.f; // speed threshold to detect start, in kmph
 	
 	//--- session measured parameters
 	float mMaxSpeed = 0.f;
+	Location[] mLocArray = null;
+	int mLocCount = 0;
 	
-	Context mContext;
-	LocationManager mLocationManager;
-	boolean mEnabled;
+	Location mBaseLocation = null; // last location
+	Location mReadyLoc = null;
+	
+	final Context mContext;
+	LocationManager mLocationManager = null;
+	boolean mEnabled = false; // gps receiver status, useless
 	boolean mWriteGPX = true;
 	GPXSerializer mGpxLog = null;
-	TrackingState mState;
-	Location[] mLocArray = new Location[MAX_LOC_COUNT]; // 5 min
-	int mLocCount;
-	Location mBaseLocation; // last location
-	Location mReadyLoc;
-	Vector<TrackingSessionListener> mListeners;
+	TrackingState mState = TrackingState.IDLE;
+	Vector<TrackingSessionListener> mListeners = null;
 	
 	public TrackingSession(Context Context) {
 		mContext = Context;
 		// Acquire a reference to the system Location Manager
 		mLocationManager = (LocationManager) mContext.getSystemService(android.content.Context.LOCATION_SERVICE);
 		mListeners = new Vector<TrackingSessionListener>();
-		StopService(); // TODO: should we?
 		StartService();
 	}
 	
-	/*protected void finalize () {
+	protected void finalize () {
 		mListeners = null;
-	}*/
+	}
 	
 	public void AddListener(TrackingSessionListener newListener) {
 		mListeners.add(newListener);
@@ -68,43 +69,49 @@ public class TrackingSession implements LocationListener {
 	}
 	
 	public void StartService() {
-		// TODO: check for mEnabled!
-		// Register the listener with the Location Manager to receive location updates
-		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this); // TODO: remove
-		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-		mBaseLocation = new Location("uncertainty");
-		mReadyLoc = new Location("uncertainty");
-		mBaseLocation.reset();
-		mReadyLoc.reset();
-		mLocCount = 0;
-		mState = TrackingState.WARMUP;
-		if (mWriteGPX) {
-			mGpxLog = new GPXSerializer("/sdcard/track.gpx");
-		}
-		for (TrackingSessionListener listener : mListeners)
-		{
-			listener.onSessionWarmingUp();
+		if (mState==TrackingState.IDLE) { // start only from IDLE state
+			// Register the listener with the Location Manager to receive location updates
+			mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this); // TODO: remove
+			mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+			ResetSessionValues();
+			mEnabled = true; // in case gps is off we'll receive onDisabled and disable it
+			mBaseLocation = new Location(UNCERT_LOC);
+			mReadyLoc = new Location(UNCERT_LOC);
+			mState = TrackingState.WARMUP;
+			if (mWriteGPX) {
+				mGpxLog = new GPXSerializer("/sdcard/track.gpx");
+			}
+			for (TrackingSessionListener listener : mListeners)
+			{
+				listener.onSessionWarmingUp();
+			}
 		}
 	}
 	
 	public void StopService() {
-		// Remove the listener you previously added
-		mLocationManager.removeUpdates(this);
-		
-		mBaseLocation = null;
-		mReadyLoc = null;
-		if (mWriteGPX && mGpxLog!=null) {
-			mGpxLog.Stop();
+		if (mState!=TrackingState.IDLE) { // stop only active
+			// Remove the listener you previously added
+			mLocationManager.removeUpdates(this);
+			
+			mBaseLocation = null;
+			mReadyLoc = null;
+			if (mWriteGPX && mGpxLog!=null) {
+				mGpxLog.Stop();
+			}
+			mState = TrackingState.IDLE;
+			// TODO: stop all activities, notify listeners
+			for (TrackingSessionListener listener : mListeners)
+			{
+				listener.onSessionStopped();
+			}
 		}
-		mState = TrackingState.IDLE;
-		// TODO: stop all activities, notify listeners
 	}
 	
 	public void StopTracking() {
 		if (mState!=TrackingState.TRACKING)
 			return;
 		// proceed only if in tracking state
-		onLocationChanged(new Location("uncertainty"));
+		// TODO: not sure this is needed
 	}
 
 	@Override
@@ -162,20 +169,12 @@ public class TrackingSession implements LocationListener {
 			break;
 		case TRACKING:
 			if (location.getAccuracy()>HOR_ACCURACY)
-			{ // in case of overflow or bad fix stop tracking
-				mState = TrackingState.IDLE;
-				for (TrackingSessionListener listener : mListeners)
-				{ // stop tracking
-					listener.onSessionError();
-				}
+			{ // in case of overflow or bad fix stop trackingSessionDone
+				SessionDone();
 			}
-			else if (mLocCount>=MAX_LOC_COUNT || location.getSpeed()<mMaxSpeed) {
-				// here is some logic to make it stop the good way
-				mState = TrackingState.IDLE;
-				for (TrackingSessionListener listener : mListeners)
-				{ // stop tracking
-					listener.onSessionFinished(mLocArray);
-				}
+			else if (mLocCount>=MAX_LOC_COUNT || location.getSpeed()<mMaxSpeed)
+			{ // good stop, there is no difference with bad stop
+				SessionDone();
 			}
 			else {
 				// and just save loc if all goes normal
@@ -190,19 +189,33 @@ public class TrackingSession implements LocationListener {
 
 	@Override
 	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
 		mEnabled = false;
+		// TODO: native toast: please enable GPS
+		// provide bad location to stop measurement
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
 		mEnabled = true;
 	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO Auto-generated method stub
-
+	}
+	
+	private void SessionDone() {
+		// here is some logic to make it stop the good way
+		mState = TrackingState.DONE;
+		for (TrackingSessionListener listener : mListeners)
+		{ // stop tracking
+			listener.onSessionFinished(mLocArray);
+		}	
+	}
+	
+	private void ResetSessionValues() {
+		mMaxSpeed = 0.f;
+		mLocCount = 0;
+		mLocArray = new Location[MAX_LOC_COUNT]; // 5 min
 	}
 }

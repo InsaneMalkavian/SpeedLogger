@@ -38,6 +38,7 @@ public class GPXSerializer {
 	
 	boolean mStopped=false;
 	
+	String mFilename = null;	
 	FileWriter mWriter = null;
 	File mFile = null;
 	DocumentBuilderFactory docFactory = null;
@@ -47,23 +48,13 @@ public class GPXSerializer {
 	Element mTrack = null;
 	Element mTrackSegment = null;
 	
-	@TargetApi(8)
 	public GPXSerializer(String filename) {
+		mFilename = filename;
 		docFactory = DocumentBuilderFactory.newInstance();
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
-		}		
-
-		mFile = new File(filename);
-		try {
-			// if file doesnt exists, then create it
-			if (!mFile.exists()) {
-				mFile.createNewFile();
-			}
-		}
-		catch(Exception e) {			
 		}
 		Attr attr;
 		// root element
@@ -88,21 +79,27 @@ public class GPXSerializer {
 	}
 	
 	public void AddFix(Location loc) {
-		Attr attr;
+		if (mDoc!=null && mTrackSegment!=null) {
+			return; // we got a problem
+		}
+		Attr attr=null;
 		Element secondary;
-		Element point = mDoc.createElement(TRKPOINT_STR);
+		Element point = mDoc.createElement(TRKPOINT_STR); // point
+		
+		// add lat/lon
 		attr = mDoc.createAttribute(LATITUDE);
 		attr.setValue(Double.toString(loc.getLatitude()));
 		point.setAttributeNode(attr);
 		attr = mDoc.createAttribute(LONGITUDE);
 		attr.setValue(Double.toString(loc.getLongitude()));
 		point.setAttributeNode(attr);
-		if (loc.hasAltitude()) {
+		
+		if (loc.hasAltitude()) { // add altitude if available
 			secondary = mDoc.createElement(ALTITUDE);
 			secondary.setNodeValue(Double.toString(loc.getAltitude()));
 			point.appendChild(secondary);
 		}
-		mTrackSegment.appendChild(point);
+		mTrackSegment.appendChild(point); // attach point to segment
 	}
 	
 	public void Stop() {
@@ -110,6 +107,16 @@ public class GPXSerializer {
 			mStopped=true;
 			// TODO: do all file operations here	
 			// write the content into xml file
+			mFile = new File(mFilename);
+			try {
+				// if file doesnt exists, then create it
+				if (!mFile.exists()) {
+					mFile.createNewFile();
+				}
+			}
+			catch(Exception e) {
+				return;
+			}
 			try {
 				TransformerFactory transformerFactory = TransformerFactory.newInstance();
 				Transformer transformer = transformerFactory.newTransformer();
