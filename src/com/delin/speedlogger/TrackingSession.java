@@ -36,9 +36,9 @@ public class TrackingSession implements LocationListener {
 		StartService();
 	}
 	
-	protected void finalize () {
+	/*protected void finalize () {
 		mListeners = null;
-	}
+	}*/
 	
 	public void AddListener(TrackingSessionListener newListener) {
 		mListeners.add(newListener);
@@ -79,7 +79,7 @@ public class TrackingSession implements LocationListener {
 		mLocCount = 0;
 		mState = TrackingState.WARMUP;
 		if (mWriteGPX) {
-			mGpxLog = new GPXSerializer("track.gpx");
+			mGpxLog = new GPXSerializer("/sdcard/track.gpx");
 		}
 		for (TrackingSessionListener listener : mListeners)
 		{
@@ -93,8 +93,8 @@ public class TrackingSession implements LocationListener {
 		
 		mBaseLocation = null;
 		mReadyLoc = null;
-		if (mWriteGPX) {
-			mGpxLog = null;
+		if (mWriteGPX && mGpxLog!=null) {
+			mGpxLog.Stop();
 		}
 		mState = TrackingState.IDLE;
 		// TODO: stop all activities, notify listeners
