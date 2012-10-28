@@ -130,25 +130,28 @@ public class TrackingSession implements LocationListener {
 		switch (mState)
 		{ // update logic
 		case WARMUP:
-			Boolean problemDetected = false;
 			// here we check for problems to solve before we can start
 			if (location.getAccuracy()>HOR_ACCURACY)
 			{ 
-				problemDetected = true;
-				mWarmupState = WarmupState.WAITING_FIX;
+				if (mWarmupState != WarmupState.WAITING_FIX)
+				{
+					mWarmupState = WarmupState.WAITING_FIX;
+					for (TrackingSessionListener listener : mListeners)
+					{ 
+						listener.onSessionWarmingUp(mWarmupState);
+					}
+				}
 				
 			}
 			else if (location.getSpeed() > SPEED_THRESHOLD)
 			{
-				problemDetected = true;
-				mWarmupState = WarmupState.HIGH_SPEED;
-			}
-			if (problemDetected)
-			{
-				// we have to wait for problems to be solved
-				for (TrackingSessionListener listener : mListeners)
-				{ 
-					listener.onSessionWarmingUp(mWarmupState);
+				if (mWarmupState != WarmupState.HIGH_SPEED)
+				{
+					mWarmupState = WarmupState.HIGH_SPEED;
+					for (TrackingSessionListener listener : mListeners)
+					{ 
+						listener.onSessionWarmingUp(mWarmupState);
+					}
 				}
 			}
 			else{
