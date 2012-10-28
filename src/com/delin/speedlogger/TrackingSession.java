@@ -7,6 +7,7 @@ import android.content.Context;
 
 public class TrackingSession implements LocationListener {
 	enum TrackingState { WARMUP, READY, TRACKING, ERROR, DONE, IDLE }
+	enum WarmupState { WAITING_FIX, HIGH_SPEED }
 	
 	final static String UNCERT_LOC = "uncertainty";
 	final static int MAX_LOC_COUNT = 300; // 300/60 fixes per minute = 5 min
@@ -27,6 +28,7 @@ public class TrackingSession implements LocationListener {
 	boolean mWriteGPX = true;
 	GPXSerializer mGpxLog = null;
 	TrackingState mState = TrackingState.IDLE;
+	WarmupState mWarmupState = WarmupState.WAITING_FIX;
 	Vector<TrackingSessionListener> mListeners = null;
 	
 	public TrackingSession(Context Context) {
@@ -47,7 +49,7 @@ public class TrackingSession implements LocationListener {
 		switch (mState)
 		{
 		case WARMUP:
-			newListener.onSessionWarmingUp();
+			newListener.onSessionWarmingUp(mWarmupState);
 			break;
 		case READY:
 			newListener.onSessionReady();
@@ -83,7 +85,7 @@ public class TrackingSession implements LocationListener {
 			}
 			for (TrackingSessionListener listener : mListeners)
 			{
-				listener.onSessionWarmingUp();
+				listener.onSessionWarmingUp(mWarmupState);
 			}
 		}
 	}
@@ -128,9 +130,29 @@ public class TrackingSession implements LocationListener {
 		switch (mState)
 		{ // update logic
 		case WARMUP:
-			// here we can only get a valid fix and become ready to start
-			if (location.getAccuracy()<HOR_ACCURACY)			
-			{ // in case of good fix notify about start availability
+			Boolean problemDetected = false;
+			// here we check for problems to solve before we can start
+			if (location.getAccuracy()>HOR_ACCURACY)
+			{ 
+				problemDetected = true;
+				mWarmupState = WarmupState.WAITING_FIX;
+				
+			}
+			else if (location.getSpeed() > SPEED_THRESHOLD)
+			{
+				problemDetected = true;
+				mWarmupState = WarmupState.HIGH_SPEED;
+			}
+			if (problemDetected)
+			{
+				// we have to wait for problems to be solved
+				for (TrackingSessionListener listener : mListeners)
+				{ 
+					listener.onSessionWarmingUp(mWarmupState);
+				}
+			}
+			else{
+				// there are no problems, we're ready
 				mState = TrackingState.READY;	
 				for (TrackingSessionListener listener : mListeners)
 				{ //onSessionReady()
@@ -143,9 +165,10 @@ public class TrackingSession implements LocationListener {
 			if (location.getAccuracy()>HOR_ACCURACY)
 			{ // in case of bad fix stop tracking
 				mState = TrackingState.WARMUP;
+				mWarmupState = WarmupState.WAITING_FIX;
 				for (TrackingSessionListener listener : mListeners)
 				{ //onSessionWarmingUp()
-					listener.onSessionWarmingUp();
+					listener.onSessionWarmingUp(mWarmupState);
 				}
 			}
 			// here is some logic to make it start

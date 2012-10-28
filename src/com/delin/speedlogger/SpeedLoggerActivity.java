@@ -1,6 +1,7 @@
 package com.delin.speedlogger;
 
 import com.delin.speedlogger.R;
+import com.delin.speedlogger.TrackingSession.WarmupState;
 
 import android.app.Activity;
 import android.content.Context;
@@ -50,8 +51,15 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
         };
         
     @Override
-	public void onSessionWarmingUp() {
-		mButton.setText("Warming up, please wait until proper fix will be received");		
+	public void onSessionWarmingUp(WarmupState mWarmupState) {
+    	switch (mWarmupState)
+    	{
+    	case WAITING_FIX:
+			mButton.setText("Warming up, please wait until proper fix will be received");	
+			break;
+    	case HIGH_SPEED:
+    		mButton.setText("Stop moving before we can start.");
+    	}
 	}
 
 	@Override
