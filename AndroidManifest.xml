@@ -19,6 +19,8 @@
             android:name=".SpeedLoggerActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity android:name=".PreferencesActivity">
+        </activity>
         
     </application>
 

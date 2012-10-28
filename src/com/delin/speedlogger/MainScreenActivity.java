@@ -2,6 +2,7 @@ package com.delin.speedlogger;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,6 +10,7 @@ import android.widget.Button;
 
 public class MainScreenActivity extends Activity {
 	Button mStartButton;
+	Button mPreferencesButton;
 	
     /** Called when the activity is first created. */
     @Override
@@ -17,12 +19,22 @@ public class MainScreenActivity extends Activity {
         setContentView(R.layout.mainscreen);
         mStartButton = (Button)findViewById(R.id.buttonStart);
         mStartButton.setOnClickListener(mOnClickListener);
+        mPreferencesButton = (Button)findViewById(R.id.buttonPreferences);
+        mPreferencesButton.setOnClickListener(mOnClickListener);
     }
 
 	private OnClickListener mOnClickListener = new OnClickListener() {
 	    public void onClick(View v) {
-	        Intent intent = new Intent(v.getContext(), SpeedLoggerActivity.class);
-	        startActivity(intent);	    	
+	    	if (v == mStartButton)
+	    	{
+	    		Intent intent = new Intent(v.getContext(), SpeedLoggerActivity.class);
+	    		startActivity(intent);	    	
+	    	}
+	    	else if (v == mPreferencesButton)
+	    	{
+	    		Intent intent = new Intent(v.getContext(), PreferencesActivity.class);
+	    		startActivity(intent);
+	    	}
 	    }
 	};
 }

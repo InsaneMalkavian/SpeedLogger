@@ -3,5 +3,8 @@
 
     <string name="hello">Hello World, SpeedLoggerActivity!</string>
     <string name="app_name">SpeedLogger</string>
+    <string name="CarBrand">Brand</string>
+    <string name="CarModel">Model</string>
+    <string name="CarEnginePower">Engine power</string>
 
 </resources>
