@@ -1,5 +1,14 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <EditTextPreference android:key="CarBrand" android:title="@string/CarBrand" android:enabled="true" android:defaultValue="Nissan"/>
-    <EditTextPreference android:key="CarModel" android:title="@string/CarModel" android:defaultValue="Terrano"/>
-    <EditTextPreference android:key="CarEnginePower" android:title="@string/CarEnginePower"/>
+    <EditTextPreference 
+        android:key="CarBrand" 
+        android:title="@string/CarBrand" 
+        android:defaultValue="Nissan"/>
+    <EditTextPreference 
+        android:key="CarModel" 
+        android:title="@string/CarModel" 
+        android:defaultValue="Terrano"/>
+    <EditTextPreference 
+        android:key="CarEnginePower" 
+        android:title="@string/CarEnginePower" 
+        android:numeric="integer"/>
 </PreferenceScreen>
