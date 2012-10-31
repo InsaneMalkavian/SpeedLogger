@@ -1,5 +1,7 @@
 package com.delin.speedlogger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import android.location.*;
 import android.os.Bundle;
@@ -16,8 +18,7 @@ public class TrackingSession implements LocationListener {
 	
 	//--- session measured parameters
 	float mMaxSpeed = 0.f;
-	Location[] mLocArray = null;
-	int mLocCount = 0;
+	List<Location> mLocList = new ArrayList<Location>();
 	
 	Location mBaseLocation = null; // last location
 	Location mReadyLoc = null;
@@ -181,11 +182,10 @@ public class TrackingSession implements LocationListener {
 				{
 					listener.onSessionStart();
 				}
-				// push mReadyLoc to array
-				mLocCount=0;
-				mLocArray[mLocCount++]=mReadyLoc;
-				// push current loc to array
-				mLocArray[mLocCount++]=location;
+				// push mReadyLoc to list
+				mLocList.add(mReadyLoc);
+				// push current loc to list
+				mLocList.add(location);
 				mMaxSpeed=location.getSpeed();
 			}
 			else {
@@ -204,7 +204,7 @@ public class TrackingSession implements LocationListener {
 			}
 			else {
 				// and just save loc if all goes normal
-				mLocArray[mLocCount++]=location;
+				mLocList.add(location);
 				mMaxSpeed=location.getSpeed();
 			}
 			break;
@@ -235,13 +235,13 @@ public class TrackingSession implements LocationListener {
 		mState = TrackingState.DONE;
 		for (TrackingSessionListener listener : mListeners)
 		{ // stop tracking
-			listener.onSessionFinished(mLocArray);
+			listener.onSessionFinished(mLocList);
 		}	
 	}
 	
 	private void ResetSessionValues() {
 		mMaxSpeed = 0.f;
 		mLocCount = 0;
-		mLocArray = new Location[MAX_LOC_COUNT]; // 5 min
+		mLocList.clear();
 	}
 }

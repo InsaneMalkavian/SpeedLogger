@@ -1,10 +1,13 @@
 package com.delin.speedlogger;
 
+import java.util.List;
+
 import com.delin.speedlogger.R;
 import com.delin.speedlogger.TrackingSession.WarmupState;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -73,8 +76,9 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	}
 
 	@Override
-	public void onSessionFinished(Location[] mLocArray) {
-		mButton.setText("Done, need to move to result page");		
+	public void onSessionFinished(List<Location> mLocList) {
+		Intent intent = new Intent(this, ResultsActivity.class);
+		startActivity(intent);	
 	}
 
 	@Override

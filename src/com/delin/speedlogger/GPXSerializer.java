@@ -100,7 +100,7 @@ public class GPXSerializer {
 		}
 		if (loc.hasSpeed()) { // add speed if available
 			secondary = mDoc.createElement(SPEED);
-			secondary.setNodeValue(Double.toString(loc.getSpeed()));
+			secondary.setNodeValue(Float.toString(loc.getSpeed()));
 			point.appendChild(secondary);
 		}
 		mTrackSegment.appendChild(point); // attach point to segment
