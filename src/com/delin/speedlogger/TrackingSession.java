@@ -198,7 +198,7 @@ public class TrackingSession implements LocationListener {
 			{ // in case of overflow or bad fix stop trackingSessionDone
 				SessionDone();
 			}
-			else if (mLocCount>=MAX_LOC_COUNT || location.getSpeed()<mMaxSpeed)
+			else if (mLocList.size()>=MAX_LOC_COUNT || location.getSpeed()<mMaxSpeed)
 			{ // good stop, there is no difference with bad stop
 				SessionDone();
 			}
@@ -241,7 +241,6 @@ public class TrackingSession implements LocationListener {
 	
 	private void ResetSessionValues() {
 		mMaxSpeed = 0.f;
-		mLocCount = 0;
 		mLocList.clear();
 	}
 }
