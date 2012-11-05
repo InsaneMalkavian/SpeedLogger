@@ -14,7 +14,7 @@ public class ResultsActivity extends Activity {
 	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.mainscreen);
+		setContentView(R.layout.results);
 		maxSpeedText = (TextView)findViewById(R.id.textDistance);
 		distanceText = (TextView)findViewById(R.id.textMaxSpeed);
 	}
@@ -35,6 +35,7 @@ public class ResultsActivity extends Activity {
 			}
 		}
 		maxSpeedText.setText(Float.toString(maxSpeed));
+		// interpolate here
 		
 		// printing distance
 		Location origin = mLocList.get(0);
