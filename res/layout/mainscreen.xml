@@ -16,17 +16,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Preferences" />
-
+
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/buttonStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button" />
-
+        android:text="Location Status" />
+
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/buttonTest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="Test" />
 
 </LinearLayout>

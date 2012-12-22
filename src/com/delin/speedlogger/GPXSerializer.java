@@ -2,7 +2,8 @@ package com.delin.speedlogger;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,8 +19,8 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import android.annotation.TargetApi;
 import android.location.Location;
+import android.os.Environment;
 
 public class GPXSerializer {
 	static final String GPX_STR =			"gpx";
@@ -35,46 +36,44 @@ public class GPXSerializer {
 	static final String LATITUDE = 			"lat";
 	static final String LONGITUDE = 		"lon";
 	static final String ALTITUDE = 			"ele";
+	static final String TIME = 				"time";
+	static final String SATNUMBER = 		"sat";
+	// non standard, used for internal purpuses
 	static final String SPEED = 			"speed";
+	static final String BEARING = 			"bear";
+	static final String ACCURACY = 			"acc";
+	
+	static final String TIMEPATTERN = 		"yyyy-MM-dd'T'HH:mm:ss'Z'";
+	static final String TIMEPATTERN_FILE = 	"yyyy-MM-dd_HH-mm-ss";
+	static final String FILE_EXTENSION = 	"gpx";
 	
 	boolean mStopped=false;
 	
 	String mFilename = null;	
 	FileWriter mWriter = null;
-	File mFile = null;
 	DocumentBuilderFactory docFactory = null;
 	DocumentBuilder docBuilder = null;
+	SimpleDateFormat mDateFormat = null;
 	
+	// xml objects
 	Document mDoc = null;
 	Element mRootElement = null;
 	Element mTrack = null;
 	Element mTrackSegment = null;
 	
-	public GPXSerializer(String filename) {
-		mFilename = filename;
-		docFactory = DocumentBuilderFactory.newInstance();
-		try {
-			docBuilder = docFactory.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
-		Attr attr;
-		// root element
-		mDoc = docBuilder.newDocument();
-		mRootElement = mDoc.createElement(GPX_STR);
-		mDoc.appendChild(mRootElement);
-		
-		attr = mDoc.createAttribute(VERSION_STR);
-		attr.setValue(VERSION_VALUE);
-		mRootElement.setAttributeNode(attr);
-		attr = mDoc.createAttribute(CREATOR_STR);
-		attr.setValue(CREATOR_VALUE);
-		mRootElement.setAttributeNode(attr);
-		
-		// no metadata here
-		
-		// start new Track
-		NewTrack();
+	public GPXSerializer() {
+		// TODO: seems bad
+		SimpleDateFormat dateFormat = new SimpleDateFormat(TIMEPATTERN_FILE);
+		String filename = Environment.getExternalStorageDirectory().getPath()+"/";
+		//String filename = "/sdcard"+"/"+CREATOR_VALUE+"/";
+		filename+=dateFormat.format(new Date());
+		filename+=".";
+		filename+=FILE_EXTENSION;
+		Initialize(filename);
+	}
+	
+	public GPXSerializer(final String filename) {
+		Initialize(filename);
 	}
 	
 	public void AddFix(Location loc) {
@@ -91,17 +90,31 @@ public class GPXSerializer {
 		point.setAttributeNode(attr);
 		attr = mDoc.createAttribute(LONGITUDE);
 		attr.setValue(Double.toString(loc.getLongitude()));
-		point.setAttributeNode(attr);
+		point.setAttributeNode(attr);		
+		secondary = mDoc.createElement(TIME); //add time
+		secondary.setNodeValue(mDateFormat.format(new Date(loc.getTime()))); // it seems slow
+		point.appendChild(secondary);
 		
+		// add optional parameters
 		if (loc.hasAltitude()) { // add altitude if available
 			secondary = mDoc.createElement(ALTITUDE);
 			secondary.setNodeValue(Double.toString(loc.getAltitude()));
 			point.appendChild(secondary);
-		}
+		}		
 		if (loc.hasSpeed()) { // add speed if available
 			secondary = mDoc.createElement(SPEED);
 			secondary.setNodeValue(Float.toString(loc.getSpeed()));
 			point.appendChild(secondary);
+		}
+		if (loc.hasBearing()) {
+			secondary = mDoc.createElement(BEARING);
+			secondary.setNodeValue(Float.toString(loc.getBearing()));
+			point.appendChild(secondary);		
+		}
+		if (loc.hasAccuracy()) {
+			secondary = mDoc.createElement(ACCURACY);
+			secondary.setNodeValue(Float.toString(loc.getAccuracy()));
+			point.appendChild(secondary);		
 		}
 		mTrackSegment.appendChild(point); // attach point to segment
 	}
@@ -124,11 +137,10 @@ public class GPXSerializer {
 	}
 	
 	public void Stop() {
-		if (!mStopped) {
+		if (!mStopped) { // once stopped do nothing
 			mStopped=true;
-			// TODO: do all file operations here	
 			// write the content into xml file
-			mFile = new File(mFilename);
+			File mFile = new File(mFilename);
 			try {
 				// if file doesn't exists, then create it
 				if (!mFile.exists()) {
@@ -158,5 +170,33 @@ public class GPXSerializer {
 	
 	protected void finalize () {
 		Stop();
+	}
+	
+	private void Initialize(final String filename) {
+		mFilename = filename;
+		docFactory = DocumentBuilderFactory.newInstance();
+		try {
+			docBuilder = docFactory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		Attr attr;
+		// root element
+		mDoc = docBuilder.newDocument();
+		mRootElement = mDoc.createElement(GPX_STR);
+		mDoc.appendChild(mRootElement);
+		
+		attr = mDoc.createAttribute(VERSION_STR);
+		attr.setValue(VERSION_VALUE);
+		mRootElement.setAttributeNode(attr);
+		attr = mDoc.createAttribute(CREATOR_STR);
+		attr.setValue(CREATOR_VALUE);
+		mRootElement.setAttributeNode(attr);
+		
+		// no metadata here
+		mDateFormat = new SimpleDateFormat(TIMEPATTERN);
+		
+		// start new Track
+		NewTrack();		
 	}
 }

@@ -5,18 +5,25 @@ import java.util.List;
 import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class ResultsActivity extends Activity {
 	TextView maxSpeedText;
 	TextView distanceText;
+	Button mButton;
+	String testline = "origin";
 	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.results);
+		mButton = (Button)findViewById(R.id.button1);
+		mButton.setOnClickListener(mOnClickListener);
 		maxSpeedText = (TextView)findViewById(R.id.textDistance);
 		distanceText = (TextView)findViewById(R.id.textMaxSpeed);
+		maxSpeedText.setText(testline);
 	}
 	 
 	public double Distance(Location loc1, Location loc2) {
@@ -43,5 +50,16 @@ public class ResultsActivity extends Activity {
 		double distance = Distance(origin, dest);
 		distanceText.setText(Double.toString(distance));
 	}
+	
+	private void TestFunc(String input) {
+		input = "hardcode";
+	}
+	
+    private OnClickListener mOnClickListener = new OnClickListener() {
+        public void onClick(View v) {
+        	TestFunc(testline);
+        	maxSpeedText.setText(testline);
+        }
+        };
 
 }
