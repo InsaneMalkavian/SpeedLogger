@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Vector;
 import android.location.*;
 import android.os.Bundle;
+import android.util.Log;
 import android.content.Context;
 
 public class TrackingSession implements LocationListener {
@@ -13,8 +14,8 @@ public class TrackingSession implements LocationListener {
 	
 	final static String UNCERT_LOC = "uncertainty";
 	final static int MAX_LOC_COUNT = 300; // 300/60 fixes per minute = 5 min
-	final static float HOR_ACCURACY = 20.f; // horizontal accuracy, in meters
-	final static float SPEED_THRESHOLD = 6.f; // speed threshold to detect start, in kmph
+	final static float HOR_ACCURACY = 25.f; // horizontal accuracy, in meters
+	final static float SPEED_THRESHOLD = 5.f; // speed threshold to detect start, in kmph
 	final static float MAX_SPEED_MULTIPLY_THRESHOLD = 0.9f; // stop tracking if speed falls more that 90% of current max
 	
 	//--- session measured parameters
@@ -119,6 +120,7 @@ public class TrackingSession implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
+		Log.i("TrackingSession", "Fix has come - onLocationChanged");
 		// we've got a new fix
 		mBaseLocation = location; // update last known location
 		for (TrackingSessionListener listener : mListeners)
@@ -131,6 +133,7 @@ public class TrackingSession implements LocationListener {
 		switch (mState)
 		{ // update logic
 		case WARMUP:
+			Log.i("TrackingSession", "Warming up...");
 			// here we check for problems to solve before we can start
 			if (location.hasAccuracy() && location.getAccuracy()>HOR_ACCURACY)
 			{ 
@@ -165,6 +168,7 @@ public class TrackingSession implements LocationListener {
 			}
 			break;
 		case READY:
+			Log.i("TrackingSession", "We are ready");
 			// here we should determine when to start or get back to WARMUP in case of bad fix
 			if (location.hasAccuracy() && location.getAccuracy()>HOR_ACCURACY)
 			{ // in case of bad fix stop tracking
@@ -195,6 +199,7 @@ public class TrackingSession implements LocationListener {
 			}
 			break;
 		case TRACKING:
+			Log.i("TrackingSession", "Tracking, go-go-go");
 			if (false/*location.getAccuracy()>HOR_ACCURACY*/)
 			{ // in case of overflow or bad fix stop trackingSessionDone
 				SessionDone();
@@ -233,6 +238,7 @@ public class TrackingSession implements LocationListener {
 	}
 	
 	private void SessionDone() {
+		Log.i("TrackingSession", "Session done");
 		// here is some logic to make it stop the good way
 		mState = TrackingState.DONE;
 		for (TrackingSessionListener listener : mListeners)

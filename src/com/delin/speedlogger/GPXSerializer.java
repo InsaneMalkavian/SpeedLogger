@@ -18,9 +18,11 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 
 import android.location.Location;
 import android.os.Environment;
+import android.util.Log;
 
 public class GPXSerializer {
 	static final String GPX_STR =			"gpx";
@@ -83,7 +85,8 @@ public class GPXSerializer {
 			return; // we got a problem
 		}
 		Attr attr=null;
-		Element secondary;
+		Text secondText;
+		Element second;
 		Element point = mDoc.createElement(TRKPOINT_STR); // point
 		
 		// add lat/lon
@@ -93,30 +96,35 @@ public class GPXSerializer {
 		attr = mDoc.createAttribute(LONGITUDE);
 		attr.setValue(Double.toString(loc.getLongitude()));
 		point.setAttributeNode(attr);		
-		secondary = mDoc.createElement(TIME); //add time
-		secondary.setNodeValue(mDateFormat.format(new Date(loc.getTime()))); // it seems slow
-		point.appendChild(secondary);
+		second = mDoc.createElement(TIME); //add time
+		secondText = mDoc.createTextNode(mDateFormat.format(new Date(loc.getTime())));
+		second.appendChild(secondText);
+		point.appendChild(second);
 		
 		// add optional parameters
 		if (loc.hasAltitude()) { // add altitude if available
-			secondary = mDoc.createElement(ALTITUDE);
-			secondary.setNodeValue(Double.toString(loc.getAltitude()));
-			point.appendChild(secondary);
+			second = mDoc.createElement(ALTITUDE); //add time
+			secondText = mDoc.createTextNode(Double.toString(loc.getAltitude()));
+			second.appendChild(secondText);
+			point.appendChild(second);
 		}		
 		if (loc.hasSpeed()) { // add speed if available
-			secondary = mDoc.createElement(SPEED);
-			secondary.setNodeValue(Float.toString(loc.getSpeed()));
-			point.appendChild(secondary);
+			second = mDoc.createElement(SPEED);
+			secondText = mDoc.createTextNode(Float.toString(loc.getSpeed()));
+			second.appendChild(secondText);
+			point.appendChild(second);
 		}
 		if (loc.hasBearing()) {
-			secondary = mDoc.createElement(BEARING);
-			secondary.setNodeValue(Float.toString(loc.getBearing()));
-			point.appendChild(secondary);		
+			second = mDoc.createElement(BEARING);
+			secondText = mDoc.createTextNode(Float.toString(loc.getBearing()));
+			second.appendChild(secondText);
+			point.appendChild(second);
 		}
 		if (loc.hasAccuracy()) {
-			secondary = mDoc.createElement(ACCURACY);
-			secondary.setNodeValue(Float.toString(loc.getAccuracy()));
-			point.appendChild(secondary);		
+			second = mDoc.createElement(ACCURACY);
+			secondText = mDoc.createTextNode(Float.toString(loc.getAccuracy()));
+			second.appendChild(secondText);
+			point.appendChild(second);
 		}
 		mTrackSegment.appendChild(point); // attach point to segment
 	}
