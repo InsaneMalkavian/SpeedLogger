@@ -45,7 +45,7 @@ public class GPXSerializer {
 	
 	static final String TIMEPATTERN = 		"yyyy-MM-dd'T'HH:mm:ss'Z'";
 	static final String TIMEPATTERN_FILE = 	"yyyy-MM-dd_HH-mm-ss";
-	static final String FILE_EXTENSION = 	"gpx";
+	static final String FILE_EXTENSION = 	".gpx";
 	
 	boolean mStopped=false;
 	
@@ -64,10 +64,12 @@ public class GPXSerializer {
 	public GPXSerializer() {
 		// TODO: seems bad
 		SimpleDateFormat dateFormat = new SimpleDateFormat(TIMEPATTERN_FILE);
-		String filename = Environment.getExternalStorageDirectory().getPath()+"/";
-		//String filename = "/sdcard"+"/"+CREATOR_VALUE+"/";
-		filename+=dateFormat.format(new Date());
-		filename+=".";
+		String filename = Environment.getExternalStorageDirectory().getPath()+"/"+CREATOR_VALUE;
+		
+		File dir = new File(filename); // create app directory
+		dir.mkdir();
+		
+		filename+=("/"+dateFormat.format(new Date()));
 		filename+=FILE_EXTENSION;
 		Initialize(filename);
 	}
