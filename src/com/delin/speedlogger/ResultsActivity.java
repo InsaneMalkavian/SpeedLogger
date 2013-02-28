@@ -20,11 +20,32 @@ public class ResultsActivity extends Activity {
 		mDistance = (TextView)findViewById(R.id.textMaxSpeed);
 	}
 	
-	// TODO: Fail. This should return distance in meters :D
-	//       and now returns whatever this is
-	public double Distance(double x1, double y1, double x2, double y2) {
-		return Math.sqrt(Math.pow(x2-x1,2) + Math.pow(y2-y1,2));
+	// got it here: http://wiki.openstreetmap.org/wiki/Mercator#Java_Implementation
+	public double mercX(double lon){
+		double r_big = 6378137.0; // big radius of an ellipse
+		return r_big * Math.toRadians(lon);
 	}
+	// got it here: http://wiki.openstreetmap.org/wiki/Mercator#Java_Implementation
+	public double mercY(double lat) {
+		double r_big = 6378137.0; // big radius of an ellipse
+		double r_small = 6356752.3142; // small radius of an ellipse
+        if (lat > 89.5) {
+            lat = 89.5;
+        }
+        if (lat < -89.5) {
+            lat = -89.5;
+        }
+        double temp = r_big / r_small;
+        double es = 1.0 - (temp * temp);
+        double eccent = Math.sqrt(es);
+        double phi = Math.toRadians(lat);
+        double con = eccent * Math.sin(phi);
+        double com = 0.5 * eccent;
+        con = Math.pow(((1.0-con)/(1.0+con)), com);
+        double ts = Math.tan(0.5 * ((0.5*Math.PI) - phi))/con;
+        double y = 0 - r_big * Math.log(ts);
+        return y;
+    }
 	
 	// TODO: it must be deleted or rewritten
 	public boolean StraightLine3D(List<Location> locList) {
@@ -60,41 +81,34 @@ public class ResultsActivity extends Activity {
 	}
 	
 	public boolean StraightLine2D(List<Location> locList) {
-		// TODO: Delin's suggestion is to use second point as origin
 		Location origin = locList.get(0);
 		Location dest = locList.get(locList.size()-1);
 		
-		// first point
-		double a_x = origin.getLatitude();
-		double a_y = origin.getLongitude();
-		// last point
-		double b_x = dest.getLatitude();
-		double b_y = dest.getLongitude();
+		// lat/lon to UTM convert is necessary to perform line calculus
+		// values represented in meters
+		double x1 = mercX(origin.getLongitude());
+		double y1 = mercY(origin.getLatitude());
+		double x2 = mercX(dest.getLongitude());
+		double y2 = mercY(dest.getLatitude());
 		
 		// TODO: 2 better be replaced with something
-		if (locList.size() <= 2 || Distance(a_x, a_y, b_x, b_y) < 50)
-			// for such a small path distance we assume it is a straight line
-			return true;
+		if (locList.size() <= 2 || Distance(x1, y1, x2, y2) < 50)
+			return true; // for such a small path we assume it is a straight line
 		else {	
-			// line formula
-			double k = (a_y - b_y) / (a_x - b_x);
-		    double b = a_y - k * a_x;
+			// line formula Ax + By + C = 0
+			double A = y1 - y2;
+		    double B = x2 - x1;
+		    double C = x1*y2 - x2*y1;
 			
-			// TODO: get proper number for eps
-		    // eps is a max allowed distance between real point 
-		    // and a 'perfect' point to suit the line (in meters)
-			double eps = 5.d;
+		    // TODO: get proper number for eps
+		    // TODO: move eps to the place where constants live
+			double eps = 5.d; // max allowed deviation from the line (meters)
 			for (int i=2; i<locList.size(); i++){
-				double x = locList.get(i).getLatitude();
-				double y = locList.get(i).getLongitude();
-
-				// calculating what y should be for this x 
-				// if point lied exactly on the line
-				double y1 = b + k * a_x;
-				
-				// this is a distance between our real point 
-				// and 'perfect' point to suit the line
-				if (Distance(x,y,x,y1) > eps)
+				Location loc = locList.get(i);
+				double x = mercX(loc.getLongitude());
+				double y = mercY(loc.getLatitude());
+				double d = (A*x+B*y+C)/Math.sqrt(A*A+B*B); // distance from point to line
+				if (d > eps)
 					return false;
 			}
 			return true;
