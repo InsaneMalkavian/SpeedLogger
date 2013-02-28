@@ -49,6 +49,8 @@ public class GPXSerializer {
 	static final String TIMEPATTERN_FILE = 	"yyyy-MM-dd_HH-mm-ss";
 	static final String FILE_EXTENSION = 	".gpx";
 	
+	static final long SEGMENT_TIME_INTERVAL=5000; // milliseconds
+	
 	boolean mStopped=false;
 	
 	String mFilename = null;	
@@ -56,6 +58,7 @@ public class GPXSerializer {
 	DocumentBuilderFactory docFactory = null;
 	DocumentBuilder docBuilder = null;
 	SimpleDateFormat mDateFormat = null;
+	long mLastAddedLocTime;
 	
 	// xml objects
 	Document mDoc = null;
@@ -67,6 +70,7 @@ public class GPXSerializer {
 		// TODO: seems bad
 		SimpleDateFormat dateFormat = new SimpleDateFormat(TIMEPATTERN_FILE);
 		String filename = Environment.getExternalStorageDirectory().getPath()+"/"+CREATOR_VALUE;
+		mLastAddedLocTime=0;
 		
 		File dir = new File(filename); // create app directory
 		dir.mkdir();
@@ -84,6 +88,11 @@ public class GPXSerializer {
 		if (mDoc==null || mTrackSegment==null) {
 			return; // we got a problem
 		}
+		// compare times of this fix and last added, insert new segment if needed
+		if (loc.getTime()-mLastAddedLocTime>SEGMENT_TIME_INTERVAL) {
+			NewSegment();
+		}
+		
 		Attr attr=null;
 		Text secondText;
 		Element second;
@@ -127,6 +136,7 @@ public class GPXSerializer {
 			point.appendChild(second);
 		}
 		mTrackSegment.appendChild(point); // attach point to segment
+		mLastAddedLocTime = loc.getTime();
 	}
 	
 	public void NewSegment() {

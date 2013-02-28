@@ -15,6 +15,7 @@ public class ResultsActivity extends Activity {
 	TextView distanceText;
 	Button mButton;
 	String testline = "origin";
+	MeasurementResult mMeasurement;
 	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -24,6 +25,9 @@ public class ResultsActivity extends Activity {
 		maxSpeedText = (TextView)findViewById(R.id.textDistance);
 		distanceText = (TextView)findViewById(R.id.textMaxSpeed);
 		maxSpeedText.setText(testline);
+		
+		mMeasurement = MeasurementResult.GetInstance();
+		mMeasurement.SaveToGPX("/mnt/sdcard/textlog.gpx");
 	}
 	 
 	public double Distance(Location loc1, Location loc2) {

@@ -22,6 +22,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	Button mButton;
 	TextView mTextView;
 	TrackingSession mTrackingSession;
+	MeasurementResult mMeasurement;
 	
     /** Called when the activity is first created. */
     @Override
@@ -33,6 +34,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
         mButton.setOnClickListener(mOnClickListener);
         
         mTrackingSession = new TrackingSession(this);
+        mMeasurement = MeasurementResult.GetInstance();
         mTrackingSession.AddListener(this);
     }
     
@@ -77,6 +79,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 
 	@Override
 	public void onSessionFinished(List<Location> mLocList) {
+		mMeasurement.SetLocations(mLocList);
 		Intent intent = new Intent(this, ResultsActivity.class);
 		startActivity(intent);	
 	}
