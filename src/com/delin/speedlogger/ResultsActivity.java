@@ -72,7 +72,9 @@ public class ResultsActivity extends Activity {
 	}
 	
 	// TODO: it must be deleted or rewritten
-	public boolean StraightLine3D(List<Location> locList){
+	// HINT: this is generalized version for both 2D and 3D.
+	//		 you can make separate func for 2D case to make simpler calculus there
+	public boolean StraightLine(List<Location> locList, boolean use3D){
 		// for a small path we assume it is a straight line
 		// TODO: 2 better be replaced with something
 		if (locList.size() <= 2) return true;
@@ -85,10 +87,10 @@ public class ResultsActivity extends Activity {
 		// altitude's already in meters, no conversion needed
 		double x1 = mercX(origin.getLongitude());
 		double y1 = mercY(origin.getLatitude());
-		double z1 = origin.getAltitude();
+		double z1 = use3D? origin.getAltitude() : 0;
 		double x2 = mercX(dest.getLongitude());
 		double y2 = mercY(dest.getLatitude());
-		double z2 = dest.getAltitude();
+		double z2 = use3D? dest.getAltitude() : 0;
 		
 		// TODO: get proper number for eps
 		// TODO: move eps to the place where constants live
@@ -97,41 +99,8 @@ public class ResultsActivity extends Activity {
 			Location loc = locList.get(i);
 			double x = mercX(loc.getLongitude());
 			double y = mercY(loc.getLatitude());
-			double z = loc.getAltitude();
+			double z = use3D? loc.getAltitude() : 0;
 			double d = distPointToLine(x,y,z,x1,y1,z1,x2,y2,z2);
-			if (d > eps) return false;
-		}
-		return true;
-	}
-	
-	public boolean StraightLine2D(List<Location> locList){
-		// for a small path we assume it is a straight line
-		// TODO: 2 better be replaced with something
-		if (locList.size() <= 2) return true;
-		
-		Location origin = locList.get(0);
-		Location dest = locList.get(locList.size()-1);
-		
-		// lat/lon to UTM convert is necessary to perform line calculus
-		// values represented in meters
-		double x1 = mercX(origin.getLongitude());
-		double y1 = mercY(origin.getLatitude());
-		double x2 = mercX(dest.getLongitude());
-		double y2 = mercY(dest.getLatitude());
-		
-		// line formula Ax + By + C = 0
-		double A = y1 - y2;
-		double B = x2 - x1;
-		double C = x1*y2 - x2*y1;
-			
-		// TODO: get proper number for eps
-		// TODO: move eps to the place where constants live
-		double eps = 5.d; // max allowed deviation from the line (meters)
-		for (int i=2; i<locList.size(); i++){
-			Location loc = locList.get(i);
-			double x = mercX(loc.getLongitude());
-			double y = mercY(loc.getLatitude());
-			double d = (A*x+B*y+C)/Math.sqrt(A*A+B*B); // distance from point to line
 			if (d > eps) return false;
 		}
 		return true;
@@ -154,7 +123,7 @@ public class ResultsActivity extends Activity {
 		double distance = origin.distanceTo(dest);
 		mDistance.setText(Double.toString(distance));
 		
-		mStraightLine.setChecked(StraightLine2D(mLocList));
+		mStraightLine.setChecked(StraightLine(mLocList,true));
 	}
 
 }
