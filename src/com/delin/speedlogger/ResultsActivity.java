@@ -6,18 +6,30 @@ import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.widget.CheckBox;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class ResultsActivity extends Activity {
 	TextView mMaxSpeed;
 	TextView mDistance;
 	CheckBox mStraightLine;
+	Button mButton;
+	String testline = "origin";
+	MeasurementResult mMeasurement;
 	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.results);
-		mMaxSpeed = (TextView)findViewById(R.id.textDistance);
-		mDistance = (TextView)findViewById(R.id.textMaxSpeed);
+		mButton = (Button)findViewById(R.id.button1);
+		mButton.setOnClickListener(mOnClickListener);
+		mMaxSpeed = (TextView)findViewById(R.id.textMaxSpeed);
+		mDistance = (TextView)findViewById(R.id.textDistance);
+                mMaxSpeed.setText(testline);
+		
+		mMeasurement = MeasurementResult.GetInstance();
+		mMeasurement.SaveToGPX("/mnt/sdcard/textlog.gpx");
 	}
 	
 	// got it here: http://wiki.openstreetmap.org/wiki/Mercator#Java_Implementation
@@ -116,6 +128,7 @@ public class ResultsActivity extends Activity {
 			}
 		}
 		mMaxSpeed.setText(Float.toString(maxSpeed));
+		// interpolate here
 		
 		// printing distance
 		Location origin = mLocList.get(0);
@@ -125,5 +138,16 @@ public class ResultsActivity extends Activity {
 		
 		mStraightLine.setChecked(StraightLine(mLocList,true));
 	}
+	
+	private void TestFunc(String input) {
+		input = "hardcode";
+	}
+	
+    private OnClickListener mOnClickListener = new OnClickListener() {
+        public void onClick(View v) {
+        	TestFunc(testline);
+        	maxSpeedText.setText(testline);
+        }
+        };
 
 }

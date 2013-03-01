@@ -19,11 +19,12 @@
                 android:layout_height="wrap_content"
                 android:text="Max speed"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
-
+
             <TextView
                 android:id="@+id/textMaxSpeed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="0"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
         </TableRow>
@@ -39,11 +40,12 @@
                 android:layout_height="wrap_content"
                 android:text="Total distance"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
-
+
             <TextView
                 android:id="@+id/textDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="0"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
         </TableRow>
@@ -65,5 +67,11 @@
         android:id="@+id/ratingBar1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button" />
 
 </LinearLayout>

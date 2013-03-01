@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Vector;
 import android.location.*;
 import android.os.Bundle;
+import android.util.Log;
 import android.content.Context;
 
 public class TrackingSession implements LocationListener {
@@ -13,8 +14,9 @@ public class TrackingSession implements LocationListener {
 	
 	final static String UNCERT_LOC = "uncertainty";
 	final static int MAX_LOC_COUNT = 300; // 300/60 fixes per minute = 5 min
-	final static float HOR_ACCURACY = 20.f; // horizontal accuracy, in meters
-	final static float SPEED_THRESHOLD = 6.f; // speed threshold to detect start, in kmph
+	final static float HOR_ACCURACY = 25.f; // horizontal accuracy, in meters
+	final static float SPEED_THRESHOLD = 5.f; // speed threshold to detect start, in kmph
+	final static float MAX_SPEED_MULTIPLY_THRESHOLD = 0.9f; // stop tracking if speed falls more that 90% of current max
 	
 	//--- session measured parameters
 	float mMaxSpeed = 0.f;
@@ -30,18 +32,16 @@ public class TrackingSession implements LocationListener {
 	GPXSerializer mGpxLog = null;
 	TrackingState mState = TrackingState.IDLE;
 	WarmupState mWarmupState = WarmupState.WAITING_FIX;
-	Vector<TrackingSessionListener> mListeners = null;
+	Vector<TrackingSessionListener> mListeners = new Vector<TrackingSessionListener>();;
 	
 	public TrackingSession(Context Context) {
 		mContext = Context;
 		// Acquire a reference to the system Location Manager
 		mLocationManager = (LocationManager) mContext.getSystemService(android.content.Context.LOCATION_SERVICE);
-		mListeners = new Vector<TrackingSessionListener>();
 		StartService();
 	}
 	
 	protected void finalize () {
-		mListeners = null;
 	}
 	
 	public void AddListener(TrackingSessionListener newListener) {
@@ -82,7 +82,7 @@ public class TrackingSession implements LocationListener {
 			mReadyLoc = new Location(UNCERT_LOC);
 			mState = TrackingState.WARMUP;
 			if (mWriteGPX) {
-				mGpxLog = new GPXSerializer("/sdcard/track.gpx");
+				mGpxLog = new GPXSerializer();
 			}
 			for (TrackingSessionListener listener : mListeners)
 			{
@@ -98,8 +98,9 @@ public class TrackingSession implements LocationListener {
 			
 			mBaseLocation = null;
 			mReadyLoc = null;
-			if (mWriteGPX && mGpxLog!=null) {
+			if (mWriteGPX) {
 				mGpxLog.Stop();
+				mGpxLog = null;
 			}
 			mState = TrackingState.IDLE;
 			// TODO: stop all activities, notify listeners
@@ -119,6 +120,7 @@ public class TrackingSession implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
+		Log.i("TrackingSession", "Fix has come - onLocationChanged");
 		// we've got a new fix
 		mBaseLocation = location; // update last known location
 		for (TrackingSessionListener listener : mListeners)
@@ -131,8 +133,9 @@ public class TrackingSession implements LocationListener {
 		switch (mState)
 		{ // update logic
 		case WARMUP:
+			Log.i("TrackingSession", "Warming up...");
 			// here we check for problems to solve before we can start
-			if (location.getAccuracy()>HOR_ACCURACY)
+			if (location.hasAccuracy() && location.getAccuracy()>HOR_ACCURACY)
 			{ 
 				if (mWarmupState != WarmupState.WAITING_FIX)
 				{
@@ -144,7 +147,7 @@ public class TrackingSession implements LocationListener {
 				}
 				
 			}
-			else if (location.getSpeed() > SPEED_THRESHOLD)
+			else if (location.hasSpeed() && location.getSpeed() > SPEED_THRESHOLD)
 			{
 				if (mWarmupState != WarmupState.HIGH_SPEED)
 				{
@@ -165,8 +168,9 @@ public class TrackingSession implements LocationListener {
 			}
 			break;
 		case READY:
+			Log.i("TrackingSession", "We are ready");
 			// here we should determine when to start or get back to WARMUP in case of bad fix
-			if (location.getAccuracy()>HOR_ACCURACY)
+			if (location.hasAccuracy() && location.getAccuracy()>HOR_ACCURACY)
 			{ // in case of bad fix stop tracking
 				mState = TrackingState.WARMUP;
 				mWarmupState = WarmupState.WAITING_FIX;
@@ -176,7 +180,7 @@ public class TrackingSession implements LocationListener {
 				}
 			}
 			// here is some logic to make it start
-			else if (location.getSpeed()>SPEED_THRESHOLD) {
+			else if (location.hasSpeed() && location.getSpeed()>SPEED_THRESHOLD) {
 				mState = TrackingState.TRACKING;
 				for (TrackingSessionListener listener : mListeners)
 				{
@@ -191,14 +195,17 @@ public class TrackingSession implements LocationListener {
 			else {
 				// if not start - just resave prestart loc
 				mReadyLoc = location;
+				// we can calculate origin by taking average fix, not last one
 			}
 			break;
 		case TRACKING:
-			if (location.getAccuracy()>HOR_ACCURACY)
+			Log.i("TrackingSession", "Tracking, go-go-go");
+			if (false/*location.getAccuracy()>HOR_ACCURACY*/)
 			{ // in case of overflow or bad fix stop trackingSessionDone
 				SessionDone();
 			}
-			else if (mLocList.size()>=MAX_LOC_COUNT || location.getSpeed()<mMaxSpeed)
+			else if (location.hasSpeed()== false || location.getSpeed()<mMaxSpeed*MAX_SPEED_MULTIPLY_THRESHOLD
+					|| mLocList.size()>=MAX_LOC_COUNT)
 			{ // good stop, there is no difference with bad stop
 				SessionDone();
 			}
@@ -231,6 +238,7 @@ public class TrackingSession implements LocationListener {
 	}
 	
 	private void SessionDone() {
+		Log.i("TrackingSession", "Session done");
 		// here is some logic to make it stop the good way
 		mState = TrackingState.DONE;
 		for (TrackingSessionListener listener : mListeners)

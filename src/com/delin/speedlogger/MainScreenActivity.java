@@ -10,6 +10,8 @@ import android.widget.Button;
 public class MainScreenActivity extends Activity {
 	Button mStartButton;
 	Button mPreferencesButton;
+	Button mLocationStatusButton;
+	Button mTestButton;
 	
     /** Called when the activity is first created. */
     @Override
@@ -20,20 +22,26 @@ public class MainScreenActivity extends Activity {
         mStartButton.setOnClickListener(mOnClickListener);
         mPreferencesButton = (Button)findViewById(R.id.buttonPreferences);
         mPreferencesButton.setOnClickListener(mOnClickListener);
+        mTestButton = (Button)findViewById(R.id.buttonTest);
+        mTestButton.setOnClickListener(mOnClickListener);
     }
 
 	private OnClickListener mOnClickListener = new OnClickListener() {
 	    public void onClick(View v) {
-	    	if (v == mStartButton)
-	    	{
-	    		Intent intent = new Intent(v.getContext(), SpeedLoggerActivity.class);
-	    		startActivity(intent);	    	
+	    	Intent intent = null;
+	    	switch (v.getId()) {
+	    	case R.id.buttonStart:
+	    		intent = new Intent(v.getContext(), SpeedLoggerActivity.class);
+	    		intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY); // don't keep on stack
+	    		break;
+	    	case R.id.buttonPreferences:
+	    		intent = new Intent(v.getContext(), PreferencesActivity.class);
+	    		break;
+	    	case R.id.buttonTest: // just for test, should be removed
+	    		intent = new Intent(v.getContext(), ResultsActivity.class);
+	    		break;
 	    	}
-	    	else if (v == mPreferencesButton)
-	    	{
-	    		Intent intent = new Intent(v.getContext(), PreferencesActivity.class);
-	    		startActivity(intent);
-	    	}
+	    	if (intent != null) startActivity(intent);    		
 	    }
 	};
 }
