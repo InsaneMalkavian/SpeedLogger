@@ -146,7 +146,7 @@ public class ResultsActivity extends Activity {
     private OnClickListener mOnClickListener = new OnClickListener() {
         public void onClick(View v) {
         	TestFunc(testline);
-        	maxSpeedText.setText(testline);
+        	mMaxSpeed.setText(testline);
         }
         };
 
