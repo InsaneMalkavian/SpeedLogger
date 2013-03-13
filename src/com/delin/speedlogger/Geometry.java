@@ -52,7 +52,7 @@ public class Geometry {
 		
 		// TODO: get proper number for eps
 		// TODO: move eps to the place where constants live
-		double eps = 5.d; // max allowed deviation from the line (meters)
+		double eps = 25.d; // max allowed deviation from the line (meters)
 		for (int i=2; i<locList.size(); i++){
 			Location loc = locList.get(i);
 			double x = Mercator.mercX(loc.getLongitude());

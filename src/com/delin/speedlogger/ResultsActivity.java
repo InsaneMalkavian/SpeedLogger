@@ -46,7 +46,7 @@ public class ResultsActivity extends Activity {
 		
 		// printing distance
 		Location origin = mLocList.get(0);
-		Location dest = mLocList.get(mLocList.size());
+		Location dest = mLocList.get(mLocList.size()-1);
 		double distance = origin.distanceTo(dest);
 		mDistance.setText(Double.toString(distance));
 		

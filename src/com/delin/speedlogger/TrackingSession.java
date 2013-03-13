@@ -24,9 +24,7 @@ public class TrackingSession implements LocationListener {
 	
 	Location mBaseLocation = null; // last location
 	Location mReadyLoc = null;
-	
-	final Context mContext;
-	LocationManager mLocationManager = null;
+	GPSProvider mGpsProvider = null;	
 	boolean mEnabled = false; // gps receiver status, useless
 	boolean mWriteGPX = true;
 	GPXSerializer mGpxLog = null;
@@ -35,9 +33,8 @@ public class TrackingSession implements LocationListener {
 	Vector<TrackingSessionListener> mListeners = new Vector<TrackingSessionListener>();;
 	
 	public TrackingSession(Context Context) {
-		mContext = Context;
-		// Acquire a reference to the system Location Manager
-		mLocationManager = (LocationManager) mContext.getSystemService(android.content.Context.LOCATION_SERVICE);
+		mGpsProvider = new RealGPSProvider(Context, this);
+		//mGpsProvider = new FileGPSProvider(Context, this);
 		StartService();
 	}
 	
@@ -73,9 +70,7 @@ public class TrackingSession implements LocationListener {
 	
 	public void StartService() {
 		if (mState==TrackingState.IDLE) { // start only from IDLE state
-			// Register the listener with the Location Manager to receive location updates
-			mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this); // TODO: remove
-			mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+			mGpsProvider.Start();
 			ResetSessionValues();
 			mEnabled = true; // in case gps is off we'll receive onDisabled and disable it
 			mBaseLocation = new Location(UNCERT_LOC);
@@ -93,8 +88,7 @@ public class TrackingSession implements LocationListener {
 	
 	public void StopService() {
 		if (mState!=TrackingState.IDLE) { // stop only active
-			// Remove the listener you previously added
-			mLocationManager.removeUpdates(this);
+			mGpsProvider.Stop();
 			
 			mBaseLocation = null;
 			mReadyLoc = null;
