@@ -1,7 +1,6 @@
 package com.delin.speedlogger;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -18,11 +17,11 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-
 import android.location.Location;
 import android.os.Environment;
-import android.util.Log;
 
 public class GPXSerializer {
 	static final String GPX_STR =			"gpx";
@@ -52,22 +51,24 @@ public class GPXSerializer {
 	static final long SEGMENT_TIME_INTERVAL=5000; // milliseconds
 	
 	boolean mStopped=false;
+	boolean mWriteMode;
 	
-	String mFilename = null;	
-	FileWriter mWriter = null;
+	String mFilename = null;
 	DocumentBuilderFactory docFactory = null;
 	DocumentBuilder docBuilder = null;
 	SimpleDateFormat mDateFormat = null;
 	long mLastAddedLocTime;
+	int mGPSFixNumber = 0;
 	
 	// xml objects
 	Document mDoc = null;
 	Element mRootElement = null;
 	Element mTrack = null;
 	Element mTrackSegment = null;
+	NodeList mList; // location list from file
 	
 	public GPXSerializer() {
-		// TODO: seems bad
+		mWriteMode= true; // only write allowed without valid filename
 		SimpleDateFormat dateFormat = new SimpleDateFormat(TIMEPATTERN_FILE);
 		String filename = Environment.getExternalStorageDirectory().getPath()+"/"+CREATOR_VALUE;
 		mLastAddedLocTime=0;
@@ -80,14 +81,31 @@ public class GPXSerializer {
 		Initialize(filename);
 	}
 	
-	public GPXSerializer(final String filename) {
+	public GPXSerializer(final String filename, boolean write) {
+		mWriteMode = write;
 		Initialize(filename);
 	}
 	
-	public void AddFix(Location loc) {
-		if (mDoc==null || mTrackSegment==null) {
-			return; // we got a problem
+	public Location GetFix() {
+		Location loc = new Location("test"); // TODO
+		if (mGPSFixNumber==mList.getLength()) mGPSFixNumber=0;
+		Node nNode = mList.item(mGPSFixNumber);
+		//System.out.println("\nCurrent Element :" + nNode.getNodeName());		 
+		if (nNode.getNodeType() == Node.ELEMENT_NODE) {		 
+			Element eElement = (Element) nNode;
+			loc.setLatitude(Float.parseFloat(eElement.getAttribute(LATITUDE))); // we assume lat/lon is always with us
+			loc.setLongitude(Float.parseFloat(eElement.getAttribute(LONGITUDE)));
+			loc.setSpeed(Float.parseFloat(eElement.getElementsByTagName(SPEED).item(0).getTextContent()));
+			loc.setAltitude(Float.parseFloat(eElement.getElementsByTagName(ALTITUDE).item(0).getTextContent()));
+			loc.setAccuracy(Float.parseFloat(eElement.getElementsByTagName(ACCURACY).item(0).getTextContent()));			
+			loc.setBearing(Float.parseFloat(eElement.getElementsByTagName(BEARING).item(0).getTextContent()));
+			//loc.setAccuracy(Float.parseFloat(eElement.getElementsByTagName(ACCURACY).item(0).getTextContent()));			
 		}
+		mGPSFixNumber++;
+		return loc;
+	}
+	
+	public void AddFix(Location loc) {
 		// compare times of this fix and last added, insert new segment if needed
 		if (loc.getTime()-mLastAddedLocTime>SEGMENT_TIME_INTERVAL) {
 			NewSegment();
@@ -139,18 +157,29 @@ public class GPXSerializer {
 		mLastAddedLocTime = loc.getTime();
 	}
 	
+	private void NewDocument() {
+		Attr attr;
+		// root element
+		mDoc = docBuilder.newDocument();
+		mRootElement = mDoc.createElement(GPX_STR);
+		mDoc.appendChild(mRootElement);
+		
+		attr = mDoc.createAttribute(VERSION_STR);
+		attr.setValue(VERSION_VALUE);
+		mRootElement.setAttributeNode(attr);
+		attr = mDoc.createAttribute(CREATOR_STR);
+		attr.setValue(CREATOR_VALUE);
+		mRootElement.setAttributeNode(attr);		
+		// start new Track
+		NewTrack();	
+	}
+	
 	public void NewSegment() {
-		if (mDoc==null || mTrack==null) {
-			return; // we got a problem
-		}
 		mTrackSegment = mDoc.createElement(TRKSEG_STR);
 		mTrack.appendChild(mTrackSegment);
 	}
 	
 	public void NewTrack() {
-		if (mDoc==null || mRootElement==null) {
-			return; // we got a problem
-		}
 		mTrack = mDoc.createElement(TRACK_STR);
 		mRootElement.appendChild(mTrack);
 		NewSegment();
@@ -176,9 +205,6 @@ public class GPXSerializer {
 				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 				DOMSource source = new DOMSource(mDoc);
 				StreamResult result = new StreamResult(mFile);
-	
-				// Output to console for testing
-				// StreamResult result = new StreamResult(System.out);
 				transformer.transform(source, result);
 				System.out.println("File saved!");
 			}
@@ -193,6 +219,7 @@ public class GPXSerializer {
 	}
 	
 	private void Initialize(final String filename) {
+		mDateFormat = new SimpleDateFormat(TIMEPATTERN);
 		mFilename = filename;
 		docFactory = DocumentBuilderFactory.newInstance();
 		try {
@@ -200,23 +227,30 @@ public class GPXSerializer {
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		}
-		Attr attr;
-		// root element
-		mDoc = docBuilder.newDocument();
-		mRootElement = mDoc.createElement(GPX_STR);
-		mDoc.appendChild(mRootElement);
-		
-		attr = mDoc.createAttribute(VERSION_STR);
-		attr.setValue(VERSION_VALUE);
-		mRootElement.setAttributeNode(attr);
-		attr = mDoc.createAttribute(CREATOR_STR);
-		attr.setValue(CREATOR_VALUE);
-		mRootElement.setAttributeNode(attr);
-		
-		// no metadata here
-		mDateFormat = new SimpleDateFormat(TIMEPATTERN);
-		
-		// start new Track
-		NewTrack();		
+		if (mWriteMode)	NewDocument();
+		else PrepareToRead(filename);
+	}	
+
+	private void PrepareToRead(final String filename) {
+		try {
+			mDoc = docBuilder.parse(new File(filename));
+			mList = mDoc.getElementsByTagName(TRKPOINT_STR);
+			/*for (int temp = 0; temp < nList.getLength(); temp++) {				 
+				Node nNode = nList.item(temp);
+				System.out.println("\nCurrent Element :" + nNode.getNodeName());		 
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {		 
+					Element eElement = (Element) nNode;		 
+					System.out.println("lat: " + eElement.getAttribute(LATITUDE));
+					System.out.println("lat: " + eElement.getAttribute(LONGITUDE));
+					System.out.println("time: " + eElement.getElementsByTagName(TIME).item(0).getTextContent());
+					//System.out.println("Last Name : " + eElement.getElementsByTagName("lastname").item(0).getTextContent());
+					//System.out.println("Nick Name : " + eElement.getElementsByTagName("nickname").item(0).getTextContent());
+					//System.out.println("Salary : " + eElement.getElementsByTagName("salary").item(0).getTextContent());
+				}
+			}*/
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

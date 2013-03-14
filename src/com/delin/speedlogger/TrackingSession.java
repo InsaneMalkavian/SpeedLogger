@@ -33,8 +33,8 @@ public class TrackingSession implements LocationListener {
 	Vector<TrackingSessionListener> mListeners = new Vector<TrackingSessionListener>();;
 	
 	public TrackingSession(Context Context) {
-		mGpsProvider = new RealGPSProvider(Context, this);
-		//mGpsProvider = new FileGPSProvider(Context, this);
+		//mGpsProvider = new RealGPSProvider(Context, this);
+		mGpsProvider = new FileGPSProvider(Context, this);
 		StartService();
 	}
 	

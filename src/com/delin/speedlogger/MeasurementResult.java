@@ -28,7 +28,7 @@ public class MeasurementResult {
     	mLocList.addAll(locs);
     }
     public void SaveToGPX(final String filename) {
-    	GPXSerializer gpxSaver = new GPXSerializer(filename);
+    	GPXSerializer gpxSaver = new GPXSerializer(filename, true);
     	for (Iterator<Location> it = mLocList.iterator(); it.hasNext(); ) {
     		gpxSaver.AddFix(it.next());
     	}
