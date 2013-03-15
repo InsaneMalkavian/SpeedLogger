@@ -89,7 +89,7 @@ public class GPXSerializer {
 	public Location GetFix() {
 		Location loc = new Location("test"); // TODO
 		if (mGPSFixNumber==mList.getLength()) mGPSFixNumber=0;
-		Node nNode = mList.item(mGPSFixNumber);
+		Node nNode = mList.item(mGPSFixNumber++);
 		//System.out.println("\nCurrent Element :" + nNode.getNodeName());		 
 		if (nNode.getNodeType() == Node.ELEMENT_NODE) {		 
 			Element eElement = (Element) nNode;
@@ -101,7 +101,6 @@ public class GPXSerializer {
 			loc.setBearing(Float.parseFloat(eElement.getElementsByTagName(BEARING).item(0).getTextContent()));
 			//loc.setAccuracy(Float.parseFloat(eElement.getElementsByTagName(ACCURACY).item(0).getTextContent()));			
 		}
-		mGPSFixNumber++;
 		return loc;
 	}
 	
