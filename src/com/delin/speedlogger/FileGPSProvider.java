@@ -1,7 +1,7 @@
 package com.delin.speedlogger;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import android.content.Context;
 import android.location.Location;
@@ -14,26 +14,26 @@ public class FileGPSProvider extends GPSProvider {
 
 	public FileGPSProvider(Context context, LocationListener listener) {
 		super(context, listener);
-		// TODO Auto-generated constructor stub
 		mGPXReader = new GPXSerializer("/mnt/sdcard/default.gpx", false);
-		mTimer = new Timer();
+		mTimer = new Timer(new Runnable() {
+			@Override
+		     public void run() {
+		    	//Location loc = mGPXReader.GetDummyFix();
+				Location loc = mGPXReader.GetFix();
+		    	mListener.onLocationChanged(loc);
+		    };
+		});
 	}
 
 	@Override
 	public void Start() {
 		// run timer
-		mTimer.schedule(new TimerTask() {
-		    @Override
-		    public void run() {
-		    	Location loc = mGPXReader.GetFix();
-		    	mListener.onLocationChanged(loc);
-		    };
-		}, 0L, 1L * 1000);
+		mTimer.start(1L * 1000);
 	}
 
 	@Override
 	public void Stop() {
-		mTimer.cancel();
+		mTimer.stop();
 	}
 
 }

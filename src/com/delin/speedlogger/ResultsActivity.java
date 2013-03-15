@@ -32,6 +32,9 @@ public class ResultsActivity extends Activity {
 		mMeasurement.SaveToGPX("/mnt/sdcard/textlog.gpx");
 	}
 	
+	// TODO: this function will never be triggered
+	// because ResultsActivity created _after_ onSessionFinishedCall.
+	// call this function from OnCreate
 	public void onSessionFinished(List<Location> mLocList){
 		// printing max speed
 		// TODO: we can get maxSpeed from TrackingSession

@@ -122,7 +122,7 @@ public class TrackingSession implements LocationListener {
 			listener.onSessionLocationUpdate(location);
 		}
 		if (mWriteGPX) { // save fix to gpx track
-			mGpxLog.AddFix(location);
+			//mGpxLog.AddFix(location); <------------------- TODO: APP CRASHES HERE
 		}
 		switch (mState)
 		{ // update logic

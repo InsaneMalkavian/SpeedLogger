@@ -105,6 +105,17 @@ public class GPXSerializer {
 		return loc;
 	}
 	
+	public Location GetDummyFix() {
+		Location loc = new Location("test"); // TODO
+		loc.setLatitude(5.); // we assume lat/lon is always with us
+		loc.setLongitude(7.);
+		loc.setSpeed((float) 4.);
+		loc.setAltitude(2.);
+		loc.setAccuracy((float) 12.);			
+		loc.setBearing((float) 6.);
+		return loc;
+	}
+	
 	public void AddFix(Location loc) {
 		// compare times of this fix and last added, insert new segment if needed
 		if (loc.getTime()-mLastAddedLocTime>SEGMENT_TIME_INTERVAL) {
