@@ -70,7 +70,6 @@ public class TrackingSession implements LocationListener {
 	
 	public void StartService() {
 		if (mState==TrackingState.IDLE) { // start only from IDLE state
-			mGpsProvider.Start();
 			ResetSessionValues();
 			mEnabled = true; // in case gps is off we'll receive onDisabled and disable it
 			mBaseLocation = new Location(UNCERT_LOC);
@@ -83,6 +82,7 @@ public class TrackingSession implements LocationListener {
 			{
 				listener.onSessionWarmingUp(mWarmupState);
 			}
+			mGpsProvider.Start();
 		}
 	}
 	
@@ -122,7 +122,7 @@ public class TrackingSession implements LocationListener {
 			listener.onSessionLocationUpdate(location);
 		}
 		if (mWriteGPX) { // save fix to gpx track
-			//mGpxLog.AddFix(location); <------------------- TODO: APP CRASHES HERE
+			mGpxLog.AddFix(location);
 		}
 		switch (mState)
 		{ // update logic
