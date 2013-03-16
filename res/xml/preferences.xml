@@ -6,7 +6,7 @@
     <EditTextPreference 
         android:key="CarModel" 
         android:title="@string/CarModel" 
-        android:defaultValue="Terrano"/>
+        android:defaultValue="Pathfinder"/>
     <EditTextPreference 
         android:key="CarEnginePower" 
         android:title="@string/CarEnginePower" 
