@@ -49,11 +49,9 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
     private OnClickListener mOnClickListener = new OnClickListener() {
         public void onClick(View v) {
         	Location location = mTrackingSession.GetLastLocation();
-        	mTextView.setText("Lat/lon: "+Double.toString(location.getLatitude())+" : "+Double.toString(location.getLongitude())+
-        			"\nProvider: "+location.getProvider()+"\nAccuracy (m): "+location.getAccuracy()+"\nSpeed (kph): "+location.getSpeed()*3.6+
-        			"\nAltitude (m): "+location.getAltitude()+"\nBearing: "+location.getBearing()+"\nTime: "+location.getTime());
-        }
+        	mTextView.setText(Logger.LocToStr(location));
         };
+    };
         
     @Override
 	public void onSessionWarmingUp(WarmupState mWarmupState) {
@@ -92,10 +90,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 
 	@Override
 	public void onSessionLocationUpdate(Location location) {
-		// TODO: make LocationToString convert function
-    	mTextView.setText("Lat/lon: "+Double.toString(location.getLatitude())+" : "+Double.toString(location.getLongitude())+
-    			"\nProvider: "+location.getProvider()+"\nAccuracy (m): "+location.getAccuracy()+"\nSpeed (kph): "+location.getSpeed()*3.6+
-    			"\nAltitude (m): "+location.getAltitude()+"\nBearing: "+location.getBearing()+"\nTime: "+location.getTime());
+    	mTextView.setText(Logger.LocToStr(location));
 	}
 
 	@Override

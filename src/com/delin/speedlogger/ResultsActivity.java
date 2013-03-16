@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.widget.CheckBox;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -37,6 +38,11 @@ public class ResultsActivity extends Activity {
 	
 	public void ShowResults(){
 		List<Location> mLocList = mMeasurement.GetLocations();
+		Log.i("Results Activity","Locs in path: " + Integer.toString(mLocList.size()));
+		for(int i=0; i<mLocList.size()-1; ++i){
+			Log.i("Results Activity",Integer.toString(i) + " -- " + Logger.LocToStr(mLocList.get(i)));
+		}
+		
 		// max speed  TODO: we can get maxSpeed from TrackingSession
 		float maxSpeed = mLocList.get(0).getSpeed();
 		for (int i=1; i<mLocList.size(); i++){
