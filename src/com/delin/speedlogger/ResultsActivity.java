@@ -25,19 +25,19 @@ public class ResultsActivity extends Activity {
 		mButton = (Button)findViewById(R.id.button1);
 		mButton.setOnClickListener(mOnClickListener);
 		mMaxSpeed = (TextView)findViewById(R.id.textMaxSpeed);
+		mMaxSpeed.setText(testline);
 		mDistance = (TextView)findViewById(R.id.textDistance);
-        mMaxSpeed.setText(testline);
+        mStraightLine = (CheckBox)findViewById(R.id.cbStraightLine);
 		
 		mMeasurement = MeasurementResult.GetInstance();
 		mMeasurement.SaveToGPX("/mnt/sdcard/textlog.gpx");
+		
+		ShowResults();
 	}
 	
-	// TODO: this function will never be triggered
-	// because ResultsActivity created _after_ onSessionFinishedCall.
-	// call this function from OnCreate
-	public void onSessionFinished(List<Location> mLocList){
-		// printing max speed
-		// TODO: we can get maxSpeed from TrackingSession
+	public void ShowResults(){
+		List<Location> mLocList = mMeasurement.GetLocations();
+		// max speed  TODO: we can get maxSpeed from TrackingSession
 		float maxSpeed = mLocList.get(0).getSpeed();
 		for (int i=1; i<mLocList.size(); i++){
 			if (maxSpeed < mLocList.get(i).getSpeed()){
@@ -46,8 +46,8 @@ public class ResultsActivity extends Activity {
 		}
 		mMaxSpeed.setText(Float.toString(maxSpeed));
 		// interpolate here
-		
-		// printing distance
+
+		// distance
 		Location origin = mLocList.get(0);
 		Location dest = mLocList.get(mLocList.size()-1);
 		double distance = origin.distanceTo(dest);
@@ -64,6 +64,9 @@ public class ResultsActivity extends Activity {
         public void onClick(View v) {
         	TestFunc(testline);
         	mMaxSpeed.setText(testline);
+        	mStraightLine.setChecked(!mStraightLine.isChecked());
+        	mStraightLine.setText("hello kitty");
+        	
         }
     };
 }

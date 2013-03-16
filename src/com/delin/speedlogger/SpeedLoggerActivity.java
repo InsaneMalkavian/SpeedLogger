@@ -80,6 +80,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	@Override
 	public void onSessionFinished(List<Location> mLocList) {
 		mMeasurement.SetLocations(mLocList);
+		// TODO: maybe we can create it only once
 		Intent intent = new Intent(this, ResultsActivity.class);
 		startActivity(intent);	
 	}
