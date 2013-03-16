@@ -39,7 +39,7 @@ public class GPXSerializer {
 	static final String ALTITUDE = 			"ele";
 	static final String TIME = 				"time";
 	static final String SATNUMBER = 		"sat";
-	// non standard, used for internal purpuses
+	// non standard, used for internal purposes
 	static final String SPEED = 			"speed";
 	static final String BEARING = 			"bear";
 	static final String ACCURACY = 			"acc";
@@ -245,19 +245,6 @@ public class GPXSerializer {
 		try {
 			mDoc = docBuilder.parse(new File(filename));
 			mList = mDoc.getElementsByTagName(TRKPOINT_STR);
-			/*for (int temp = 0; temp < nList.getLength(); temp++) {				 
-				Node nNode = nList.item(temp);
-				System.out.println("\nCurrent Element :" + nNode.getNodeName());		 
-				if (nNode.getNodeType() == Node.ELEMENT_NODE) {		 
-					Element eElement = (Element) nNode;		 
-					System.out.println("lat: " + eElement.getAttribute(LATITUDE));
-					System.out.println("lat: " + eElement.getAttribute(LONGITUDE));
-					System.out.println("time: " + eElement.getElementsByTagName(TIME).item(0).getTextContent());
-					//System.out.println("Last Name : " + eElement.getElementsByTagName("lastname").item(0).getTextContent());
-					//System.out.println("Nick Name : " + eElement.getElementsByTagName("nickname").item(0).getTextContent());
-					//System.out.println("Salary : " + eElement.getElementsByTagName("salary").item(0).getTextContent());
-				}
-			}*/
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

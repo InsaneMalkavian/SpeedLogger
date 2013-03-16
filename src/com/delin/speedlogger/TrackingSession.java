@@ -184,7 +184,6 @@ public class TrackingSession implements LocationListener {
 				mLocList.add(mReadyLoc);
 				// push current loc to list
 				mLocList.add(location);
-				mMaxSpeed=location.getSpeed();
 			}
 			else {
 				// if not start - just resave prestart loc
@@ -206,7 +205,7 @@ public class TrackingSession implements LocationListener {
 			else {
 				// and just save loc if all goes normal
 				mLocList.add(location);
-				mMaxSpeed=location.getSpeed();
+				if (mMaxSpeed<location.getSpeed()) mMaxSpeed=location.getSpeed();
 			}
 			break;
 		default:

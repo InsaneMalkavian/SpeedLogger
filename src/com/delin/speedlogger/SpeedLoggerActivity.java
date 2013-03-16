@@ -6,7 +6,6 @@ import com.delin.speedlogger.R;
 import com.delin.speedlogger.TrackingSession.WarmupState;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 public class SpeedLoggerActivity extends Activity implements TrackingSessionListener {
@@ -32,9 +30,9 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
         mButton = (Button)findViewById(R.id.button1);
         mTextView = (TextView)findViewById(R.id.textView1);
         mButton.setOnClickListener(mOnClickListener);
-        
-        mTrackingSession = new TrackingSession(this);
+
         mMeasurement = MeasurementResult.GetInstance();
+        mTrackingSession = new TrackingSession(this);
         mTrackingSession.AddListener(this);
     }
     
