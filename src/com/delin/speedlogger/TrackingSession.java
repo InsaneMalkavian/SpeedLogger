@@ -15,7 +15,7 @@ public class TrackingSession implements LocationListener {
 	final static String UNCERT_LOC = "uncertainty";
 	final static int MAX_LOC_COUNT = 300; // 300/60 fixes per minute = 5 min
 	final static float HOR_ACCURACY = 25.f; // horizontal accuracy, in meters
-	final static float SPEED_THRESHOLD = 5.f; // speed threshold to detect start, in kmph
+	final static float SPEED_THRESHOLD = 1.75f; // speed threshold to detect start, in m/s
 	final static float MAX_SPEED_MULTIPLY_THRESHOLD = 0.9f; // stop tracking if speed falls more that 90% of current max
 	
 	//--- session measured parameters
@@ -141,7 +141,7 @@ public class TrackingSession implements LocationListener {
 				}
 				
 			}
-			else if (location.hasSpeed() && location.getSpeed() > SPEED_THRESHOLD)
+			else if (location.hasSpeed() && location.getSpeed() > 5) // just for test, should be zero
 			{
 				if (mWarmupState != WarmupState.HIGH_SPEED)
 				{
@@ -154,7 +154,8 @@ public class TrackingSession implements LocationListener {
 			}
 			else{
 				// there are no problems, we're ready
-				mState = TrackingState.READY;	
+				mState = TrackingState.READY;
+				mReadyLoc=location;
 				for (TrackingSessionListener listener : mListeners)
 				{ //onSessionReady()
 					listener.onSessionReady();

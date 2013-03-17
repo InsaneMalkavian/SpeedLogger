@@ -59,7 +59,7 @@ public class ResultsActivity extends Activity {
 		// interpolate here
 
 		// distance
-		Location origin = mLocList.get(1);
+		Location origin = mLocList.get(0);
 		Location dest = mLocList.get(mLocList.size()-1);
 		//double distance = origin.distanceTo(dest);   // returns 87.4m
 		double distance = Geometry.DistBetweenLocs(origin,dest,false); // return 156m
