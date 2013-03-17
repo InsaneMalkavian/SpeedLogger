@@ -55,7 +55,7 @@ public class Geometry {
 		// TODO: get proper number for eps
 		// TODO: move eps to the place where constants live
 		double eps = 25.d; // max allowed deviation from the line (meters)
-		for (int i=2; i<locList.size(); i++){
+		for (int i=1; i<locList.size(); i++){
 			Location loc = locList.get(i);
 			double x = Mercator.mercX(loc.getLongitude());
 			double y = Mercator.mercY(loc.getLatitude());
@@ -69,5 +69,16 @@ public class Geometry {
 			if (d > eps) return false;
 		}
 		return true;
+	}
+	
+	public static double DistBetweenLocs(Location loc1, Location loc2, boolean use3D){
+		double x1 = Mercator.mercX(loc1.getLatitude ());
+		double y1 = Mercator.mercY(loc1.getLongitude());
+		double z1 = use3D? loc1.getAltitude() : 0;
+		double x2 = Mercator.mercX(loc2.getLatitude());
+		double y2 = Mercator.mercY(loc2.getLongitude ());
+		double z2 = use3D? loc2.getAltitude() : 0;
+		
+		return Math.sqrt(sqrDistPointToPoint3D(x1,y1,z1,x2,y2,z2));
 	}
 }
