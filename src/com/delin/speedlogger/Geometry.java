@@ -3,6 +3,7 @@ package com.delin.speedlogger;
 import java.util.List;
 
 import android.location.Location;
+import android.util.Log;
 
 // TODO: use Point class instead of ax,ay,az
 public class Geometry {
@@ -37,7 +38,8 @@ public class Geometry {
 		// TODO: 2 better be replaced with something
 		if (locList.size() <= 2) return true;
 		
-		Location origin = locList.get(0);
+		//Location origin = locList.get(0);
+		Location origin = locList.get(1);
 		Location dest = locList.get(locList.size()-1);
 			
 		// lat/lon to UTM convert is necessary to perform line calculus
@@ -59,6 +61,11 @@ public class Geometry {
 			double y = Mercator.mercY(loc.getLatitude());
 			double z = use3D? loc.getAltitude() : 0;
 			double d = distPointToLine(x,y,z,x1,y1,z1,x2,y2,z2);
+			
+			Log.i("Geometry","x = " + Double.toString(x) + 
+				  "  y = " + Double.toString(y) +  "  z = " + 
+				  Double.toString(z) +  "  d = " + Double.toString(d));
+			
 			if (d > eps) return false;
 		}
 		return true;
