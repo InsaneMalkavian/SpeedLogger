@@ -16,7 +16,7 @@ public class Mercator {
          if (lat > 89.5) lat = 89.5;
          else if (lat < -89.5) lat = -89.5;
          
-         double temp = R_BIG / R_SMALL;
+         double temp = R_SMALL / R_BIG;
          double es = 1.0 - (temp * temp);
          double eccent = Math.sqrt(es);
          double phi = Math.toRadians(lat);
@@ -26,16 +26,18 @@ public class Mercator {
          double ts = Math.tan(0.5 * ((0.5*Math.PI) - phi))/con;
          double y = 0 - R_BIG * Math.log(ts);
          
-         Log.i("Mercator.mercY",
-        	   "  lat = " + Double.toString(lat) + 
-        	   "  temp = " + Double.toString(temp) +
-        	   "  es = " + Double.toString(es) +
-        	   "  eccent = " + Double.toString(es) +
-        	   "  phi = " + Double.toString(phi) +
-        	   "  con = " + Double.toString(con) +
-        	   "  com = " + Double.toString(com) +
-        	   "  ts = " + Double.toString(ts) +
-        	   "  y = " + Double.toString(y));
+         if(false){
+        	 Log.i("Mercator.mercY",
+	        	   "  lat = " + Double.toString(lat) + 
+	        	   "  temp = " + Double.toString(temp) +
+	        	   "  es = " + Double.toString(es) +
+	        	   "  eccent = " + Double.toString(es) +
+	        	   "  phi = " + Double.toString(phi) +
+	        	   "  con = " + Double.toString(con) +
+	        	   "  com = " + Double.toString(com) +
+	        	   "  ts = " + Double.toString(ts) +
+	        	   "  y = " + Double.toString(y));
+         }
          
          return y;
      }

@@ -39,6 +39,8 @@ public class ResultsActivity extends Activity {
 	public void ShowResults(){
 		List<Location> mLocList = mMeasurement.GetLocations();
 		
+		// mLocList.get(3).setLatitude(10); // uncomment this to test StraightLine
+		
 		Log.i("Results Activity","Locs in path: " + Integer.toString(mLocList.size()));
 		for(int i=0; i<mLocList.size(); ++i){
 			Log.i("Results Activity", "-----\n" + "#" + Integer.toString(i) + 
