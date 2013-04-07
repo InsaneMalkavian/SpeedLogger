@@ -56,8 +56,21 @@ public class ResultsActivity extends Activity {
 			}
 		}
 		mMaxSpeed.setText(Double.toString(maxSpeed*3.6) + " kph"); // TODO: 3.6 must be a constant
+		
 		// interpolate here
-
+		Interpolator interp = new Interpolator(mLocList);
+		Location loc;
+		for(long i = mLocList.get(0).getTime(); i <= mLocList.get(mLocList.size()-1).getTime(); i += 250){
+			loc = interp.SpeedByTime(i);
+			Log.i("Results Activity", "-----\n" + "time: " + Long.toString(i) + 
+					  "  speed: " + Double.toString(loc.getSpeed()*3.6));
+		}
+		for(float i = mLocList.get(0).getSpeed(); i <= mLocList.get(mLocList.size()-1).getSpeed(); i += 0.5){
+			loc = interp.TimeBySpeed(i);
+			Log.i("Results Activity", "-----\n" + "speed: " + Double.toString(i*3.6) + 
+					  "  time: " + Long.toString(loc.getTime()));
+		}
+		
 		// distance
 		Location origin = mLocList.get(0);
 		Location dest = mLocList.get(mLocList.size()-1);
