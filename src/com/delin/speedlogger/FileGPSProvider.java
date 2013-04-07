@@ -28,8 +28,7 @@ public class FileGPSProvider extends GPSProvider {
 	@Override
 	public void Start() {
 		// run timer
-		//mTimer.start(1L * 1000);
-		mTimer.start(10);
+		mTimer.start(1L * 1000);
 	}
 
 	@Override

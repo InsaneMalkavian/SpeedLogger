@@ -12,6 +12,7 @@ public class MainScreenActivity extends Activity {
 	Button mPreferencesButton;
 	Button mLocationStatusButton;
 	Button mTestButton;
+	Button mChartPage;
 	
     /** Called when the activity is first created. */
     @Override
@@ -24,6 +25,8 @@ public class MainScreenActivity extends Activity {
         mPreferencesButton.setOnClickListener(mOnClickListener);
         mTestButton = (Button)findViewById(R.id.buttonTest);
         mTestButton.setOnClickListener(mOnClickListener);
+        mChartPage = (Button)findViewById(R.id.chartpage);
+        mChartPage.setOnClickListener(mOnClickListener);
     }
 
 	private OnClickListener mOnClickListener = new OnClickListener() {
@@ -39,6 +42,9 @@ public class MainScreenActivity extends Activity {
 	    		break;
 	    	case R.id.buttonTest: // just for test, should be removed
 	    		intent = new Intent(v.getContext(), ResultsActivity.class);
+	    		break;
+	    	case R.id.chartpage: // just for test, should be removed
+	    		intent = new Intent(v.getContext(), XYChartBuilder.class);
 	    		break;
 	    	}
 	    	if (intent != null) startActivity(intent);    		
