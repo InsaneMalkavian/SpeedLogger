@@ -37,48 +37,36 @@ public class ResultsActivity extends Activity {
 	}
 	
 	public void ShowResults(){
-		List<Location> mLocList = mMeasurement.GetLocations();
+		List<Location> locList = mMeasurement.GetLocations();
+		SessionResult result = new SessionResult(locList);
+		boolean isStraightLine = Geometry.StraightLine(locList,false);
 		
-		// uncomment this to test StraightLine
-		//mLocList.get(3).setLatitude(mLocList.get(3).getLatitude() + 0.01); 
+		mMaxSpeed.setText(Double.toString(result.mMaxSpeed*3.6) + " kph"); // TODO: 3.6 must be a constant
+		mDistance.setText(Double.toString(result.mDistance));
+		mStraightLine.setChecked(isStraightLine);
 		
-		Log.i("Results Activity","Locs in path: " + Integer.toString(mLocList.size()));
-		for(int i=0; i<mLocList.size(); ++i){
+		if(isStraightLine){
+			// Save result via ResultsManager
+		}
+		
+		Log.i("Results Activity","Locs in path: " + Integer.toString(locList.size()));
+		for(int i=0; i<locList.size(); ++i){
 			Log.i("Results Activity", "-----\n" + "#" + Integer.toString(i) + 
-				  "\n" + Logger.LocToStr(mLocList.get(i)));
+				  "\n" + Logger.LocToStr(locList.get(i)));
 		}
-		
-		// max speed  TODO: we can get maxSpeed from TrackingSession
-		float maxSpeed = mLocList.get(0).getSpeed();
-		for (int i=1; i<mLocList.size(); i++){
-			if (maxSpeed < mLocList.get(i).getSpeed()){
-				maxSpeed = mLocList.get(i).getSpeed();
-			}
-		}
-		mMaxSpeed.setText(Double.toString(maxSpeed*3.6) + " kph"); // TODO: 3.6 must be a constant
-		
-		// interpolate here
-		Interpolator interp = new Interpolator(mLocList);
+		// TODO: make use of interpolation; now it only shows values
+		Interpolator interp = new Interpolator(locList);
 		Location loc;
-		for(long i = mLocList.get(0).getTime(); i <= mLocList.get(mLocList.size()-1).getTime(); i += 250){
+		for(long i = locList.get(0).getTime(); i <= locList.get(locList.size()-1).getTime(); i += 250){
 			loc = interp.SpeedByTime(i);
 			Log.i("Results Activity", "-----\n" + "time: " + Long.toString(i) + 
 					  "  speed: " + Double.toString(loc.getSpeed()*3.6));
 		}
-		for(float i = mLocList.get(0).getSpeed(); i <= mLocList.get(mLocList.size()-1).getSpeed(); i += 0.5){
+		for(float i = locList.get(0).getSpeed(); i <= locList.get(locList.size()-1).getSpeed(); i += 0.5){
 			loc = interp.TimeBySpeed(i);
 			Log.i("Results Activity", "-----\n" + "speed: " + Double.toString(i*3.6) + 
 					  "  time: " + Long.toString(loc.getTime()));
 		}
-		
-		// distance
-		Location origin = mLocList.get(0);
-		Location dest = mLocList.get(mLocList.size()-1);
-		//double distance = origin.distanceTo(dest);   // returns 87.4m
-		double distance = Geometry.DistBetweenLocs(origin,dest,false); // return 156m
-		mDistance.setText(Double.toString(distance));
-		
-		mStraightLine.setChecked(Geometry.StraightLine(mLocList,false));
 	}
 	
 	private void TestFunc(String input) {

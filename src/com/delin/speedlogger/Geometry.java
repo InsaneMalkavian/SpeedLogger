@@ -38,8 +38,7 @@ public class Geometry {
 		// TODO: 2 better be replaced with something
 		if (locList.size() <= 2) return true;
 		
-		//Location origin = locList.get(0);
-		Location origin = locList.get(1);
+		Location origin = locList.get(0);
 		Location dest = locList.get(locList.size()-1);
 			
 		// lat/lon to UTM convert is necessary to perform line calculus
@@ -71,7 +70,7 @@ public class Geometry {
 		return true;
 	}
 	
-	public static double DistBetweenLocs(Location loc1, Location loc2, boolean use3D){
+	public static float DistBetweenLocs(Location loc1, Location loc2, boolean use3D){
 		double x1 = Mercator.mercX(loc1.getLatitude ());
 		double y1 = Mercator.mercY(loc1.getLongitude());
 		double z1 = use3D? loc1.getAltitude() : 0;
@@ -79,6 +78,6 @@ public class Geometry {
 		double y2 = Mercator.mercY(loc2.getLongitude ());
 		double z2 = use3D? loc2.getAltitude() : 0;
 		
-		return Math.sqrt(sqrDistPointToPoint3D(x1,y1,z1,x2,y2,z2));
+		return (float) Math.sqrt(sqrDistPointToPoint3D(x1,y1,z1,x2,y2,z2));
 	}
 }
