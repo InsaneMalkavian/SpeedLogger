@@ -34,5 +34,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ChartPage" />
+
+    <Button
+        android:id="@+id/buttonLocalTimes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LocalTimes" />
 
 </LinearLayout>

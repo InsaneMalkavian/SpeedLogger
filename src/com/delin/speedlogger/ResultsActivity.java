@@ -3,6 +3,7 @@ package com.delin.speedlogger;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.widget.CheckBox;
@@ -16,15 +17,18 @@ public class ResultsActivity extends Activity {
 	TextView mMaxSpeed;
 	TextView mDistance;
 	CheckBox mStraightLine;
-	Button mButton;
+	Button mLocalTimesButton;
 	String testline = "origin";
 	MeasurementResult mMeasurement;
+	
+	// TODO: Do not create activity every time. 
+	// Because it creates similar session results every time we came here 
 	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.results);
-		mButton = (Button)findViewById(R.id.button1);
-		mButton.setOnClickListener(mOnClickListener);
+		mLocalTimesButton = (Button)findViewById(R.id.buttonLocalTimes);
+		mLocalTimesButton.setOnClickListener(mOnClickListener);
 		mMaxSpeed = (TextView)findViewById(R.id.textMaxSpeed);
 		mMaxSpeed.setText(testline);
 		mDistance = (TextView)findViewById(R.id.textDistance);
@@ -38,6 +42,10 @@ public class ResultsActivity extends Activity {
 	
 	public void ShowResults(){
 		List<Location> locList = mMeasurement.GetLocations();
+		if(locList.size() < 2){
+			ShowZeroResults();
+			return;
+		}
 		SessionResult result = new SessionResult(locList);
 		boolean isStraightLine = Geometry.StraightLine(locList,false);
 		
@@ -47,6 +55,7 @@ public class ResultsActivity extends Activity {
 		
 		if(isStraightLine){
 			// Save result via ResultsManager
+			ResultsManager.GetInstance().AddResult(result);
 		}
 		
 		Log.i("Results Activity","Locs in path: " + Integer.toString(locList.size()));
@@ -69,17 +78,21 @@ public class ResultsActivity extends Activity {
 		}
 	}
 	
-	private void TestFunc(String input) {
-		input = "hardcode";
+	void ShowZeroResults() {
+		mMaxSpeed.setText("0 kph");
+		mDistance.setText("0 m");
+		mStraightLine.setChecked(false);
 	}
 	
     private OnClickListener mOnClickListener = new OnClickListener() {
         public void onClick(View v) {
-        	TestFunc(testline);
-        	mMaxSpeed.setText(testline);
-        	mStraightLine.setChecked(!mStraightLine.isChecked());
-        	mStraightLine.setText("hello kitty");
-        	
+        	Intent intent = null;
+	    	switch (v.getId()) {
+	    	case R.id.buttonLocalTimes:
+	    		intent = new Intent(v.getContext(), LocalTimesActivity.class);
+	    		break;
+	    	}
+	    	if (intent != null) startActivity(intent);   
         }
     };
 }

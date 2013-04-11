@@ -11,6 +11,9 @@ public class SessionResult {
 	long mDuration   = 0;
 	private List<Location> mLocList;
 	
+	public SessionResult() {
+	}
+	
 	public SessionResult(List<Location> locList) {
 		mLocList = new ArrayList<Location>(locList);
 		Location origin = mLocList.get(0);
@@ -27,7 +30,7 @@ public class SessionResult {
 		//mDistance = origin.distanceTo(dest);   // returns 87.4m
 		mDistance = Geometry.DistBetweenLocs(origin,dest,false); // returns 156m
 	}
-	
+
 	public List<Location> GetLocations() {
 		if(mLocList != null) return mLocList;
 		else{

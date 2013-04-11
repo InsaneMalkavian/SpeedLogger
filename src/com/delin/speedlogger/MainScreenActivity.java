@@ -13,6 +13,9 @@ public class MainScreenActivity extends Activity {
 	Button mLocationStatusButton;
 	Button mTestButton;
 	Button mChartPage;
+	Button mLocalTimesButton;
+	
+	ResultsManager mResultsManager; // initialization of RM. it loads data now
 	
     /** Called when the activity is first created. */
     @Override
@@ -27,6 +30,8 @@ public class MainScreenActivity extends Activity {
         mTestButton.setOnClickListener(mOnClickListener);
         mChartPage = (Button)findViewById(R.id.chartpage);
         mChartPage.setOnClickListener(mOnClickListener);
+        mLocalTimesButton = (Button)findViewById(R.id.buttonLocalTimes);
+        mLocalTimesButton.setOnClickListener(mOnClickListener);
     }
 
 	private OnClickListener mOnClickListener = new OnClickListener() {
@@ -45,6 +50,9 @@ public class MainScreenActivity extends Activity {
 	    		break;
 	    	case R.id.chartpage: // just for test, should be removed
 	    		intent = new Intent(v.getContext(), XYChartBuilder.class);
+	    		break;
+	    	case R.id.buttonLocalTimes:
+	    		intent = new Intent(v.getContext(), LocalTimesActivity.class);
 	    		break;
 	    	}
 	    	if (intent != null) startActivity(intent);    		

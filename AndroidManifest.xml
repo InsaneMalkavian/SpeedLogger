@@ -3,29 +3,45 @@
     package="com.delin.speedlogger"
     android:settingsActivity=".PreferencesActivity"
     android:versionCode="1"
-    android:versionName="1.0" ><uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="8"/>
-    
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    android:versionName="1.0" >
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="8" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-        <activity android:name=".MainScreenActivity">
+        <activity android:name=".MainScreenActivity" >
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-</activity><activity android:name=".SpeedLoggerActivity" android:label="@string/app_name">
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-        
-        <activity android:name=".PreferencesActivity">
+        <activity
+            android:name=".SpeedLoggerActivity"
+            android:label="@string/app_name" >
         </activity>
-        <activity android:name=".ResultsActivity">
+        <activity android:name=".PreferencesActivity" >
         </activity>
-        <activity android:name=".XYChartBuilder">
+        <activity android:name=".ResultsActivity" >
         </activity>
-        
+        <activity android:name=".XYChartBuilder" >
+        </activity>
+        <activity
+            android:name=".LocalTimesActivity"
+            android:label="@string/title_activity_local_times" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -6,5 +6,8 @@
     <string name="CarBrand">Brand</string>
     <string name="CarModel">Model</string>
     <string name="CarEnginePower">Engine power</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_local_times">LocalTimesActivity</string>
 
 </resources>
