@@ -7,7 +7,7 @@ import android.location.Location;
 // uses Cubic Spline interpolation
 // based on http://www.jarvana.com/jarvana/view/org/rrd4j/rrd4j/2.0.7/rrd4j-2.0.7-sources.jar!/org/rrd4j/data/CubicSplineInterpolator.java?format=ok
 public class Interpolator {
-	private static final String provider =			"Interpolator";
+	private static final String provider = "Interpolator";
 	
 	private double[] time;
 	private double[] speed;

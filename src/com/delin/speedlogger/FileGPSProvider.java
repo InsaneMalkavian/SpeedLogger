@@ -1,8 +1,5 @@
 package com.delin.speedlogger;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
@@ -18,7 +15,6 @@ public class FileGPSProvider extends GPSProvider {
 		mTimer = new Timer(new Runnable() {
 			@Override
 		     public void run() {
-		    	//Location loc = mGPXReader.GetDummyFix();
 				Location loc = mGPXReader.GetFix();
 		    	mListener.onLocationChanged(loc);
 		    };

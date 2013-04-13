@@ -194,11 +194,11 @@ public class TrackingSession implements LocationListener {
 			break;
 		case TRACKING:
 			Log.i("TrackingSession", "Tracking, go-go-go");
-			if (false/*location.getAccuracy()>HOR_ACCURACY*/)
+			/*if (false)//location.getAccuracy()>HOR_ACCURACY)
 			{ // in case of overflow or bad fix stop trackingSessionDone
 				SessionDone();
 			}
-			else if (location.hasSpeed()== false || location.getSpeed()<mMaxSpeed*MAX_SPEED_MULTIPLY_THRESHOLD
+			else */if (location.hasSpeed()== false || location.getSpeed()<mMaxSpeed*MAX_SPEED_MULTIPLY_THRESHOLD
 					|| mLocList.size()>=MAX_LOC_COUNT)
 			{ // good stop, there is no difference with bad stop
 				SessionDone();
