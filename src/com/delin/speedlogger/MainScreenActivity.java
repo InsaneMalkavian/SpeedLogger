@@ -15,7 +15,7 @@ public class MainScreenActivity extends Activity {
 	Button mChartPage;
 	Button mLocalTimesButton;
 	
-	ResultsManager mResultsManager; // initialization of RM. it loads data now
+	ResultsManager mResultsManager;
 	
     /** Called when the activity is first created. */
     @Override
@@ -32,6 +32,9 @@ public class MainScreenActivity extends Activity {
         mChartPage.setOnClickListener(mOnClickListener);
         mLocalTimesButton = (Button)findViewById(R.id.buttonLocalTimes);
         mLocalTimesButton.setOnClickListener(mOnClickListener);
+        
+        mResultsManager = ResultsManager.GetInstance();
+        mResultsManager.Init(this); // it loads data now
     }
 
 	private OnClickListener mOnClickListener = new OnClickListener() {
