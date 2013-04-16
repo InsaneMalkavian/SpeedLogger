@@ -21,8 +21,6 @@ public class ResultsActivity extends Activity {
 	String testline = "origin";
 	MeasurementResult mMeasurement;
 	
-	// TODO: Do not create activity every time. 
-	// Because it creates similar session results every time we came here 
 	
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -37,10 +35,11 @@ public class ResultsActivity extends Activity {
 		mMeasurement = MeasurementResult.GetInstance();
 		mMeasurement.SaveToGPX("/mnt/sdcard/textlog.gpx");
 		
-		ShowResults();
+		// if activity just created, not restored by system
+		if(savedInstanceState == null) HandleResults();
 	}
 	
-	public void ShowResults(){
+	public void HandleResults(){
 		List<Location> locList = mMeasurement.GetLocations();
 		if(locList.size() < 2){
 			ShowZeroResults();
