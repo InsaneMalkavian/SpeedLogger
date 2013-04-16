@@ -4,7 +4,12 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -12,6 +17,8 @@ import android.widget.TextView;
 public class LocalTimesActivity extends Activity {
 	TableLayout mHeaderTable;
 	TableLayout mValuesTable;
+	List<SessionResult> mResults;
+	Button mClearButton;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -19,7 +26,8 @@ public class LocalTimesActivity extends Activity {
         setContentView(R.layout.activity_local_times);
         mHeaderTable = (TableLayout)findViewById(R.id.TableLayout1); // TODO: name me well
         mValuesTable = (TableLayout)findViewById(R.id.TableLayout2);
-        
+        mClearButton = (Button)findViewById(R.id.buttonClearDatabase);
+        mClearButton.setOnClickListener(mOnClickListener);
         ShowLocalResults();
     }
 
@@ -30,25 +38,41 @@ public class LocalTimesActivity extends Activity {
     }
     
     void ShowLocalResults() {
-    	List<SessionResult> results = ResultsManager.GetInstance().GetResults();
-    	
+    	mResults = ResultsManager.GetInstance().GetResults();
+    	mValuesTable.removeViews(1, mValuesTable.getChildCount()-1);
     	TableRow row;
     	TextView text;
-    	for(int i = 0; i<results.size(); ++i){
+    	for(int i = 0; i<mResults.size(); ++i){
     		row = new TableRow(this);
+    		row.setId(i);
+    		row.setOnClickListener(mOnClickListener);
     		text = new TextView(this);
-            text.setText(Long.toString(results.get(i).mStartTime));
+            text.setText(Long.toString(mResults.get(i).mStartTime));
             row.addView(text);
             text = new TextView(this);
-            text.setText(Float.toString(results.get(i).mDistance));
+            text.setText(Float.toString(mResults.get(i).mDistance));
             row.addView(text);
             text = new TextView(this);
-            text.setText(Float.toString(results.get(i).mMaxSpeed));
+            text.setText(Float.toString(mResults.get(i).mMaxSpeed));
             row.addView(text);
             text = new TextView(this);
-            text.setText(Long.toString(results.get(i).mDuration));
+            text.setText(Long.toString(mResults.get(i).mDuration));
             row.addView(text);
             mValuesTable.addView(row);
     	}
     }
+    
+    private OnClickListener mOnClickListener = new OnClickListener() {
+        public void onClick(View v) {
+        	if(v.getId() == R.id.buttonClearDatabase){
+        		ResultsManager.GetInstance().ClearLocalResults();
+        		ShowLocalResults();
+        	}
+        	else{
+        		SessionResult result = mResults.get(v.getId());
+        		Log.i("LocalTimesActivity", result.GetLocations().toString());
+        		// TODO: here we go to the result details page (chart + stuff)
+        	}
+        }
+    };
 }

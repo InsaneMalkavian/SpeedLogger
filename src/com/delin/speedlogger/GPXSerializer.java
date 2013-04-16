@@ -2,7 +2,9 @@ package com.delin.speedlogger;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -87,10 +89,44 @@ public class GPXSerializer {
 	}
 	
 	public Location GetFix() {
-		Location loc = new Location("test"); // TODO
+		if(mList==null || mList.getLength()==0) return null;
 		if (mGPSFixNumber==mList.getLength()) mGPSFixNumber=0;
 		Node nNode = mList.item(mGPSFixNumber++);
 		//System.out.println("\nCurrent Element :" + nNode.getNodeName());		 
+		return NodeToLoc(nNode);
+	}
+	
+	public List<Location> GetAllFixes() {
+		List<Location> locList = new ArrayList<Location>();
+		if(mList!=null && mList.getLength()>0){
+			Node nNode;
+			for(int i=0; i<mList.getLength(); ++i) {
+				nNode = mList.item(i);
+				locList.add(NodeToLoc(nNode));
+			}
+		}
+		return locList;
+	}
+	
+	public void SaveAllFixes(List<Location> locList) {
+		for(int i=0; i<locList.size(); ++i){
+			AddFix(locList.get(i));
+		}
+	}
+	
+	public Location GetDummyFix() {
+		Location loc = new Location("test"); // TODO
+		loc.setLatitude(5.); // we assume lat/lon is always with us
+		loc.setLongitude(7.);
+		loc.setSpeed((float) 4.);
+		loc.setAltitude(2.);
+		loc.setAccuracy((float) 12.);			
+		loc.setBearing((float) 6.);
+		return loc;
+	}
+	
+	private Location NodeToLoc(Node nNode) {
+		Location loc = new Location("test"); // TODO
 		if (nNode.getNodeType() == Node.ELEMENT_NODE) {		 
 			Element eElement = (Element) nNode;
 			loc.setLatitude(Float.parseFloat(eElement.getAttribute(LATITUDE))); // we assume lat/lon is always with us
@@ -106,17 +142,6 @@ public class GPXSerializer {
 				e.printStackTrace();
 			}		
 		}
-		return loc;
-	}
-	
-	public Location GetDummyFix() {
-		Location loc = new Location("test"); // TODO
-		loc.setLatitude(5.); // we assume lat/lon is always with us
-		loc.setLongitude(7.);
-		loc.setSpeed((float) 4.);
-		loc.setAltitude(2.);
-		loc.setAccuracy((float) 12.);			
-		loc.setBearing((float) 6.);
 		return loc;
 	}
 	

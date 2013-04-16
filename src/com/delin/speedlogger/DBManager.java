@@ -74,6 +74,13 @@ public class DBManager extends SQLiteOpenHelper {
 	    Log.i("DBManager", "GetSessionResults()");
 	    return results;
 	}
+	
+	public void ClearLocalResults() {
+		String sql = "delete from " + LOCAL_RESULTS;
+		SQLiteDatabase db = getWritableDatabase(PASSWORD);
+		db.execSQL(sql);
+		db.close();
+	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

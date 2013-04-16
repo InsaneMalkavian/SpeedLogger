@@ -10,7 +10,7 @@ import android.content.Context;
 public class ResultsManager {
 	List<SessionResult> mResults = new ArrayList<SessionResult>();
 	private Context mContext;
-	private DBManager db;
+	private DBManager mDatabase;
 	
 	private static final ResultsManager instance = new ResultsManager();    
 	private ResultsManager() {}
@@ -18,7 +18,7 @@ public class ResultsManager {
 	public void Init(Context context) {
 		mContext = context;
 		SQLiteDatabase.loadLibs(mContext);
-		db = new DBManager(mContext);
+		mDatabase = new DBManager(mContext);
 		LoadData();
 	}
 	
@@ -28,7 +28,8 @@ public class ResultsManager {
 	
 	public void AddResult(SessionResult result) {
 		mResults.add(result);
-		db.InsertSessionResult(result);
+		mDatabase.InsertSessionResult(result);
+		result.SaveGPX();
 	}
 	
 	public List<SessionResult> GetResults() {
@@ -36,7 +37,7 @@ public class ResultsManager {
 	}
 	
 	private void LoadData() {	
-		mResults = db.GetSessionResults();
+		mResults = mDatabase.GetSessionResults();
 		// if database is empty use hardcoded values
 		// TODO: delete after debug
 		if(mResults.isEmpty()) LoadDummyData();
@@ -63,6 +64,11 @@ public class ResultsManager {
 		result.mDistance = 400;
 		result.mDuration = 150;
 		AddResult(result);
+	}
+	
+	public void ClearLocalResults() {
+		mDatabase.ClearLocalResults();
+		mResults.clear();
 	}
 
 }
