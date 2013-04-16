@@ -228,28 +228,30 @@ public class GPXSerializer {
 	public void Stop() {
 		if (!mStopped) { // once stopped do nothing
 			mStopped=true;
-			// write the content into xml file
-			File mFile = new File(mFilename);
-			try {
-				// if file doesn't exists, then create it
-				if (!mFile.exists()) {
-					mFile.createNewFile();
+			if(mWriteMode){
+				// write the content into xml file
+				File mFile = new File(mFilename);
+				try {
+					// if file doesn't exists, then create it
+					if (!mFile.exists()) {
+						mFile.createNewFile();
+					}
 				}
-			}
-			catch(Exception e) {
-				return;
-			}
-			try {
-				TransformerFactory transformerFactory = TransformerFactory.newInstance();
-				Transformer transformer = transformerFactory.newTransformer();
-				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-				DOMSource source = new DOMSource(mDoc);
-				StreamResult result = new StreamResult(mFile);
-				transformer.transform(source, result);
-				System.out.println("File saved!");
-			}
-			catch(TransformerException tfe) {
-				tfe.printStackTrace();
+				catch(Exception e) {
+					return;
+				}
+				try {
+					TransformerFactory transformerFactory = TransformerFactory.newInstance();
+					Transformer transformer = transformerFactory.newTransformer();
+					transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+					DOMSource source = new DOMSource(mDoc);
+					StreamResult result = new StreamResult(mFile);
+					transformer.transform(source, result);
+					System.out.println("File saved!");
+				}
+				catch(TransformerException tfe) {
+					tfe.printStackTrace();
+				}
 			}
 		}
 	}
