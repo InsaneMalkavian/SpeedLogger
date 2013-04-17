@@ -1,10 +1,13 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.Activities;
 
 import java.util.List;
 
+import com.delin.speedlogger.R;
+import com.delin.speedlogger.Results.ResultsManager;
+import com.delin.speedlogger.Results.SessionResult;
+
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;

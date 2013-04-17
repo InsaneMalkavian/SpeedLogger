@@ -1,7 +1,14 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.Activities;
 
 import java.util.List;
 
+import com.delin.speedlogger.R;
+import com.delin.speedlogger.Math.Geometry;
+import com.delin.speedlogger.Math.Interpolator;
+import com.delin.speedlogger.Results.ResultsManager;
+import com.delin.speedlogger.Results.SessionResult;
+import com.delin.speedlogger.TrackingSession.MeasurementResult;
+import com.delin.speedlogger.Utils.Logger;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;

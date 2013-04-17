@@ -1,8 +1,8 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.TrackingSession;
 
 import java.util.List;
 
-import com.delin.speedlogger.TrackingSession.WarmupState;
+import com.delin.speedlogger.TrackingSession.TrackingSession.WarmupState;
 
 import android.location.Location;
 

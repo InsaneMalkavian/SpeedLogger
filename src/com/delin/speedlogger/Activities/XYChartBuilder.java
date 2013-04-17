@@ -1,4 +1,4 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.Activities;
 
 import java.io.File;
 import java.io.FileOutputStream;

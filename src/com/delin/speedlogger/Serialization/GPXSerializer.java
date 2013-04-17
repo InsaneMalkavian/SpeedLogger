@@ -1,4 +1,4 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.Serialization;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

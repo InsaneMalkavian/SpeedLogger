@@ -1,4 +1,7 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.Activities;
+
+import com.delin.speedlogger.R;
+import com.delin.speedlogger.Results.ResultsManager;
 
 import android.app.Activity;
 import android.content.Intent;

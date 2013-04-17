@@ -1,7 +1,9 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.Serialization;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.delin.speedlogger.Results.SessionResult;
 
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteOpenHelper;

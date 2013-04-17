@@ -1,4 +1,6 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.Activities;
+
+import com.delin.speedlogger.R;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;

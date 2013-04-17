@@ -1,8 +1,10 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.TrackingSession;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.delin.speedlogger.Serialization.GPXSerializer;
 
 import android.location.Location;
 

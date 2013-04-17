@@ -1,9 +1,13 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.Activities;
 
 import java.util.List;
 
 import com.delin.speedlogger.R;
-import com.delin.speedlogger.TrackingSession.WarmupState;
+import com.delin.speedlogger.TrackingSession.MeasurementResult;
+import com.delin.speedlogger.TrackingSession.TrackingSession;
+import com.delin.speedlogger.TrackingSession.TrackingSessionListener;
+import com.delin.speedlogger.TrackingSession.TrackingSession.WarmupState;
+import com.delin.speedlogger.Utils.Logger;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -75,7 +79,6 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	@Override
 	public void onSessionFinished(List<Location> mLocList) {
 		mMeasurement.SetLocations(mLocList);
-		// TODO: maybe we can create it only once
 		Intent intent = new Intent(this, ResultsActivity.class);
 		startActivity(intent);	
 	}

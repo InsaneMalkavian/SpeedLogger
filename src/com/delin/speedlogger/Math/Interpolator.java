@@ -1,4 +1,4 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.Math;
 
 import java.util.List;
 

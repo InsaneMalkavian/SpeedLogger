@@ -1,4 +1,4 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.Utils;
 
 import android.location.Location;
 

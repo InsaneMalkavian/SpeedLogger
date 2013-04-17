@@ -1,14 +1,18 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.Results;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.delin.speedlogger.Math.Geometry;
+import com.delin.speedlogger.Serialization.GPXSerializer;
+
 import android.location.Location;
 
 public class SessionResult {
-	long mStartTime  = 0;
-	float mMaxSpeed  = 0;
-	float mDistance  = 0; // meters
-	long mDuration   = 0;
+	public long mStartTime  = 0;
+	public float mMaxSpeed  = 0;
+	public float mDistance  = 0; // meters
+	public long mDuration   = 0;
 	private List<Location> mLocList;
 	
 	public SessionResult() {

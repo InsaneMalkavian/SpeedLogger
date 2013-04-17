@@ -1,8 +1,12 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.TrackingSession;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+
+import com.delin.speedlogger.GPS.FileGPSProvider;
+import com.delin.speedlogger.GPS.GPSProvider;
+import com.delin.speedlogger.Serialization.GPXSerializer;
 import android.location.*;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,7 +14,7 @@ import android.content.Context;
 
 public class TrackingSession implements LocationListener {
 	enum TrackingState { WARMUP, READY, TRACKING, ERROR, DONE, IDLE }
-	enum WarmupState { WAITING_FIX, HIGH_SPEED }
+	public enum WarmupState { WAITING_FIX, HIGH_SPEED }
 	
 	final static String UNCERT_LOC = "uncertainty";
 	final static int MAX_LOC_COUNT = 300; // 300/60 fixes per minute = 5 min

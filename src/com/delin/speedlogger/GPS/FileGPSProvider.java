@@ -1,4 +1,7 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.GPS;
+
+import com.delin.speedlogger.Serialization.GPXSerializer;
+import com.delin.speedlogger.Utils.Timer;
 
 import android.content.Context;
 import android.location.Location;

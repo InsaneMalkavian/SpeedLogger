@@ -1,4 +1,4 @@
-package com.delin.speedlogger;
+package com.delin.speedlogger.GPS;
 
 import android.content.Context;
 import android.location.LocationListener;
