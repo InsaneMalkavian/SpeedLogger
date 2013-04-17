@@ -43,14 +43,14 @@ public class SessionResult {
 	
 	public void SaveGPX() {
 		if(mLocList == null || mLocList.size() < 2) return;
-		String filename = "/mnt/sdcard/" + Long.toString(mStartTime) + ".gpx";
+		String filename = Long.toString(mStartTime) + ".gpx";
 		GPXSerializer gpxLog = new GPXSerializer(filename, true);
 		gpxLog.SaveAllFixes(mLocList);
 		gpxLog.Stop();
 	}
 	
 	private void LoadGPX() {
-		String filename = "/mnt/sdcard/" + Long.toString(mStartTime) + ".gpx";
+		String filename = Long.toString(mStartTime) + ".gpx";
 		GPXSerializer gpxLog = new GPXSerializer(filename, false);
 		mLocList = gpxLog.GetAllFixes();
 		// HINT: we can check gpx data here to prevent hacks

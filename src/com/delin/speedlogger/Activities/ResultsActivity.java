@@ -9,6 +9,7 @@ import com.delin.speedlogger.Results.ResultsManager;
 import com.delin.speedlogger.Results.SessionResult;
 import com.delin.speedlogger.TrackingSession.MeasurementResult;
 import com.delin.speedlogger.Utils.Logger;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
@@ -40,7 +41,7 @@ public class ResultsActivity extends Activity {
         mStraightLine = (CheckBox)findViewById(R.id.cbStraightLine);
 		
 		mMeasurement = MeasurementResult.GetInstance();
-		mMeasurement.SaveToGPX("/mnt/sdcard/textlog.gpx");
+		mMeasurement.SaveToGPX("textlog.gpx");
 		
 		// if activity just created, not restored by system
 		if(savedInstanceState == null) HandleResults();
@@ -59,8 +60,7 @@ public class ResultsActivity extends Activity {
 		mDistance.setText(Double.toString(result.mDistance) + " m");
 		mStraightLine.setChecked(isStraightLine);
 		
-		if(isStraightLine){
-			// Save result via ResultsManager
+		if(isStraightLine){ // Save result via ResultsManager
 			ResultsManager.GetInstance().AddResult(result);
 		}
 		

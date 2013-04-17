@@ -49,11 +49,13 @@ public class GPXSerializer {
 	static final String TIMEPATTERN = 		"yyyy-MM-dd'T'HH:mm:ss'Z'";
 	static final String TIMEPATTERN_FILE = 	"yyyy-MM-dd_HH-mm-ss";
 	static final String FILE_EXTENSION = 	".gpx";
+	static final String STORAGE_DIR = 		Environment.getExternalStorageDirectory().getPath()
+											+"/"+CREATOR_VALUE;
 	
-	static final long SEGMENT_TIME_INTERVAL=5000; // milliseconds
+	static final long SEGMENT_TIME_INTERVAL = 5000; // milliseconds
 	
-	boolean mStopped=false;
-	boolean mWriteMode;
+	boolean mStopped = false;
+	boolean mWriteMode = true;
 	
 	String mFilename = null;
 	DocumentBuilderFactory docFactory = null;
@@ -70,41 +72,39 @@ public class GPXSerializer {
 	NodeList mList; // location list from file
 	
 	public GPXSerializer() {
-		mWriteMode= true; // only write allowed without valid filename
 		SimpleDateFormat dateFormat = new SimpleDateFormat(TIMEPATTERN_FILE);
-		String filename = Environment.getExternalStorageDirectory().getPath()+"/"+CREATOR_VALUE;
-		mLastAddedLocTime=0;
-		
-		File dir = new File(filename); // create app directory
-		dir.mkdir();
-		
-		filename+=("/"+dateFormat.format(new Date()));
-		filename+=FILE_EXTENSION;
-		Initialize(filename);
+		mFilename = STORAGE_DIR+"/"+dateFormat.format(new Date())+FILE_EXTENSION;
+		mLastAddedLocTime = 0;
+		Initialize();
 	}
 	
-	public GPXSerializer(final String filename, boolean write) {
+	public GPXSerializer(String filename, boolean write) {
+		mFilename = STORAGE_DIR + "/" + filename;
 		mWriteMode = write;
-		Initialize(filename);
+		Initialize();
 	}
 	
 	public Location GetFix() {
-		if(mList==null || mList.getLength()==0) return null;
-		if (mGPSFixNumber==mList.getLength()) mGPSFixNumber=0;
-		Node nNode = mList.item(mGPSFixNumber++);
-		//System.out.println("\nCurrent Element :" + nNode.getNodeName());		 
-		return NodeToLoc(nNode);
+		try{
+			if (mGPSFixNumber==mList.getLength()) mGPSFixNumber=0;
+			Node nNode = mList.item(mGPSFixNumber++);
+			//System.out.println("\nCurrent Element :" + nNode.getNodeName());
+			return NodeToLoc(nNode);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}	
 	}
 	
 	public List<Location> GetAllFixes() {
 		List<Location> locList = new ArrayList<Location>();
-		if(mList!=null && mList.getLength()>0){
+		try{
 			Node nNode;
 			for(int i=0; i<mList.getLength(); ++i) {
 				nNode = mList.item(i);
 				locList.add(NodeToLoc(nNode));
 			}
-		}
+		} catch(Exception e){ e.printStackTrace();}
 		return locList;
 	}
 	
@@ -112,17 +112,6 @@ public class GPXSerializer {
 		for(int i=0; i<locList.size(); ++i){
 			AddFix(locList.get(i));
 		}
-	}
-	
-	public Location GetDummyFix() {
-		Location loc = new Location("test"); // TODO
-		loc.setLatitude(5.); // we assume lat/lon is always with us
-		loc.setLongitude(7.);
-		loc.setSpeed((float) 4.);
-		loc.setAltitude(2.);
-		loc.setAccuracy((float) 12.);			
-		loc.setBearing((float) 6.);
-		return loc;
 	}
 	
 	private Location NodeToLoc(Node nNode) {
@@ -231,11 +220,11 @@ public class GPXSerializer {
 			if(mWriteMode){
 				// write the content into xml file
 				File mFile = new File(mFilename);
+				File mDir = mFile.getParentFile();
 				try {
 					// if file doesn't exists, then create it
-					if (!mFile.exists()) {
-						mFile.createNewFile();
-					}
+					if(!mDir.exists()) mDir.mkdirs(); // create all needed dirs
+					if (!mFile.exists()) mFile.createNewFile();
 				}
 				catch(Exception e) {
 					return;
@@ -260,9 +249,8 @@ public class GPXSerializer {
 		Stop();
 	}
 	
-	private void Initialize(final String filename) {
+	private void Initialize() {
 		mDateFormat = new SimpleDateFormat(TIMEPATTERN);
-		mFilename = filename;
 		docFactory = DocumentBuilderFactory.newInstance();
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
@@ -270,15 +258,14 @@ public class GPXSerializer {
 			e.printStackTrace();
 		}
 		if (mWriteMode)	NewDocument();
-		else PrepareToRead(filename);
+		else PrepareToRead();
 	}	
 
-	private void PrepareToRead(final String filename) {
+	private void PrepareToRead() {
 		try {
-			mDoc = docBuilder.parse(new File(filename));
+			mDoc = docBuilder.parse(new File(mFilename));
 			mList = mDoc.getElementsByTagName(TRKPOINT_STR);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

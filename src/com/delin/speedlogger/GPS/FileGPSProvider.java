@@ -14,7 +14,7 @@ public class FileGPSProvider extends GPSProvider {
 
 	public FileGPSProvider(Context context, LocationListener listener) {
 		super(context, listener);
-		mGPXReader = new GPXSerializer("/mnt/sdcard/default.gpx", false);
+		mGPXReader = new GPXSerializer("default.gpx", false);
 		mTimer = new Timer(new Runnable() {
 			@Override
 		     public void run() {
