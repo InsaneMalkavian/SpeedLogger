@@ -52,16 +52,16 @@ public class LocalTimesActivity extends Activity {
     		row.setId(i);
     		row.setOnClickListener(mOnClickListener);
     		text = new TextView(this);
-            text.setText(Long.toString(mResults.get(i).mStartTime));
+            text.setText(Long.toString(mResults.get(i).getStartTime()));
             row.addView(text);
             text = new TextView(this);
-            text.setText(Float.toString(mResults.get(i).mDistance));
+            text.setText(Float.toString(mResults.get(i).getDistance()));
             row.addView(text);
             text = new TextView(this);
-            text.setText(Float.toString(mResults.get(i).mMaxSpeed));
+            text.setText(Float.toString(mResults.get(i).getMaxSpeed()));
             row.addView(text);
             text = new TextView(this);
-            text.setText(Long.toString(mResults.get(i).mDuration));
+            text.setText(Long.toString(mResults.get(i).getDuration()));
             row.addView(text);
             mValuesTable.addView(row);
     	}
@@ -75,7 +75,7 @@ public class LocalTimesActivity extends Activity {
         	}
         	else{
         		SessionResult result = mResults.get(v.getId());
-        		Log.i("LocalTimesActivity", result.GetLocations().toString());
+        		Log.i("LocalTimesActivity", result.getLocations().toString());
         		// TODO: here we go to the result details page (chart + stuff)
         	}
         }

@@ -8,6 +8,7 @@ import com.delin.speedlogger.Math.Interpolator;
 import com.delin.speedlogger.Results.ResultsManager;
 import com.delin.speedlogger.Results.SessionResult;
 import com.delin.speedlogger.TrackingSession.MeasurementResult;
+import com.delin.speedlogger.Utils.Converter;
 import com.delin.speedlogger.Utils.Logger;
 
 import android.app.Activity;
@@ -56,8 +57,9 @@ public class ResultsActivity extends Activity {
 		SessionResult result = new SessionResult(locList);
 		boolean isStraightLine = Geometry.StraightLine(locList,false);
 		
-		mMaxSpeed.setText(Double.toString(result.mMaxSpeed*3.6) + " kph"); // TODO: 3.6 must be a constant
-		mDistance.setText(Double.toString(result.mDistance) + " m");
+		float maxSpeed = Converter.ms2kph(result.getMaxSpeed());
+		mMaxSpeed.setText(Double.toString(maxSpeed) + " kph");
+		mDistance.setText(Double.toString(result.getDistance()) + " m");
 		mStraightLine.setChecked(isStraightLine);
 		
 		if(isStraightLine){ // Save result via ResultsManager
@@ -75,11 +77,11 @@ public class ResultsActivity extends Activity {
 		for(long i = locList.get(0).getTime(); i <= locList.get(locList.size()-1).getTime(); i += 250){
 			loc = interp.SpeedByTime(i);
 			Log.i("Results Activity", "-----\n" + "time: " + Long.toString(i) + 
-					  "  speed: " + Double.toString(loc.getSpeed()*3.6));
+					  "  speed: " + Double.toString(Converter.ms2kph(loc.getSpeed())));
 		}
 		for(float i = locList.get(0).getSpeed(); i <= locList.get(locList.size()-1).getSpeed(); i += 0.5){
 			loc = interp.TimeBySpeed(i);
-			Log.i("Results Activity", "-----\n" + "speed: " + Double.toString(i*3.6) + 
+			Log.i("Results Activity", "-----\n" + "speed: " + Double.toString(Converter.ms2kph(i)) + 
 					  "  time: " + Long.toString(loc.getTime()));
 		}
 	}

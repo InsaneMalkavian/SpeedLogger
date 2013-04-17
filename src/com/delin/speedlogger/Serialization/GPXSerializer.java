@@ -269,4 +269,8 @@ public class GPXSerializer {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void DeleteGPX(String filename) {
+		new File(STORAGE_DIR + "/" + filename).delete();
+	}
 }

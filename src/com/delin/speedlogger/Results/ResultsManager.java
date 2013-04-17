@@ -47,29 +47,30 @@ public class ResultsManager {
 		
 	private void LoadDummyData() {
 		SessionResult result = new SessionResult();
-		result.mStartTime = 1000; // just random values
-		result.mMaxSpeed = 150;
-		result.mDistance = 200;
-		result.mDuration = 50;
+		result.setStartTime(1000); // just random values
+		result.setMaxSpeed(150);
+		result.setDistance(200);
+		result.setDuration(50);
 		AddResult(result);
 		
 		result = new SessionResult();
-		result.mStartTime = 2000;
-		result.mMaxSpeed = 100;
-		result.mDistance = 300;
-		result.mDuration = 100;
+		result.setStartTime(2000);
+		result.setMaxSpeed(100);
+		result.setDistance(300);
+		result.setDuration(100);
 		AddResult(result);
 		
 		result = new SessionResult();
-		result.mStartTime = 1500;
-		result.mMaxSpeed = 250;
-		result.mDistance = 400;
-		result.mDuration = 150;
+		result.setStartTime(1500);
+		result.setMaxSpeed(250);
+		result.setDistance(400);
+		result.setDuration(150);
 		AddResult(result);
 	}
 	
 	public void ClearLocalResults() {
 		mDatabase.ClearLocalResults();
+		for(SessionResult r : mResults) r.DeleteGPX();
 		mResults.clear();
 	}
 

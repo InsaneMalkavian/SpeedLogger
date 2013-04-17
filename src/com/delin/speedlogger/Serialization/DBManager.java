@@ -45,10 +45,10 @@ public class DBManager extends SQLiteOpenHelper {
 	
 	public void InsertSessionResult(SessionResult result) {
 	    ContentValues values = new ContentValues();
-	    values.put(START_TIME, result.mStartTime);
-	    values.put(MAX_SPEED, result.mMaxSpeed);
-	    values.put(DISTANCE, result.mDistance);
-	    values.put(DURATION, result.mDuration);
+	    values.put(START_TIME, result.getStartTime());
+	    values.put(MAX_SPEED, result.getMaxSpeed());
+	    values.put(DISTANCE, result.getDistance());
+	    values.put(DURATION, result.getDuration());
 	    
 	    SQLiteDatabase db = getWritableDatabase(PASSWORD);
 	    db.insert(LOCAL_RESULTS, null, values);
@@ -65,10 +65,10 @@ public class DBManager extends SQLiteOpenHelper {
 	    List<SessionResult> results = new ArrayList<SessionResult>();
 	    while(cursor.moveToNext()){
 	    	SessionResult r = new SessionResult();
-			r.mStartTime = cursor.getLong(1); // 0 is for id_
-			r.mMaxSpeed = cursor.getFloat(2);
-			r.mDistance = cursor.getFloat(3);
-			r.mDuration = cursor.getLong(4);
+			r.setStartTime(cursor.getLong(1)); // 0 is for id_
+			r.setMaxSpeed(cursor.getFloat(2));
+			r.setDistance(cursor.getFloat(3));
+			r.setDuration(cursor.getLong(4));
 			results.add(r);
 	      }
 	    cursor.close(); // TODO: can be buggy. read about managing cursors
