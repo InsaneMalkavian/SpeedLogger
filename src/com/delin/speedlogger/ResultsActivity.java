@@ -49,7 +49,7 @@ public class ResultsActivity extends Activity {
 		boolean isStraightLine = Geometry.StraightLine(locList,false);
 		
 		mMaxSpeed.setText(Double.toString(result.mMaxSpeed*3.6) + " kph"); // TODO: 3.6 must be a constant
-		mDistance.setText(Double.toString(result.mDistance));
+		mDistance.setText(Double.toString(result.mDistance) + " m");
 		mStraightLine.setChecked(isStraightLine);
 		
 		if(isStraightLine){
@@ -78,6 +78,7 @@ public class ResultsActivity extends Activity {
 	}
 	
 	void ShowZeroResults() {
+		// TODO: show "measurement failed" dialog instead
 		mMaxSpeed.setText("0 kph");
 		mDistance.setText("0 m");
 		mStraightLine.setChecked(false);

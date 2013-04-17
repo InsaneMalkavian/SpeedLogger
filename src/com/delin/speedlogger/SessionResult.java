@@ -15,6 +15,7 @@ public class SessionResult {
 	}
 	
 	public SessionResult(List<Location> locList) {
+		if(locList == null || locList.size() < 2) return;
 		mLocList = new ArrayList<Location>(locList);
 		Location origin = mLocList.get(0);
 		Location dest = mLocList.get(mLocList.size()-1);
@@ -44,7 +45,7 @@ public class SessionResult {
 		gpxLog.Stop();
 	}
 	
-	public void LoadGPX() {
+	private void LoadGPX() {
 		String filename = "/mnt/sdcard/" + Long.toString(mStartTime) + ".gpx";
 		GPXSerializer gpxLog = new GPXSerializer(filename, false);
 		mLocList = gpxLog.GetAllFixes();

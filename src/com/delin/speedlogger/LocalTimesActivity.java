@@ -39,7 +39,9 @@ public class LocalTimesActivity extends Activity {
     
     void ShowLocalResults() {
     	mResults = ResultsManager.GetInstance().GetResults();
+    	// clear widgets table (0st row used as header, don't touch it)
     	mValuesTable.removeViews(1, mValuesTable.getChildCount()-1);
+    	// put new widgets
     	TableRow row;
     	TextView text;
     	for(int i = 0; i<mResults.size(); ++i){

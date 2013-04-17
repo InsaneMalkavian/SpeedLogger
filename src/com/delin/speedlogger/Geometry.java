@@ -34,9 +34,8 @@ public class Geometry {
 	// HINT: this is generalized version for both 2D and 3D.
 	//		 you can make separate func for 2D case to make simpler calculus there
 	public static boolean StraightLine(List<Location> locList, boolean use3D){
-		// for a small path we assume it is a straight line
 		// TODO: 2 better be replaced with something
-		if (locList.size() <= 2) return true;
+		if (locList.size() < 2) return false;
 		
 		Location origin = locList.get(0);
 		Location dest = locList.get(locList.size()-1);
