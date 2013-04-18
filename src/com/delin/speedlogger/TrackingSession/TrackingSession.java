@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import com.delin.speedlogger.R;
 import com.delin.speedlogger.GPS.FileGPSProvider;
 import com.delin.speedlogger.GPS.GPSProvider;
 import com.delin.speedlogger.GPS.RealGPSProvider;
@@ -40,10 +41,11 @@ public class TrackingSession implements LocationListener {
 	Vector<TrackingSessionListener> mListeners = new Vector<TrackingSessionListener>();;
 	
 	public TrackingSession(Context context) {
-		// TODO: factor this
-		SharedPreferences devPrefs = context.getSharedPreferences("devPrefs",Context.MODE_PRIVATE);
-		String provider = devPrefs.getString("GPS Provider", "FileGPS");
-		if(provider.equals("RealGPS")){ 
+		String prefsName = context.getString(R.string.DevPrefs);
+		SharedPreferences devPrefs = context.getSharedPreferences(prefsName,Context.MODE_PRIVATE);
+		String provider = context.getString(R.string.FileGPS);
+		provider = devPrefs.getString(context.getString(R.string.ProviderGPS),provider);
+		if(provider.equals(context.getString(R.string.RealGPS))){ 
 			mGpsProvider = new RealGPSProvider(context, this);
 		}
 		else{

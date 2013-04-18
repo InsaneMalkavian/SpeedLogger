@@ -17,5 +17,6 @@
         <item>@string/FileGPS</item>
         <item>@string/RealGPS</item>
     </string-array>
+    <string name="DevPrefs">DevPrefs</string>
 
 </resources>

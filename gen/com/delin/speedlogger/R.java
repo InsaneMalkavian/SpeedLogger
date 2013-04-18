@@ -62,6 +62,7 @@ public final class R {
         public static final int CarBrand=0x7f050002;
         public static final int CarEnginePower=0x7f050004;
         public static final int CarModel=0x7f050003;
+        public static final int DevPrefs=0x7f05000b;
         public static final int FileGPS=0x7f050008;
         public static final int ProviderGPS=0x7f05000a;
         public static final int RealGPS=0x7f050009;
