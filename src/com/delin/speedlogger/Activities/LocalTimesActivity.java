@@ -9,7 +9,6 @@ import com.delin.speedlogger.Results.SessionResult;
 import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -32,12 +31,6 @@ public class LocalTimesActivity extends Activity {
         mClearButton = (Button)findViewById(R.id.buttonClearDatabase);
         mClearButton.setOnClickListener(mOnClickListener);
         ShowLocalResults();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_local_times, menu);
-        return true;
     }
     
     void ShowLocalResults() {

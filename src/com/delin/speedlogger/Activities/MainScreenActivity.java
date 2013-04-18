@@ -13,6 +13,7 @@ import android.widget.Button;
 public class MainScreenActivity extends Activity {
 	Button mStartButton;
 	Button mPreferencesButton;
+	Button mDevPrefsButton;
 	Button mLocationStatusButton;
 	Button mTestButton;
 	Button mChartPage;
@@ -29,6 +30,8 @@ public class MainScreenActivity extends Activity {
         mStartButton.setOnClickListener(mOnClickListener);
         mPreferencesButton = (Button)findViewById(R.id.buttonPreferences);
         mPreferencesButton.setOnClickListener(mOnClickListener);
+        mDevPrefsButton = (Button)findViewById(R.id.buttonDevPrefs);
+        mDevPrefsButton.setOnClickListener(mOnClickListener);
         mTestButton = (Button)findViewById(R.id.buttonTest);
         mTestButton.setOnClickListener(mOnClickListener);
         mChartPage = (Button)findViewById(R.id.chartpage);
@@ -50,6 +53,9 @@ public class MainScreenActivity extends Activity {
 	    		break;
 	    	case R.id.buttonPreferences:
 	    		intent = new Intent(v.getContext(), PreferencesActivity.class);
+	    		break;
+	    	case R.id.buttonDevPrefs:
+	    		intent = new Intent(v.getContext(), DevPrefsActivity.class);
 	    		break;
 	    	case R.id.buttonTest: // just for test, should be removed
 	    		intent = new Intent(v.getContext(), ResultsActivity.class);

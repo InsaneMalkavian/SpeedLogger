@@ -26,11 +26,12 @@
         </activity>
         <activity android:name=".Activities.PreferencesActivity" >
         </activity>
-        <activity android:name=".Activities.XYChartBuilder">
+        <activity android:name=".Activities.DevPrefsActivity"></activity><activity android:name=".Activities.XYChartBuilder">
         </activity>
         <activity android:name=".Activities.ResultsActivity" >
         </activity>
         <activity android:name=".Activities.LocalTimesActivity"></activity>
+        
     </application>
 
 </manifest>

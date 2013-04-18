@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <ListPreference android:title="@string/ProviderGPS" android:entries="@array/GpsList" android:entryValues="@array/GpsList" android:defaultValue="@string/FileGPS" android:key="@string/ProviderGPS"/>
+    
+
+</PreferenceScreen>

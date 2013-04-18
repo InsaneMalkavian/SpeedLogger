@@ -6,11 +6,14 @@ import java.util.Vector;
 
 import com.delin.speedlogger.GPS.FileGPSProvider;
 import com.delin.speedlogger.GPS.GPSProvider;
+import com.delin.speedlogger.GPS.RealGPSProvider;
 import com.delin.speedlogger.Serialization.GPXSerializer;
+
 import android.location.*;
 import android.os.Bundle;
 import android.util.Log;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 public class TrackingSession implements LocationListener {
 	enum TrackingState { WARMUP, READY, TRACKING, ERROR, DONE, IDLE }
@@ -36,9 +39,17 @@ public class TrackingSession implements LocationListener {
 	WarmupState mWarmupState = WarmupState.WAITING_FIX;
 	Vector<TrackingSessionListener> mListeners = new Vector<TrackingSessionListener>();;
 	
-	public TrackingSession(Context Context) {
-		//mGpsProvider = new RealGPSProvider(Context, this);
-		mGpsProvider = new FileGPSProvider(Context, this);
+	public TrackingSession(Context context) {
+		// TODO: factor this
+		SharedPreferences devPrefs = context.getSharedPreferences("devPrefs",Context.MODE_PRIVATE);
+		String provider = devPrefs.getString("GPS Provider", "FileGPS");
+		if(provider.equals("RealGPS")){ 
+			mGpsProvider = new RealGPSProvider(context, this);
+		}
+		else{
+			mGpsProvider = new FileGPSProvider(context, this);
+		}
+		
 		StartService();
 	}
 	
