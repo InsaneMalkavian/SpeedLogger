@@ -109,8 +109,8 @@ public class GPXSerializer {
 	}
 	
 	public void SaveAllFixes(List<Location> locList) {
-		for(int i=0; i<locList.size(); ++i){
-			AddFix(locList.get(i));
+		for(Location loc : locList){
+			AddFix(loc);
 		}
 	}
 	

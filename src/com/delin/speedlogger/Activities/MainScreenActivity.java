@@ -40,7 +40,9 @@ public class MainScreenActivity extends Activity {
         mLocalTimesButton.setOnClickListener(mOnClickListener);
         
         mResultsManager = ResultsManager.GetInstance();
-        mResultsManager.Init(this); // it loads data now
+        // load data if it's the first time we came here
+        if(savedInstanceState == null)
+        mResultsManager.Init(this);
     }
 
 	private OnClickListener mOnClickListener = new OnClickListener() {
