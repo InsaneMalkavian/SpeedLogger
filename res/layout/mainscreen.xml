@@ -10,12 +10,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/start" />
-
+
     <Button
         android:id="@+id/buttonPreferences"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/prefs" />
+        android:text="@string/Prefs" />
 
     <Button
         android:id="@+id/buttonDevPrefs"

@@ -12,7 +12,7 @@
     <string name="lastlocbutton">GetLastKnownLocation</string>
     <string name="empty">Nothing to show</string>
     <string name="start">Start</string>
-    <string name="prefs">Preferences</string>
+    <string name="Prefs">Preferences</string>
     <string name="FileGPS">FileGPS</string>
     <string name="RealGPS">RealGPS</string>
     <string name="ProviderGPS">GPS Provider</string>
@@ -22,5 +22,6 @@
         <item>@string/RealGPS</item>
     </string-array>
     <string name="DevPrefs">DevPrefs</string>
+    <string name="ScreenAwake">Keep Screen Awake</string>
 
 </resources>

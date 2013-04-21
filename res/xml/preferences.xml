@@ -11,4 +11,5 @@
         android:key="CarEnginePower" 
         android:title="@string/CarEnginePower" 
         android:numeric="integer"/>
+    <CheckBoxPreference android:key="@string/ScreenAwake" android:title="@string/ScreenAwake"/>
 </PreferenceScreen>

@@ -10,11 +10,14 @@ import com.delin.speedlogger.TrackingSession.TrackingSession.WarmupState;
 import com.delin.speedlogger.Utils.Logger;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -30,6 +33,11 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.Prefs),Context.MODE_PRIVATE);
+		if (prefs.getBoolean(getString(R.string.ScreenAwake), false))
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
         mButton = (Button)findViewById(R.id.button1);
         mTextView = (TextView)findViewById(R.id.textView1);
         mButton.setOnClickListener(mOnClickListener);
