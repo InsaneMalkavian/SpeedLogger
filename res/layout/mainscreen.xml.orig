@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <Button
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/buttonStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start" />
+
+    <Button
+        android:id="@+id/buttonPreferences"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+<<<<<<< origin/master
+        android:text="Preferences" />
+
+    <Button
+        android:id="@+id/buttonDevPrefs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dev Preferences" />
+=======
+        android:text="@string/prefs" />
+>>>>>>> local
+
+    <Button
+        android:id="@+id/buttonStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Location Status" />
+
+    <Button
+        android:id="@+id/buttonTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test" />
+
+    <Button
+        android:id="@+id/chartpage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ChartPage" />
+
+    <Button
+        android:id="@+id/buttonLocalTimes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LocalTimes" />
+
+</LinearLayout>

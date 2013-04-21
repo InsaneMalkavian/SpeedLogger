@@ -61,7 +61,7 @@ public class GPXSerializer {
 	DocumentBuilderFactory docFactory = null;
 	DocumentBuilder docBuilder = null;
 	SimpleDateFormat mDateFormat = null;
-	long mLastAddedLocTime;
+	long mLastAddedLocTime = 0;
 	int mGPSFixNumber = 0;
 	
 	// xml objects
@@ -74,7 +74,6 @@ public class GPXSerializer {
 	public GPXSerializer() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(TIMEPATTERN_FILE);
 		mFilename = STORAGE_DIR+"/"+dateFormat.format(new Date())+FILE_EXTENSION;
-		mLastAddedLocTime = 0;
 		Initialize();
 	}
 	
