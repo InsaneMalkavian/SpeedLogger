@@ -158,7 +158,7 @@ public class TrackingSession implements LocationListener {
 				}
 				
 			}
-			else if (location.hasSpeed() && location.getSpeed() > 5) // just for test, should be zero
+			else if (location.hasSpeed() && location.getSpeed() > 0)
 			{
 				if (mWarmupState != WarmupState.HIGH_SPEED)
 				{
@@ -192,7 +192,7 @@ public class TrackingSession implements LocationListener {
 				}
 			}
 			// here is some logic to make it start
-			else if (location.hasSpeed() && location.getSpeed()>SPEED_THRESHOLD) {
+			else if (location.hasSpeed() && location.getSpeed()>SPEED_THRESHOLD) { // todo should be zero
 				mState = TrackingState.TRACKING;
 				for (TrackingSessionListener listener : mListeners)
 				{
