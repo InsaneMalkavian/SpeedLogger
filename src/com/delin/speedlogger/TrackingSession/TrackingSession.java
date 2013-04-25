@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.Vector;
 
 import com.delin.speedlogger.R;
-import com.delin.speedlogger.GPS.FileGPSProvider;
-import com.delin.speedlogger.GPS.GPSProvider;
-import com.delin.speedlogger.GPS.RealGPSProvider;
+import com.delin.speedlogger.GPS.*;
 import com.delin.speedlogger.Serialization.GPXSerializer;
 
 import android.location.*;
@@ -18,7 +16,7 @@ import android.content.SharedPreferences;
 
 public class TrackingSession implements LocationListener {
 	enum TrackingState { WARMUP, READY, TRACKING, ERROR, DONE, IDLE }
-	public enum WarmupState { WAITING_FIX, HIGH_SPEED }
+	public enum WarmupState { WAITING_FIX, BAD_ACCURACY, HIGH_SPEED }
 	
 	final static String UNCERT_LOC = "uncertainty";
 	final static int MAX_LOC_COUNT = 300; // 300/60 fixes per minute = 5 min
@@ -34,7 +32,7 @@ public class TrackingSession implements LocationListener {
 	Location mReadyLoc = null;
 	GPSProvider mGpsProvider = null;	
 	boolean mEnabled = false; // gps receiver status, useless
-	boolean mWriteGPX = true;
+	boolean mWriteGPX = false;
 	GPXSerializer mGpxLog = null;
 	TrackingState mState = TrackingState.IDLE;
 	WarmupState mWarmupState = WarmupState.WAITING_FIX;
@@ -43,6 +41,9 @@ public class TrackingSession implements LocationListener {
 	public TrackingSession(Context context) {
 		String prefsName = context.getString(R.string.DevPrefs);
 		SharedPreferences devPrefs = context.getSharedPreferences(prefsName,Context.MODE_PRIVATE);
+		
+		mWriteGPX = devPrefs.getBoolean(context.getString(R.string.SaveTrackingSession), false);
+		
 		String provider = context.getString(R.string.FileGPS);
 		provider = devPrefs.getString(context.getString(R.string.ProviderGPS),provider);
 		if(provider.equals(context.getString(R.string.RealGPS))){ 
@@ -148,9 +149,9 @@ public class TrackingSession implements LocationListener {
 			// here we check for problems to solve before we can start
 			if (location.hasAccuracy() && location.getAccuracy()>HOR_ACCURACY)
 			{ 
-				if (mWarmupState != WarmupState.WAITING_FIX)
+				if (mWarmupState != WarmupState.BAD_ACCURACY)
 				{
-					mWarmupState = WarmupState.WAITING_FIX;
+					mWarmupState = WarmupState.BAD_ACCURACY;
 					for (TrackingSessionListener listener : mListeners)
 					{ 
 						listener.onSessionWarmingUp(mWarmupState);
@@ -185,7 +186,7 @@ public class TrackingSession implements LocationListener {
 			if (location.hasAccuracy() && location.getAccuracy()>HOR_ACCURACY)
 			{ // in case of bad fix stop tracking
 				mState = TrackingState.WARMUP;
-				mWarmupState = WarmupState.WAITING_FIX;
+				mWarmupState = WarmupState.BAD_ACCURACY;
 				for (TrackingSessionListener listener : mListeners)
 				{ //onSessionWarmingUp()
 					listener.onSessionWarmingUp(mWarmupState);

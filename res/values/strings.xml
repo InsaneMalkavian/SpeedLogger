@@ -23,5 +23,5 @@
     </string-array>
     <string name="DevPrefs">DevPrefs</string>
     <string name="ScreenAwake">Keep Screen Awake</string>
-
+    <string name="SaveTrackingSession">Save TrackingSession</string>
 </resources>
