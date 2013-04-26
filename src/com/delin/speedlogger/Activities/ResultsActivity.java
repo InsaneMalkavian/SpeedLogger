@@ -25,6 +25,9 @@ import android.widget.TextView;
 public class ResultsActivity extends Activity {
 	TextView mMaxSpeed;
 	TextView mDistance;
+	TextView mTime;
+	TextView mZero60;
+	TextView mZero100;
 	CheckBox mStraightLine;
 	Button mLocalTimesButton;
 	String testline = "origin";
@@ -39,6 +42,9 @@ public class ResultsActivity extends Activity {
 		mMaxSpeed = (TextView)findViewById(R.id.textMaxSpeed);
 		mMaxSpeed.setText(testline);
 		mDistance = (TextView)findViewById(R.id.textDistance);
+		mTime = (TextView)findViewById(R.id.totalTimevalue);
+		mZero60 = (TextView)findViewById(R.id.zero60value);
+		mZero100 = (TextView)findViewById(R.id.zero100value);
         mStraightLine = (CheckBox)findViewById(R.id.cbStraightLine);
 		
 		mMeasurement = MeasurementResult.GetInstance();
@@ -84,12 +90,29 @@ public class ResultsActivity extends Activity {
 			Log.i("Results Activity", "-----\n" + "speed: " + Double.toString(Converter.ms2kph(i)) + 
 					  "  time: " + Long.toString(loc.getTime()));
 		}
+
+		Location atSpeed = interp.TimeBySpeed(Converter.kph2ms(maxSpeed));
+		mTime.setText(Float.toString((float)(atSpeed.getTime()-locList.get(0).getTime())/1000)+" sec");
+		
+		float speeds = 60;
+		if (speeds<maxSpeed) {
+			atSpeed = interp.TimeBySpeed(Converter.kph2ms(speeds));
+			mZero60.setText(Float.toString((float)(atSpeed.getTime()-locList.get(0).getTime())/1000)+" sec");
+		}
+		speeds=100;
+		if (speeds<maxSpeed) {
+			atSpeed = interp.TimeBySpeed(Converter.kph2ms(speeds));
+			mZero100.setText(Float.toString((float)(atSpeed.getTime()-locList.get(0).getTime())/1000)+" sec");
+		}
+		
 	}
 	
 	void ShowZeroResults() {
 		// TODO: show "measurement failed" dialog instead
 		mMaxSpeed.setText("0 kph");
 		mDistance.setText("0 m");
+		mZero60.setText("Unreacheble");
+		mZero100.setText("Unreacheble");
 		mStraightLine.setChecked(false);
 	}
 	

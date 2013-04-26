@@ -86,6 +86,10 @@ public class TrackingSession implements LocationListener {
 		return mBaseLocation;
 	}
 	
+	public Location GetReadyLocation() {
+		return mReadyLoc;
+	}
+	
 	public void StartService() {
 		if (mState==TrackingState.IDLE) { // start only from IDLE state
 			ResetSessionValues();

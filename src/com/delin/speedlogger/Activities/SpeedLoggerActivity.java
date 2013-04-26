@@ -49,7 +49,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
 	XYSeries mCurrentSeries = null;
 	GraphicalView mChartView = null;
-	int xval=0; // TODO should be based on time
+	long mStartTime=0;
 
 	
 
@@ -160,8 +160,10 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	public void onSessionStart() {
 		mTracking = true;
 		mButton.setText("Push, push, push");
+		mStartTime = mTrackingSession.GetReadyLocation().getTime();
 		if (mCurrentSeries!=null && mChartView!=null && mTracking) {
-			mCurrentSeries.add(xval++, Converter.ms2kph(0));        
+			mCurrentSeries.add(0, Converter.ms2kph(0));
+			mCurrentSeries.add((mTrackingSession.GetLastLocation().getTime()-mStartTime)/1000, Converter.ms2kph(mTrackingSession.GetLastLocation().getSpeed()));
         	mChartView.repaint();
         }
 	}
@@ -182,7 +184,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	public void onSessionLocationUpdate(Location location) {
     	//mTextView.setText(Logger.LocToStr(location));
 		if (mCurrentSeries!=null && mChartView!=null && mTracking) {
-			mCurrentSeries.add(xval++, Converter.ms2kph(location.getSpeed()));        
+			mCurrentSeries.add((location.getTime()-mStartTime)/1000, Converter.ms2kph(location.getSpeed()));        
         	mChartView.repaint();
         }
         
