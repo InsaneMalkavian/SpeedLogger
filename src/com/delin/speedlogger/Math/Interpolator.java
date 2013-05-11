@@ -59,7 +59,7 @@ public class Interpolator {
     public Location TimeBySpeed(float s) {
     	Location loc = new Location(Interpolator.provider);
     	loc.setSpeed(s);
-    	loc.setTime((long) getValue(speed, time, time2, s));
+    	loc.setTime((long) getValue(SpeedAsX(), time, time2, s));
     	return loc;
     }
     
@@ -84,5 +84,20 @@ public class Interpolator {
         double b = (xval - x[low]) / h;
         return a * y[low] + b * y[high] +
                 ((a * a * a - a) * y2[low] + (b * b * b - b) * y2[high]) * (h * h) / 6.0;
+    }
+    
+    // to use speed as X we must cut values after maxSpeed  
+    double[] SpeedAsX() {
+    	// get position of first max value
+    	int max_n = 0;
+    	for(int i=1; i<speed.length; ++i){
+    		if (speed[i]>speed[max_n]) max_n = i;
+    		else break;
+    	}
+    	// copy useful part
+    	double[] s = new double[max_n+1];
+    	System.arraycopy(speed, 0, s, 0, max_n+1);
+		return s;
+    	
     }
 }
