@@ -22,15 +22,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:label="@string/app_name" android:name=".Activities.SpeedLoggerActivity">
+            android:label="@string/app_name" android:name=".Activities.SpeedLoggerActivity"
+            android:theme="@android:style/Theme.NoTitleBar">
         </activity>
-        <activity android:name=".Activities.PreferencesActivity" >
+        <activity 
+            android:name=".Activities.PreferencesActivity"
+            android:theme="@android:style/Theme.NoTitleBar">
         </activity>
-        <activity android:name=".Activities.DevPrefsActivity"></activity><activity android:name=".Activities.XYChartBuilder">
+        <activity 
+            android:name=".Activities.DevPrefsActivity"
+            android:theme="@android:style/Theme.NoTitleBar">
         </activity>
-        <activity android:name=".Activities.ResultsActivity" >
+        <activity 
+            android:name=".Activities.XYChartBuilder"
+            android:theme="@android:style/Theme.NoTitleBar">
         </activity>
-        <activity android:name=".Activities.LocalTimesActivity"></activity>
+        <activity 
+            android:name=".Activities.ResultsActivity"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+        <activity android:name=".Activities.LocalTimesActivity"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
         
     </application>
 
