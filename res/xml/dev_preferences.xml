@@ -2,5 +2,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <ListPreference android:title="@string/ProviderGPS" android:entries="@array/GpsList" android:entryValues="@array/GpsList" android:defaultValue="@string/FileGPS" android:key="@string/ProviderGPS"/>
     <CheckBoxPreference android:title="@string/SaveTrackingSession" android:key="@string/SaveTrackingSession"/>
-    
+    <ListPreference android:title="@string/FileWithGPS" android:key="@string/FileWithGPS"/>
 </PreferenceScreen>
