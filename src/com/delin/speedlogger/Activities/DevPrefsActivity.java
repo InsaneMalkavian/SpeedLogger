@@ -29,13 +29,17 @@ public class DevPrefsActivity extends PreferenceActivity {
 	private void FindGPX() {
 		File dir = new File(GPS_DIR_PATH);
 		try{ if(!dir.exists()) dir.mkdirs();} catch(Exception e){return;}
-		String[] filenames = dir.list();
-		if (filenames.length > 0) {
-			gpxFiles.setEntries(filenames);
-			for(int i=0; i<filenames.length; ++i) {
-				filenames[i] = GPS_DIR_NAME + "/" + filenames[i];
+		String[] filenameEntries = dir.list();
+		String[] filenameValues;
+		if (filenameEntries.length > 0) {
+			// list entries
+			gpxFiles.setEntries(filenameEntries);
+			// list values
+			filenameValues = filenameEntries.clone();
+			for(int i=0; i<filenameValues.length; ++i) {
+				filenameValues[i] = GPS_DIR_NAME + "/" + filenameValues[i];
 			}
-			gpxFiles.setEntryValues(filenames);
+			gpxFiles.setEntryValues(filenameValues);
 			if (gpxFiles.getValue() == null) gpxFiles.setValueIndex(0);
 		}
 	}
