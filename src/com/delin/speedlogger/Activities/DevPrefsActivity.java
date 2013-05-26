@@ -39,5 +39,4 @@ public class DevPrefsActivity extends PreferenceActivity {
 			if (gpxFiles.getValue() == null) gpxFiles.setValueIndex(0);
 		}
 	}
-
 }
