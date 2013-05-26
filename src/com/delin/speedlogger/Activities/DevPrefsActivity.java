@@ -31,7 +31,7 @@ public class DevPrefsActivity extends PreferenceActivity {
 		try{ if(!dir.exists()) dir.mkdirs();} catch(Exception e){return;}
 		String[] filenames = dir.list();
 		if (filenames.length > 0) {
-			gpxFiles.setEntries(filenames);
+			gpxFiles.setEntries(filenames.clone()); // avoid sharing
 			for(int i=0; i<filenames.length; ++i) {
 				filenames[i] = GPS_DIR_NAME + "/" + filenames[i];
 			}

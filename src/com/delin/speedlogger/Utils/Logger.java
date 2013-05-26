@@ -8,7 +8,8 @@ public class Logger {
 				"\nLongitude: " + Double.toString(loc.getLongitude()) +
     			"\nProvider: " + loc.getProvider() + 
     			"\nAccuracy (m): " + loc.getAccuracy() + 
-    			"\nSpeed (kph): " + Double.toString(Converter.ms2kph(loc.getSpeed())) +
+    			"\nSpeed (kph): " + Double.toString(Converter.ms2kph(loc.getSpeed())) +    			
+    			"\nSpeed (mps): " + Double.toString(loc.getSpeed()) +
     			"\nAltitude (m): " + loc.getAltitude() + 
     			"\nBearing: " + loc.getBearing() + 
     			"\nTime: " + loc.getTime();
