@@ -7,8 +7,10 @@ import java.util.List;
 import com.delin.speedlogger.Math.Geometry;
 import com.delin.speedlogger.Math.Interpolator;
 import com.delin.speedlogger.Serialization.GPXSerializer;
+import com.delin.speedlogger.Utils.Converter;
 
 import android.location.Location;
+import android.util.Log;
 
 public class SessionResult {
 	class Point {
