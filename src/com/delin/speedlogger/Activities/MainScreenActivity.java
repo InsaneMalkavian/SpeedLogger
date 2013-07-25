@@ -32,6 +32,8 @@ public class MainScreenActivity extends Activity {
         mPreferencesButton.setOnClickListener(mOnClickListener);
         mDevPrefsButton = (Button)findViewById(R.id.buttonDevPrefs);
         mDevPrefsButton.setOnClickListener(mOnClickListener);
+        mLocationStatusButton = (Button)findViewById(R.id.buttonStatus);
+        mLocationStatusButton.setOnClickListener(mOnClickListener);
         mTestButton = (Button)findViewById(R.id.buttonTest);
         mTestButton.setOnClickListener(mOnClickListener);
         mChartPage = (Button)findViewById(R.id.chartpage);
@@ -61,6 +63,9 @@ public class MainScreenActivity extends Activity {
 	    		break;
 	    	case R.id.buttonTest: // just for test, should be removed
 	    		intent = new Intent(v.getContext(), ResultsActivity.class);
+	    		break;
+	    	case R.id.buttonStatus: // just for test, should be removed
+	    		intent = new Intent(v.getContext(), SensorStatusActivity.class);
 	    		break;
 	    	case R.id.chartpage: // just for test, should be removed
 	    		intent = new Intent(v.getContext(), XYChartBuilder.class);

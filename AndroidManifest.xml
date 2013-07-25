@@ -44,6 +44,7 @@
         <activity android:name=".Activities.LocalTimesActivity"
             android:theme="@android:style/Theme.NoTitleBar">
         </activity>
+        <activity android:name=".Activities.SensorStatusActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
         
     </application>
 

@@ -5,12 +5,11 @@
     android:orientation="vertical" >
 
     <Button
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/buttonStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/start" />
-
+        android:text="@string/start"/>
+    
     <Button
         android:id="@+id/buttonPreferences"
         android:layout_width="wrap_content"
@@ -27,7 +26,7 @@
         android:id="@+id/buttonStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Location Status" />
+        android:text="Sensor Status" />
 
     <Button
         android:id="@+id/buttonTest"
