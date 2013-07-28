@@ -11,10 +11,8 @@ import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
-import com.delin.speedlogger.R;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -32,6 +30,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.delin.speedlogger.R;
+
 public class SensorStatusActivity extends Activity implements SensorEventListener {
 	
 	XYMultipleSeriesDataset mDataset = new XYMultipleSeriesDataset();
@@ -43,6 +43,10 @@ public class SensorStatusActivity extends Activity implements SensorEventListene
 	private Sensor mAccelerometer = null;
 	private long mStarttime = 0;
 	private int mCurrentAxis = 0;
+	private long mCount = 0;
+	private double mSum = 0;
+	private double mMX = 0;
+	private double mDX = 0;
 
     /** Called when the activity is first created. */
     @Override
@@ -58,6 +62,7 @@ public class SensorStatusActivity extends Activity implements SensorEventListene
     	list.add("X 1");
     	list.add("Y 2");
     	list.add("Z 3");
+    	list.add("All");
     	ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
     	dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     	spinner.setAdapter(dataAdapter);
@@ -85,7 +90,7 @@ public class SensorStatusActivity extends Activity implements SensorEventListene
         
         
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
     }
     
 
@@ -101,36 +106,52 @@ public class SensorStatusActivity extends Activity implements SensorEventListene
     	} else {
     		mChartView.repaint();
     	}
+    	RestartSession();
     	if (mAccelerometer!=null) mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-    	mStarttime = System.nanoTime();
     }
 
     @Override
     protected void onPause() {
     	super.onPause();
-    	if (mAccelerometer!=null) mSensorManager.unregisterListener(this);
+    	mSensorManager.unregisterListener(this);
     }
 
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		// check for accelerometer
-		mCurrentSeries.add((event.timestamp-mStarttime)/1000000000L, event.values[mCurrentAxis]);
+		float value = mCurrentAxis == 3 ? event.values[0]+event.values[1]+event.values[2] : event.values[mCurrentAxis];
+		//mCurrentSeries.add((event.timestamp-mStarttime)/1000000L, value);
+		mCurrentSeries.add(mCount, value);
     	mChartView.repaint();
+    	mCount++;
+    	mSum+=value;
+    	mMX = mSum/mCount;
+    	if (mCount%20==0) { // update values on display
+    		
+    	}
+	}
+	
+	private void RestartSession() {
+		mCurrentSeries.clear();
+		mChartView.repaint();
+    	mStarttime = System.nanoTime();
+    	
+    	mCount = 0;
+    	mSum = 0;
+    	mMX = 0;
+    	mDX = 0;
+
 	}
 	
 	private OnClickListener mOnClickListener = new OnClickListener() {
 	    public void onClick(View v) {
 	    	switch (v.getId()) {
 	    	case R.id.buttonClear:
-	    		mCurrentSeries.clear();
-	    		mChartView.repaint();
-	        	mStarttime = System.nanoTime();
+	    		RestartSession();
 	    		break;
 	    	}
 	    }
@@ -144,15 +165,12 @@ public class SensorStatusActivity extends Activity implements SensorEventListene
 			if (parent.getItemAtPosition(pos).toString()=="X 1") mCurrentAxis = 0;
 			if (parent.getItemAtPosition(pos).toString()=="Y 2") mCurrentAxis = 1;
 			if (parent.getItemAtPosition(pos).toString()=="Z 3") mCurrentAxis = 2;
-			mCurrentSeries.clear();
-    		mChartView.repaint();
-        	mStarttime = System.nanoTime();
+			if (parent.getItemAtPosition(pos).toString()=="All") mCurrentAxis = 3;
+			RestartSession();
 		}
 		
 		@Override
-		public void onNothingSelected(AdapterView<?> arg0) {
-			// TODO Auto-generated method stub
-			
+		public void onNothingSelected(AdapterView<?> arg0) {			
 		}
 	};
 }

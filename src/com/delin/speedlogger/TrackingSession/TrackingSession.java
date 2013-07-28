@@ -11,12 +11,13 @@ import com.delin.speedlogger.Serialization.GPXSerializer;
 import android.location.*;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 public class TrackingSession implements LocationListener {
 	enum TrackingState { WARMUP, READY, TRACKING, ERROR, DONE, IDLE }
-	public enum WarmupState { WAITING_FIX, BAD_ACCURACY, HIGH_SPEED }
+	public enum WarmupState {NO_GPS, WAITING_FIX, BAD_ACCURACY, HIGH_SPEED }
 	
 	final static String UNCERT_LOC = "uncertainty";
 	final static int MAX_LOC_COUNT = 300; // 300/60 fixes per minute = 5 min
@@ -31,14 +32,16 @@ public class TrackingSession implements LocationListener {
 	Location mBaseLocation = null; // last location
 	Location mReadyLoc = null;
 	GPSProvider mGpsProvider = null;	
-	boolean mEnabled = false; // gps receiver status, useless
+	boolean mGPSEnabled = false; // gps receiver status
 	boolean mWriteGPX = false;
 	GPXSerializer mGpxLog = null;
 	TrackingState mState = TrackingState.IDLE;
 	WarmupState mWarmupState = WarmupState.WAITING_FIX;
-	Vector<TrackingSessionListener> mListeners = new Vector<TrackingSessionListener>();;
+	Vector<TrackingSessionListener> mListeners = new Vector<TrackingSessionListener>();
+	Context mContext;
 	
 	public TrackingSession(Context context) {
+		mContext = context;
 		String prefsName = context.getString(R.string.DevPrefs);
 		SharedPreferences devPrefs = context.getSharedPreferences(prefsName,Context.MODE_PRIVATE);
 		
@@ -56,9 +59,6 @@ public class TrackingSession implements LocationListener {
 		StartService();
 	}
 	
-	protected void finalize () {
-	}
-	
 	public void AddListener(TrackingSessionListener newListener) {
 		mListeners.add(newListener);
 		// notify about current state!
@@ -73,7 +73,11 @@ public class TrackingSession implements LocationListener {
 		case TRACKING:
 			newListener.onSessionStart();
 			break;
-		default:
+		case DONE:
+			break;
+		case ERROR:
+			break;
+		case IDLE:
 			break;
 		}
 	}
@@ -93,7 +97,7 @@ public class TrackingSession implements LocationListener {
 	public void StartService() {
 		if (mState==TrackingState.IDLE) { // start only from IDLE state
 			ResetSessionValues();
-			mEnabled = true; // in case gps is off we'll receive onDisabled and disable it
+			mGPSEnabled = true; // in case gps is off we'll receive onDisabled and disable it
 			mBaseLocation = new Location(UNCERT_LOC);
 			mReadyLoc = new Location(UNCERT_LOC);
 			mState = TrackingState.WARMUP;
@@ -146,6 +150,7 @@ public class TrackingSession implements LocationListener {
 		if (mWriteGPX) { // save fix to gpx track
 			mGpxLog.AddFix(location);
 		}
+		if (mGPSEnabled == false) return; // location has come from cell/wifi - so just skip it
 		switch (mState)
 		{ // update logic
 		case WARMUP:
@@ -153,25 +158,15 @@ public class TrackingSession implements LocationListener {
 			// here we check for problems to solve before we can start
 			if (location.hasAccuracy() && location.getAccuracy()>HOR_ACCURACY)
 			{ 
-				if (mWarmupState != WarmupState.BAD_ACCURACY)
-				{
-					mWarmupState = WarmupState.BAD_ACCURACY;
-					for (TrackingSessionListener listener : mListeners)
-					{ 
-						listener.onSessionWarmingUp(mWarmupState);
-					}
+				if (mWarmupState != WarmupState.BAD_ACCURACY) {
+					SetWarmingState(WarmupState.BAD_ACCURACY);
 				}
 				
 			}
 			else if (location.hasSpeed() && location.getSpeed() > 0)
 			{
-				if (mWarmupState != WarmupState.HIGH_SPEED)
-				{
-					mWarmupState = WarmupState.HIGH_SPEED;
-					for (TrackingSessionListener listener : mListeners)
-					{ 
-						listener.onSessionWarmingUp(mWarmupState);
-					}
+				if (mWarmupState != WarmupState.HIGH_SPEED) {
+					SetWarmingState(WarmupState.HIGH_SPEED);
 				}
 			}
 			else{
@@ -190,11 +185,7 @@ public class TrackingSession implements LocationListener {
 			if (location.hasAccuracy() && location.getAccuracy()>HOR_ACCURACY)
 			{ // in case of bad fix stop tracking
 				mState = TrackingState.WARMUP;
-				mWarmupState = WarmupState.BAD_ACCURACY;
-				for (TrackingSessionListener listener : mListeners)
-				{ //onSessionWarmingUp()
-					listener.onSessionWarmingUp(mWarmupState);
-				}
+				SetWarmingState(WarmupState.BAD_ACCURACY);
 			}
 			// here is some logic to make it start
 			else if (location.hasSpeed() && location.getSpeed()>SPEED_THRESHOLD) { // todo should be zero
@@ -231,21 +222,42 @@ public class TrackingSession implements LocationListener {
 				if (mMaxSpeed<location.getSpeed()) mMaxSpeed=location.getSpeed();
 			}
 			break;
-		default:
+		case ERROR:
+		case IDLE:
+		case DONE:
 			break;
 		}
 	}
 
 	@Override
 	public void onProviderDisabled(String provider) {
-		mEnabled = false;
-		// TODO: native toast: please enable GPS
-		// provide bad location to stop measurement
+		mGPSEnabled = false;
+		Toast toast = Toast.makeText(mContext, mContext.getString(R.string.EnableGPS), Toast.LENGTH_LONG);
+		toast.show();
+		// current warming - goto warming, nothing to change
+		// ready -> warming
+		// tracking -> done and close
+		// so we can be only in warmingup state after provider has been disabled
+		switch (mState) {
+		case WARMUP:
+		case READY:
+			mState = TrackingState.WARMUP;
+			SetWarmingState(WarmupState.NO_GPS);
+			break;
+		case TRACKING:
+			SessionDone();
+			break;
+		case ERROR:
+		case IDLE:
+		case DONE:
+			break;
+		}
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
-		mEnabled = true;
+		SetWarmingState(WarmupState.WAITING_FIX);
+		mGPSEnabled = true;
 	}
 
 	@Override
@@ -260,11 +272,18 @@ public class TrackingSession implements LocationListener {
 		for (TrackingSessionListener listener : mListeners)
 		{ // stop tracking
 			listener.onSessionFinished(mLocList);
-		}	
+		}
 	}
 	
 	private void ResetSessionValues() {
 		mMaxSpeed = 0.f;
 		mLocList.clear();
+	}
+	
+	private void SetWarmingState(WarmupState state) {
+		mWarmupState = state;
+		for (TrackingSessionListener listener : mListeners) {
+			listener.onSessionWarmingUp(mWarmupState);
+		}
 	}
 }

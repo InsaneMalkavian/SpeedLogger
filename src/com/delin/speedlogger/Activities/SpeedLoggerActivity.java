@@ -123,10 +123,10 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
     
     @Override
     public void onDestroy() {
+    	super.onDestroy();
     	mTrackingSession.RemoveListener(this);
     	mTrackingSession.StopService();
     	mTrackingSession = null;
-    	super.onDestroy();
     }
     
     private OnClickListener mOnClickListener = new OnClickListener() {
@@ -140,14 +140,18 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	public void onSessionWarmingUp(WarmupState mWarmupState) {
     	switch (mWarmupState)
     	{
+    	case NO_GPS:
+    		mButton.setText("GPS Service disabled, please enable GPS");
+    		break;
     	case WAITING_FIX:
-			mButton.setText("Warming up, please wait until fix will be received");	
+			mButton.setText("Warming up, please wait until fix will be received");
 			break;
     	case BAD_ACCURACY:
-			mButton.setText("Inaccurate fix, please wait for stable fix");	
+			mButton.setText("Inaccurate fix, please wait for stable fix");
 			break;
     	case HIGH_SPEED:
     		mButton.setText("Stop moving before we can start.");
+    		break;
     	}
 	}
 

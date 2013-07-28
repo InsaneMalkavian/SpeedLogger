@@ -25,4 +25,5 @@
     <string name="DevPrefs">DevPrefs</string>
     <string name="ScreenAwake">Keep Screen Awake</string>
     <string name="SaveTrackingSession">Save TrackingSession</string>
+    <string name="EnableGPS">Please enable GPS!</string>
 </resources>
