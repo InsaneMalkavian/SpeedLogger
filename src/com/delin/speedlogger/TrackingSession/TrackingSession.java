@@ -74,9 +74,7 @@ public class TrackingSession implements LocationListener {
 			newListener.onSessionStart();
 			break;
 		case DONE:
-			break;
 		case ERROR:
-			break;
 		case IDLE:
 			break;
 		}
@@ -115,27 +113,20 @@ public class TrackingSession implements LocationListener {
 	public void StopService() {
 		if (mState!=TrackingState.IDLE) { // stop only active
 			mGpsProvider.Stop();
-			
-			mBaseLocation = null;
-			mReadyLoc = null;
+
 			if (mWriteGPX) {
 				mGpxLog.Stop();
 				mGpxLog = null;
 			}
+			if (mState==TrackingState.TRACKING) { // save active session
+				SessionDone();
+			}
 			mState = TrackingState.IDLE;
-			// TODO: stop all activities, notify listeners
 			for (TrackingSessionListener listener : mListeners)
 			{
 				listener.onSessionStopped();
 			}
 		}
-	}
-	
-	public void StopTracking() {
-		if (mState!=TrackingState.TRACKING)
-			return;
-		// proceed only if in tracking state
-		// TODO: not sure this is needed
 	}
 
 	@Override
@@ -262,7 +253,6 @@ public class TrackingSession implements LocationListener {
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
 	}
 	
 	private void SessionDone() {

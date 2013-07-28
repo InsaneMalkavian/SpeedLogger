@@ -102,7 +102,7 @@ public class SensorStatusActivity extends Activity implements SensorEventListene
     		mChartView = ChartFactory.getLineChartView(this, mDataset, mRenderer);
     		mRenderer.setClickEnabled(true);
     		mRenderer.setSelectableBuffer(100);
-    		layout.addView(mChartView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+    		layout.addView(mChartView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     	} else {
     		mChartView.repaint();
     	}

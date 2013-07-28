@@ -106,19 +106,28 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 		mPreviousAngle=-135.f+0*2;
     }
     
+    @Override
+    protected void onPause() {
+    	super.onPause();
+    	mTrackingSession.StopService();
+    }
+    
 
     @Override
     protected void onResume() {
     	super.onResume();
-    	if (mChartView == null) {
+    	mCurrentSeries.clear();		
+		if (mChartView == null) {
     		LinearLayout layout = (LinearLayout) findViewById(R.id.chart);
     		mChartView = ChartFactory.getLineChartView(this, mDataset, mRenderer);
     		mRenderer.setClickEnabled(true);
     		mRenderer.setSelectableBuffer(100);
-    		layout.addView(mChartView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+    		layout.addView(mChartView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
     	} else {
     		mChartView.repaint();
     	}
+    	mCurrentSeries.clear();
+    	mTrackingSession.StartService();
     }
     
     @Override
@@ -176,7 +185,8 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	public void onSessionFinished(List<Location> mLocList) {
 		mMeasurement.SetLocations(mLocList);
 		Intent intent = new Intent(this, ResultsActivity.class);
-		startActivity(intent);	
+		startActivity(intent);
+		finish();
 	}
 
 	@Override
@@ -206,7 +216,5 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 
 	@Override
 	public void onSessionStopped() {
-		// TODO Auto-generated method stub
-		
 	}
 }

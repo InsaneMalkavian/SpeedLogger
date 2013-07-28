@@ -32,20 +32,17 @@ public class RealGPSProvider extends GPSProvider implements LocationListener {
 
 	@Override
 	public void onProviderDisabled(String arg0) {
-		// TODO Auto-generated method stub
 		mListener.onProviderDisabled(arg0);
 		
 	}
 
 	@Override
 	public void onProviderEnabled(String arg0) {
-		// TODO Auto-generated method stub
 		mListener.onProviderEnabled(arg0);
 	}
 
 	@Override
 	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-		// TODO Auto-generated method stub
 		mListener.onStatusChanged(arg0, arg1, arg2);
 	}
 
