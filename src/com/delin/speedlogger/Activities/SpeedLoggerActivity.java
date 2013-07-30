@@ -17,6 +17,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -49,8 +50,13 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
 	XYSeries mCurrentSeries = null;
 	GraphicalView mChartView = null;
+	
+	
 	long mStartTime=0;
 
+	
+	private int mChronoInterval = 15; // 15 milliseconds by default
+	private Handler mChronoHandler = new Handler(); // timer is used to draw time since start
 	
 
 	float mPreviousAngle = -90.0f;
@@ -173,7 +179,9 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	public void onSessionStart() {
 		mTracking = true;
 		mButton.setText("Push, push, push");
-		mStartTime = mTrackingSession.GetReadyLocation().getTime();
+		mStartTime = mTrackingSession.GetReadyLocation().getTime(); // which one to use???
+		//mStartTime = System.currentTimeMillis();
+		mChronoChecker.run(); 
 		if (mCurrentSeries!=null && mChartView!=null && mTracking) {
 			mCurrentSeries.add(0, Converter.ms2kph(0));
 			mCurrentSeries.add((mTrackingSession.GetLastLocation().getTime()-mStartTime)/1000, Converter.ms2kph(mTrackingSession.GetLastLocation().getSpeed()));
@@ -183,6 +191,8 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 
 	@Override
 	public void onSessionFinished(List<Location> mLocList) {
+		mTracking = false;
+		//mChronoHandler.removeCallbacks(mChronoChecker);
 		mMeasurement.SetLocations(mLocList);
 		Intent intent = new Intent(this, ResultsActivity.class);
 		startActivity(intent);
@@ -191,9 +201,15 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 
 	@Override
 	public void onSessionError() {
+		mTracking = false;
 		mButton.setText("Error occured!");
 	}
 
+	@Override
+	public void onSessionStopped() {
+		mTracking = false;
+	}
+	
 	@Override
 	public void onSessionLocationUpdate(Location location) {
     	//mTextView.setText(Logger.LocToStr(location));
@@ -214,7 +230,12 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 		mPreviousAngle=-135.f+location.getSpeed()*2;
 	}
 
-	@Override
-	public void onSessionStopped() {
-	}
+	Runnable mChronoChecker = new Runnable() {
+	     @Override 
+	     public void run() {
+	    	 long elapsed = System.currentTimeMillis() - mStartTime;
+	         mButton.setText(Long.toString(elapsed));
+	    	 mChronoHandler.postDelayed(mChronoChecker, mChronoInterval);
+	     }
+	};
 }

@@ -28,6 +28,7 @@ public class FileGPSProvider extends GPSProvider {
 			@Override
 		     public void run() {
 				Location loc = mGPXReader.GetFix();
+				loc.setTime(System.currentTimeMillis());
 		    	mListener.onLocationChanged(loc);
 		    };
 		});
