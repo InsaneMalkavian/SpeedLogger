@@ -71,7 +71,7 @@ public class TrackingSession implements LocationListener {
 			newListener.onSessionReady();
 			break;
 		case TRACKING:
-			newListener.onSessionStart();
+			newListener.onSessionStart(mReadyLoc.getTime());
 			break;
 		case DONE:
 		case ERROR:
@@ -183,7 +183,7 @@ public class TrackingSession implements LocationListener {
 				mState = TrackingState.TRACKING;
 				for (TrackingSessionListener listener : mListeners)
 				{
-					listener.onSessionStart();
+					listener.onSessionStart(mReadyLoc.getTime());
 				}
 				// push mReadyLoc to list
 				mLocList.add(mReadyLoc);

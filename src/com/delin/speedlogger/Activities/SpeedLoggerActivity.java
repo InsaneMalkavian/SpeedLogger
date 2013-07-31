@@ -140,7 +140,6 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
     public void onDestroy() {
     	super.onDestroy();
     	mTrackingSession.RemoveListener(this);
-    	mTrackingSession.StopService();
     	mTrackingSession = null;
     }
     
@@ -176,11 +175,10 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	}
 
 	@Override
-	public void onSessionStart() {
+	public void onSessionStart(long startTime) {
 		mTracking = true;
 		mButton.setText("Push, push, push");
-		mStartTime = mTrackingSession.GetReadyLocation().getTime(); // which one to use???
-		//mStartTime = System.currentTimeMillis();
+		mStartTime = startTime;
 		mChronoChecker.run(); 
 		if (mCurrentSeries!=null && mChartView!=null && mTracking) {
 			mCurrentSeries.add(0, Converter.ms2kph(0));
@@ -190,10 +188,10 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	}
 
 	@Override
-	public void onSessionFinished(List<Location> mLocList) {
+	public void onSessionFinished(List<Location> locList) {
 		mTracking = false;
 		//mChronoHandler.removeCallbacks(mChronoChecker);
-		mMeasurement.SetLocations(mLocList);
+		mMeasurement.SetLocations(locList);
 		Intent intent = new Intent(this, ResultsActivity.class);
 		startActivity(intent);
 		finish();
@@ -218,7 +216,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
         	mChartView.repaint();
         }
         
-        RotateAnimation rotateAnimation1 = new RotateAnimation(mPreviousAngle, -135.f+location.getSpeed()*2,
+        RotateAnimation rotateAnimation1 = new RotateAnimation(mPreviousAngle, -135.f+location.getSpeed()*3,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 1.0f);
         rotateAnimation1.setInterpolator(new LinearInterpolator());
@@ -227,14 +225,13 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 		rotateAnimation1.setFillAfter(true);
         View img = (ImageView)findViewById(R.id.imageView2);
 		img .startAnimation(rotateAnimation1);
-		mPreviousAngle=-135.f+location.getSpeed()*2;
+		mPreviousAngle=-135.f+location.getSpeed()*3;
 	}
 
 	Runnable mChronoChecker = new Runnable() {
 	     @Override 
 	     public void run() {
-	    	 long elapsed = System.currentTimeMillis() - mStartTime;
-	         mButton.setText(Long.toString(elapsed));
+	         mButton.setText(Long.toString(System.currentTimeMillis() - mStartTime));
 	    	 mChronoHandler.postDelayed(mChronoChecker, mChronoInterval);
 	     }
 	};
