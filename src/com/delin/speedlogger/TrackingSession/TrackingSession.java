@@ -47,7 +47,7 @@ public class TrackingSession implements LocationListener {
 		
 		mWriteGPX = devPrefs.getBoolean(context.getString(R.string.SaveTrackingSession), false);
 		
-		String provider = context.getString(R.string.FileGPS);
+		String provider = context.getString(R.string.RealGPS);
 		provider = devPrefs.getString(context.getString(R.string.ProviderGPS),provider);
 		if(provider.equals(context.getString(R.string.RealGPS))){ 
 			mGpsProvider = new RealGPSProvider(context, this);
@@ -88,6 +88,17 @@ public class TrackingSession implements LocationListener {
 		return mBaseLocation;
 	}
 	
+	/**
+	 * Returns location where the session has been started.
+	 * 
+	 * This location may have recalculated position, time instead of provided via gps/glns.
+	 * The position may be calculated by using several previous fixes,
+	 * and time of fix may be adjusted by accelerometer data.
+	 * <p>
+	 * This location always comes first in trackingsession's location list.
+	 * 
+	 * @return Location at which session has been started
+	 */
 	public Location GetReadyLocation() {
 		return mReadyLoc;
 	}
