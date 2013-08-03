@@ -8,42 +8,56 @@
         android:id="@+id/buttonStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/start"/>
+        android:layout_gravity="center_horizontal"
+        android:text="@string/start"
+        android:textAllCaps="true" />
     
     <Button
         android:id="@+id/buttonPreferences"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/Prefs" />
+        android:layout_gravity="center_horizontal"
+        android:text="@string/Prefs"
+        android:textAllCaps="true" />
 
     <Button
         android:id="@+id/buttonDevPrefs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dev Preferences" />
+        android:layout_gravity="center_horizontal"
+        android:text="Dev Preferences"
+        android:textAllCaps="true" />
 
     <Button
         android:id="@+id/buttonStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sensor Status" />
+        android:layout_gravity="center_horizontal"
+        android:text="Sensor Status"
+        android:textAllCaps="true" />
 
     <Button
         android:id="@+id/buttonTest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Test" />
+        android:layout_gravity="center_horizontal"
+        android:text="Test"
+        android:textAllCaps="true" />
 
     <Button
         android:id="@+id/chartpage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ChartPage" />
+        android:layout_gravity="center_horizontal"
+        android:text="ChartPage"
+        android:textAllCaps="true" />
 
     <Button
         android:id="@+id/buttonLocalTimes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LocalTimes" />
+        android:layout_gravity="center_horizontal"
+        android:text="LocalTimes"
+        android:textAllCaps="true" />
 
 </LinearLayout>

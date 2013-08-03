@@ -26,4 +26,12 @@
     <string name="ScreenAwake">Keep Screen Awake</string>
     <string name="SaveTrackingSession">Save TrackingSession</string>
     <string name="EnableGPS">Please enable GPS!</string>
+    <string name="SessionResult">Session Result</string>
+    <string name="MaxSpeed">Max Speed:</string>
+    <string name="TotalDistance">Total Distance:</string>
+    <string name="TotalTime">Total Time:</string>
+    <string name="OverallStats">Overall Statistics:</string>
+    <string name="Times">Times:</string>
+    <string name="Distances">Distances:</string>
+    <string name="Na">N/A</string>
 </resources>

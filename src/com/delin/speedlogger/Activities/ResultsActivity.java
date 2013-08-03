@@ -25,6 +25,8 @@ public class ResultsActivity extends Activity {
 	Button mLocalTimesButton;
 	String testline = "origin";
 	MeasurementResult mMeasurement;
+	float[] mSpeeds = {60.f, 80.f, 100.f, 120.f, 150.f, 180.f, 200.f, 250.f, 300.f, 400.f}; // kmph
+	float[] mDistances = {100.f, 200.f, 400.f, 800.f, 1000.f}; // meters
 	
 	
 	public void onCreate(Bundle savedInstanceState){
@@ -55,9 +57,9 @@ public class ResultsActivity extends Activity {
 		boolean isStraightLine = Geometry.StraightLine(result.GetLocations(),false);
 		
 		float maxSpeed = result.GetMaxSpeed();
-		mMaxSpeed.setText(Double.toString(Converter.ms2kph(maxSpeed)) + " kph");
-		mDistance.setText(Double.toString(result.GetTotalDistance()) + " m");
-		mTime.setText(Float.toString((float)result.GetTotalTime()/1000) + " sec");
+		mMaxSpeed.setText(String.format("%.3f", Converter.ms2kph(maxSpeed)) + " km/h");
+		mDistance.setText(String.format("%.3f", result.GetTotalDistance()) + " meters");
+		mTime.setText(String.format("%.3f", (float)result.GetTotalTime()/1000) + " sec");
 		mStraightLine.setChecked(isStraightLine);
 		
 		if(isStraightLine){ // Save result via ResultsManager
@@ -89,12 +91,12 @@ public class ResultsActivity extends Activity {
 		float speeds = Converter.kph2ms(60);
 		if (speeds<maxSpeed) {
 			float time = Converter.ms2kph(result.GetTimeAtSpeed(speeds));
-			mZero60.setText(Float.toString(time)+" sec");
+			mZero60.setText(String.format("%.3f", time)+" sec");
 		}
 		speeds = Converter.kph2ms(100);
 		if (speeds<maxSpeed) {
 			float time = Converter.ms2kph(result.GetTimeAtSpeed(speeds));
-			mZero100.setText(Float.toString(time)+" sec");
+			mZero100.setText(String.format("%.3f", time)+" sec");
 		}
 	}
 	
