@@ -1,6 +1,7 @@
 package com.delin.speedlogger.Results;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.delin.speedlogger.Math.Geometry;
@@ -9,65 +10,24 @@ import com.delin.speedlogger.Serialization.GPXSerializer;
 import android.location.Location;
 
 public class SessionResult {
-	private long mStartTime  = 0;
-	private float mMaxSpeed  = 0;
-	private float mDistance  = 0; // meters
-	private long mDuration   = 0;
+	class Point {
+		public long time = -1;
+		public float speed = -1.f;
+		public float distance = -1.f;
+	}
+	private long mStartTime = 0;
+	private long mTotalTime = 0;
+	private float mMaxSpeed = 0;
+	private float mTotalDistance = 0;
+	private boolean mValid = false;
+	private List<Location> mLocList = new ArrayList<Location>();
 	private String mFilename; // gpx file
-	private List<Location> mLocList;
 	
 	public SessionResult() {
 	}
 	
 	public SessionResult(List<Location> locList) {
-		if(locList == null || locList.size() < 2) return;
-		mLocList = new ArrayList<Location>(locList);
-		Location origin = mLocList.get(0);
-		Location dest = mLocList.get(mLocList.size()-1);
-		
-		setStartTime(mLocList.get(0).getTime());
-		for (int i=1; i<mLocList.size(); i++){
-			if (mMaxSpeed < mLocList.get(i).getSpeed()){
-				setMaxSpeed(mLocList.get(i).getSpeed());
-			}
-		}
-		setDuration(dest.getTime() - mStartTime);
-		// TODO: One of them is VERY wrong
-		//mDistance = origin.distanceTo(dest); // returns 87.4m
-		setDistance(Geometry.DistBetweenLocs(origin,dest,false)); // returns 156m
-	}
-	
-	public long getStartTime() {
-		return mStartTime;
-	}
-
-	public void setStartTime(long startTime) {
-		mStartTime = startTime;
-		mFilename = Long.toString(mStartTime) + ".gpx";
-	}
-	
-	public float getMaxSpeed() {
-		return mMaxSpeed;
-	}
-
-	public void setMaxSpeed(float maxSpeed) {
-		mMaxSpeed = maxSpeed;
-	}
-	
-	public float getDistance() {
-		return mDistance;
-	}
-
-	public void setDistance(float distance) {
-		mDistance = distance;
-	}
-
-	public long getDuration() {
-		return mDuration;
-	}
-
-	public void setDuration(long duration) {
-		mDuration = duration;
+		SetLocations(locList);
 	}
 
 	public List<Location> getLocations() {
@@ -91,4 +51,145 @@ public class SessionResult {
 	public void DeleteGPX() {
 		GPXSerializer.DeleteGPX(mFilename);
 	}
+
+    public List<Location> GetLocations() {
+    	return mLocList;
+    }
+
+    public void SetLocations(List<Location> locs) { // do a full copy
+    	mLocList.clear();
+    	mLocList.addAll(locs);
+    	Recalc();
+    }
+    
+    public void SaveToGPX(final String filename) {
+    	GPXSerializer gpxSaver = new GPXSerializer(filename, true);
+    	for (Iterator<Location> it = mLocList.iterator(); it.hasNext(); ) {
+    		gpxSaver.AddFix(it.next());
+    	}
+    	gpxSaver.Stop();
+    }
+
+    public long GetTimeAtSpeed(final float speed) {
+    	// look at the cache
+    	// then look at loclist itself
+		for (int i=1; i<mLocList.size(); i++) {
+			if (speed < mLocList.get(i).getSpeed()) {
+				// we found a closest largest fix
+				return mLocList.get(i).getTime() - mStartTime; // TODO: very rough, intepolate that
+			}
+		}
+    	return -1;
+    }
+    
+    public long GetTimeAtSpeed(final float toSpeed, final float fromSpeed) {
+    	long retval = -1;
+    	long fromTime = 0;
+    	// check input parameters
+    	if (toSpeed<fromSpeed || toSpeed<0 ) return retval;
+    	
+    	fromTime = retval = GetTimeAtSpeed(fromSpeed); // get 'from' time
+    	if (retval!=-1) {  // if it's ('from') ok - get 'to' time
+    		retval = GetTimeAtSpeed(toSpeed);
+    		if (retval!=-1) retval = retval - fromTime >0 ? retval - fromTime : -1; // if 'to' is ok - calc difference
+        }
+    	return retval;
+    }
+    
+    public long GetTimeAtDistance(final float distance) {
+    	// look at the cache
+    	// then look at loclist itself
+    	float dist= 0.f;
+		for (int i=1; i<mLocList.size(); i++) {
+			dist = Geometry.DistBetweenLocs(mLocList.get(0),mLocList.get(i),false);
+			if (distance < dist) {
+				// we found a closest largest fix
+				return mLocList.get(i).getTime() - mStartTime; // TODO: very rough, intepolate that
+			}
+		}
+    	return -1;
+    }
+    
+    public Point GetInfoAtDistance(final float distance) {
+    	// look at the cache
+    	// then look at loclist itself
+    	Point point = new Point();
+    	float dist= 0.f;
+		for (int i=1; i<mLocList.size(); i++) {
+			dist = Geometry.DistBetweenLocs(mLocList.get(0),mLocList.get(i),false);
+			if (distance < dist) {
+				// we found a closest largest fix
+				point.time = mLocList.get(i).getTime() - mStartTime; // TODO: very rough, intepolate that
+				point.speed = mLocList.get(i).getSpeed();
+				point.distance = distance;
+				return point;
+			}
+		}
+    	return point;
+    }
+
+    /**
+	 * Indicates state of results
+	 * 
+	 * If state is invalid - results may be incorrect
+	 *
+	 * @return Valid or not
+	 */
+    public boolean IsValid() {
+    	return mValid;
+    }
+    
+	/**
+	 * Returns top speed
+	 *
+	 * @return Speed, in m/s
+	 */
+    public float GetMaxSpeed() {
+    	return mMaxSpeed;
+    }
+    
+    /**
+	 * Returns distance on which top speed has been achieved
+	 *
+	 * @return Distance, in meters
+	 */
+    public float GetTotalDistance() {
+    	return mTotalDistance;
+    }
+    
+	/**
+	 * Returns time taken on achievement top speed
+	 *
+	 * @return Time, in milliseconds, since StartTime!
+	 */
+    public long GetTotalTime() {
+    	return mTotalTime;
+    }
+    
+	/**
+	 * Returns time at which session has been started
+	 *
+	 * @return Time at which session has been started, in milliseconds since 01.01.1970 UTC
+	 */
+    public long GetStartTime() {
+    	return mStartTime; 
+    }
+    
+    private void Recalc() {
+    	mValid = false;
+		if(mLocList == null || mLocList.size() < 2) return;
+		mValid = true;
+		Location origin = mLocList.get(0);
+		Location dest = mLocList.get(mLocList.size()-1);
+		
+		mStartTime = mLocList.get(0).getTime();
+		for (int i=1; i<mLocList.size(); i++){
+			if (mMaxSpeed < mLocList.get(i).getSpeed()) {
+				mMaxSpeed = mLocList.get(i).getSpeed();
+				mTotalTime = mLocList.get(i).getTime() - mStartTime;
+			}
+		}		
+		mTotalDistance = Geometry.DistBetweenLocs(origin,dest,false);
+    }
+
 }

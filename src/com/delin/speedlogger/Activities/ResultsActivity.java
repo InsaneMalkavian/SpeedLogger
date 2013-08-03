@@ -1,22 +1,15 @@
 package com.delin.speedlogger.Activities;
 
-import java.util.List;
-
 import com.delin.speedlogger.R;
 import com.delin.speedlogger.Math.Geometry;
-import com.delin.speedlogger.Math.Interpolator;
 import com.delin.speedlogger.Results.ResultsManager;
 import com.delin.speedlogger.Results.SessionResult;
 import com.delin.speedlogger.TrackingSession.MeasurementResult;
 import com.delin.speedlogger.Utils.Converter;
-import com.delin.speedlogger.Utils.Logger;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.widget.CheckBox;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -48,31 +41,30 @@ public class ResultsActivity extends Activity {
         mStraightLine = (CheckBox)findViewById(R.id.cbStraightLine);
 		
 		mMeasurement = MeasurementResult.GetInstance();
-		mMeasurement.SaveToGPX("textlog.gpx");
 		
 		// if activity just created, not restored by system
 		if(savedInstanceState == null) HandleResults();
 	}
 	
-	public void HandleResults(){
-		List<Location> locList = mMeasurement.GetLocations();
-		if(locList.size() < 2){
+	public void HandleResults() {
+		SessionResult result = new SessionResult(mMeasurement.GetLocations());
+		if (result.IsValid() == false) {
 			ShowZeroResults();
 			return;
 		}
-		SessionResult result = new SessionResult(locList);
-		boolean isStraightLine = Geometry.StraightLine(locList,false);
+		boolean isStraightLine = Geometry.StraightLine(result.GetLocations(),false);
 		
-		float maxSpeed = Converter.ms2kph(result.getMaxSpeed());
-		mMaxSpeed.setText(Double.toString(maxSpeed) + " kph");
-		mDistance.setText(Double.toString(result.getDistance()) + " m");
+		float maxSpeed = result.GetMaxSpeed();
+		mMaxSpeed.setText(Double.toString(Converter.ms2kph(maxSpeed)) + " kph");
+		mDistance.setText(Double.toString(result.GetTotalDistance()) + " m");
+		mTime.setText(Float.toString((float)result.GetTotalTime()/1000) + " sec");
 		mStraightLine.setChecked(isStraightLine);
 		
 		if(isStraightLine){ // Save result via ResultsManager
 			ResultsManager.GetInstance().AddResult(result);
 		}
 		
-		Log.i("Results Activity","Locs in path: " + Integer.toString(locList.size()));
+		/*Log.i("Results Activity","Locs in path: " + Integer.toString(locList.size()));
 		for(int i=0; i<locList.size(); ++i){
 			Log.i("Results Activity", "-----\n" + "#" + Integer.toString(i) + 
 				  "\n" + Logger.LocToStr(locList.get(i)));
@@ -93,26 +85,25 @@ public class ResultsActivity extends Activity {
 
 		Location atSpeed = interp.TimeBySpeed(Converter.kph2ms(maxSpeed));
 		mTime.setText(Float.toString((float)(atSpeed.getTime()-locList.get(0).getTime())/1000)+" sec");
-		
-		float speeds = 60;
+		*/
+		float speeds = Converter.kph2ms(60);
 		if (speeds<maxSpeed) {
-			atSpeed = interp.TimeBySpeed(Converter.kph2ms(speeds));
-			mZero60.setText(Float.toString((float)(atSpeed.getTime()-locList.get(0).getTime())/1000)+" sec");
+			float time = Converter.ms2kph(result.GetTimeAtSpeed(speeds));
+			mZero60.setText(Float.toString(time)+" sec");
 		}
-		speeds=100;
+		speeds = Converter.kph2ms(100);
 		if (speeds<maxSpeed) {
-			atSpeed = interp.TimeBySpeed(Converter.kph2ms(speeds));
-			mZero100.setText(Float.toString((float)(atSpeed.getTime()-locList.get(0).getTime())/1000)+" sec");
+			float time = Converter.ms2kph(result.GetTimeAtSpeed(speeds));
+			mZero100.setText(Float.toString(time)+" sec");
 		}
-		
 	}
 	
 	void ShowZeroResults() {
 		// TODO: show "measurement failed" dialog instead
 		mMaxSpeed.setText("0 kph");
 		mDistance.setText("0 m");
-		mZero60.setText("Unreacheble");
-		mZero100.setText("Unreacheble");
+		mZero60.setText("N/A");
+		mZero100.setText("N/A");
 		mStraightLine.setChecked(false);
 	}
 	

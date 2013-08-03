@@ -45,16 +45,16 @@ public class LocalTimesActivity extends Activity {
     		row.setId(i);
     		row.setOnClickListener(mOnClickListener);
     		text = new TextView(this);
-            text.setText(Long.toString(mResults.get(i).getStartTime()));
+            text.setText(Long.toString(mResults.get(i).GetStartTime()));
             row.addView(text);
             text = new TextView(this);
-            text.setText(Float.toString(mResults.get(i).getDistance()));
+            text.setText(Float.toString(mResults.get(i).GetTotalDistance()));
             row.addView(text);
             text = new TextView(this);
-            text.setText(Float.toString(mResults.get(i).getMaxSpeed()));
+            text.setText(Float.toString(mResults.get(i).GetMaxSpeed()));
             row.addView(text);
             text = new TextView(this);
-            text.setText(Long.toString(mResults.get(i).getDuration()));
+            text.setText(Long.toString(mResults.get(i).GetTotalTime()));
             row.addView(text);
             mValuesTable.addView(row);
     	}

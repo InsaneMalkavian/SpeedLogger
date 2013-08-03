@@ -46,7 +46,7 @@ public class ResultsManager {
 	}
 		
 	private void LoadDummyData() {
-		SessionResult result = new SessionResult();
+		/*SessionResult result = new SessionResult();
 		result.setStartTime(1000); // just random values
 		result.setMaxSpeed(150);
 		result.setDistance(200);
@@ -65,7 +65,7 @@ public class ResultsManager {
 		result.setMaxSpeed(250);
 		result.setDistance(400);
 		result.setDuration(150);
-		AddResult(result);
+		AddResult(result);*/
 	}
 	
 	public void ClearLocalResults() {
