@@ -210,13 +210,14 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	
 	@Override
 	public void onSessionLocationUpdate(Location location) {
+		final float mult = 3.6f*40/45;
     	//mTextView.setText(Logger.LocToStr(location));
 		if (mCurrentSeries!=null && mChartView!=null && mTracking) {
 			mCurrentSeries.add((location.getTime()-mStartTime)/1000, Converter.ms2kph(location.getSpeed()));        
         	mChartView.repaint();
         }
         
-        RotateAnimation rotateAnimation1 = new RotateAnimation(mPreviousAngle, -135.f+location.getSpeed()*3,
+        RotateAnimation rotateAnimation1 = new RotateAnimation(mPreviousAngle, -135.f+location.getSpeed()*mult,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 1.0f);
         rotateAnimation1.setInterpolator(new LinearInterpolator());
@@ -225,7 +226,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 		rotateAnimation1.setFillAfter(true);
         View img = (ImageView)findViewById(R.id.imageView2);
 		img .startAnimation(rotateAnimation1);
-		mPreviousAngle=-135.f+location.getSpeed()*3;
+		mPreviousAngle=-135.f+location.getSpeed()*mult;
 	}
 
 	Runnable mChronoChecker = new Runnable() {

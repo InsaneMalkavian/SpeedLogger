@@ -100,4 +100,12 @@ public class Interpolator {
 		return s;
     	
     }
+    public static long Lerp(float x0, long fx0, float x1, long fx1, float x) {
+    	if (x0 == x1) return fx0;
+		return fx0 + (long)((float)(fx1 - fx0) / (x1 - x0) * (x - x0));
+	}
+    public static double Lerp(double x0, double fx0, double x1, double fx1, double x) {
+    	if (x0 == x1) return fx0;
+		return fx0 + (fx1 - fx0) / (x1 - x0) * (x - x0);
+	}
 }

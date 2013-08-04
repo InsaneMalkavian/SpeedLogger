@@ -17,6 +17,7 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/ResNewPar"
         android:gravity="center_horizontal"
         android:text="@string/OverallStats"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -95,43 +96,6 @@
 
         </TableRow>
 
-        <TableRow
-            android:id="@+id/tableRow2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-		<TextView
-                android:id="@+id/zero60"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0-60"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-		<TextView
-                android:id="@+id/zero60value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" 0"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-		<TextView
-                android:id="@+id/zero100"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0-100"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-		<TextView
-                android:id="@+id/zero100value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" 0"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        </TableRow>
 
     </TableLayout>
     <TextView
@@ -140,7 +104,78 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="@string/Times"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium" android:layout_marginTop="@dimen/ResNewPar"/>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+		<TextView
+                android:id="@+id/zero60"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="right"
+                android:text="@string/Times060"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+		<TextView
+                android:id="@+id/zero60value"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/ResSpace"
+                android:text="@string/Na"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowZero80"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+        <TextView
+                android:id="@+id/zero80"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="right"
+                android:text="@string/Times080"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+		<TextView
+                android:id="@+id/zero80value"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/ResSpace"
+                android:text="@string/Na"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </TableRow>
+        
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+		<TextView
+                android:id="@+id/zero100"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="right"
+                android:text="@string/Times0100"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+		<TextView
+                android:id="@+id/zero100value"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/ResSpace"
+                android:text="@string/Na"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </TableRow>
+        
+    </TableLayout>
+
     <CheckBox
         android:id="@+id/cbStraightLine"
         android:layout_width="wrap_content"
@@ -151,6 +186,7 @@
         android:linksClickable="false"
         android:longClickable="false"
         android:text="Path is a straight line" />
+
 	<Button
         android:id="@+id/buttonLocalTimes"
         android:layout_width="wrap_content"

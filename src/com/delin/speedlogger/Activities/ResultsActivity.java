@@ -20,10 +20,11 @@ public class ResultsActivity extends Activity {
 	TextView mDistance;
 	TextView mTime;
 	TextView mZero60;
+	TextView mZero80;
 	TextView mZero100;
+	TextView[] mSpeedsViews = null;
 	CheckBox mStraightLine;
 	Button mLocalTimesButton;
-	String testline = "origin";
 	MeasurementResult mMeasurement;
 	float[] mSpeeds = {60.f, 80.f, 100.f, 120.f, 150.f, 180.f, 200.f, 250.f, 300.f, 400.f}; // kmph
 	float[] mDistances = {100.f, 200.f, 400.f, 800.f, 1000.f}; // meters
@@ -35,17 +36,16 @@ public class ResultsActivity extends Activity {
 		mLocalTimesButton = (Button)findViewById(R.id.buttonLocalTimes);
 		mLocalTimesButton.setOnClickListener(mOnClickListener);
 		mMaxSpeed = (TextView)findViewById(R.id.textMaxSpeed);
-		mMaxSpeed.setText(testline);
 		mDistance = (TextView)findViewById(R.id.textDistance);
 		mTime = (TextView)findViewById(R.id.totalTimevalue);
 		mZero60 = (TextView)findViewById(R.id.zero60value);
+		mZero80 = (TextView)findViewById(R.id.zero80value);
 		mZero100 = (TextView)findViewById(R.id.zero100value);
         mStraightLine = (CheckBox)findViewById(R.id.cbStraightLine);
 		
 		mMeasurement = MeasurementResult.GetInstance();
 		
-		// if activity just created, not restored by system
-		if(savedInstanceState == null) HandleResults();
+		HandleResults();
 	}
 	
 	public void HandleResults() {
@@ -88,14 +88,19 @@ public class ResultsActivity extends Activity {
 		Location atSpeed = interp.TimeBySpeed(Converter.kph2ms(maxSpeed));
 		mTime.setText(Float.toString((float)(atSpeed.getTime()-locList.get(0).getTime())/1000)+" sec");
 		*/
-		float speeds = Converter.kph2ms(60);
+		float speeds = Converter.kph2ms(10);
 		if (speeds<maxSpeed) {
-			float time = Converter.ms2kph(result.GetTimeAtSpeed(speeds));
+			float time = (float)result.GetTimeAtSpeed(speeds)/1000;
 			mZero60.setText(String.format("%.3f", time)+" sec");
 		}
-		speeds = Converter.kph2ms(100);
+		speeds = Converter.kph2ms(20);
 		if (speeds<maxSpeed) {
-			float time = Converter.ms2kph(result.GetTimeAtSpeed(speeds));
+			float time = (float)result.GetTimeAtSpeed(speeds)/1000;
+			mZero80.setText(String.format("%.3f", time)+" sec");
+		}
+		speeds = Converter.kph2ms(30);
+		if (speeds<maxSpeed) {
+			float time = (float)result.GetTimeAtSpeed(speeds)/1000;
 			mZero100.setText(String.format("%.3f", time)+" sec");
 		}
 	}

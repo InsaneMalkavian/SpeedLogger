@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.delin.speedlogger.Math.Geometry;
+import com.delin.speedlogger.Math.Interpolator;
 import com.delin.speedlogger.Serialization.GPXSerializer;
 
 import android.location.Location;
@@ -70,18 +71,37 @@ public class SessionResult {
     	gpxSaver.Stop();
     }
 
+	/**
+	 * Returns time at which specified speed has been reached
+	 *
+	 * @param speed desired speed, in m/s
+	 * @return Time at which specified speed has been reached, in milliseconds
+	 * or -1 in case of error
+	 */
     public long GetTimeAtSpeed(final float speed) {
     	// look at the cache
     	// then look at loclist itself
 		for (int i=1; i<mLocList.size(); i++) {
 			if (speed < mLocList.get(i).getSpeed()) {
 				// we found a closest largest fix
-				return mLocList.get(i).getTime() - mStartTime; // TODO: very rough, intepolate that
+				// weird linear interpolator
+				return Interpolator.Lerp(mLocList.get(i-1).getSpeed(), mLocList.get(i-1).getTime(),
+						mLocList.get(i).getSpeed(), mLocList.get(i).getTime(), speed) - mStartTime;
+				//return mLocList.get(i).getTime() - mStartTime;
 			}
 		}
     	return -1;
     }
     
+	/**
+	 * Returns time at which specified speed has been reached after
+	 * starting from origin speed
+	 *
+	 * @param toSpeed origin speed, in m/s
+	 * @param fromSpeed desired speed, in m/s
+	 * @return Time at which specified speed has been reached, in milliseconds
+	 * or -1 in case of error
+	 */
     public long GetTimeAtSpeed(final float toSpeed, final float fromSpeed) {
     	long retval = -1;
     	long fromTime = 0;

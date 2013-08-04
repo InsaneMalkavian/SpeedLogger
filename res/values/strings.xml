@@ -34,4 +34,9 @@
     <string name="Times">Times:</string>
     <string name="Distances">Distances:</string>
     <string name="Na">N/A</string>
+    <string name="Times060">0 - 60:</string>
+    <string name="Times080">0 - 80:</string>
+    <string name="Times0100">0 - 100:</string>
+    <string name="Times0120">0 - 120:</string>
+    <string name="Times80120">80 - 120:</string>
 </resources>
