@@ -17,7 +17,6 @@
     <string name="RealGPS">RealGPS</string>
     <string name="ProviderGPS">GPS Provider</string>
     <string name="FileWithGPS">File with GPS</string>
-    
     <string-array name="GpsList">
         <item>@string/FileGPS</item>
         <item>@string/RealGPS</item>

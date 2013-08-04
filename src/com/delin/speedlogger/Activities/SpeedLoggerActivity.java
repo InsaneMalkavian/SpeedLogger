@@ -31,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.delin.speedlogger.R;
+import com.delin.speedlogger.Sensors.AccelerationProcessor;
 import com.delin.speedlogger.TrackingSession.MeasurementResult;
 import com.delin.speedlogger.TrackingSession.TrackingSession;
 import com.delin.speedlogger.TrackingSession.TrackingSession.WarmupState;
@@ -44,16 +45,15 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	TextView mTextView;
 	TrackingSession mTrackingSession;
 	MeasurementResult mMeasurement;
+	AccelerationProcessor mAccel;
 	boolean mTracking = false; // indicates user in tracking mode. We only set it to true and don't need to set false anymore
 
 	XYMultipleSeriesDataset mDataset = new XYMultipleSeriesDataset();
 	XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
 	XYSeries mCurrentSeries = null;
-	GraphicalView mChartView = null;
-	
+	GraphicalView mChartView = null;	
 	
 	long mStartTime=0;
-
 	
 	private int mChronoInterval = 15; // 15 milliseconds by default
 	private Handler mChronoHandler = new Handler(); // timer is used to draw time since start
@@ -99,6 +99,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
         mMeasurement = MeasurementResult.GetInstance();
         mTrackingSession = new TrackingSession(this);
         mTrackingSession.AddListener(this);
+        mAccel = new AccelerationProcessor(this);
         
         RotateAnimation rotateAnimation1 = new RotateAnimation(mPreviousAngle, -135.f+0*2,
                 Animation.RELATIVE_TO_SELF, 0.5f,
@@ -116,6 +117,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
     protected void onPause() {
     	super.onPause();
     	mTrackingSession.StopService();
+    	mAccel.Stop();
     }
     
 
@@ -134,6 +136,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
     	}
     	mCurrentSeries.clear();
     	mTrackingSession.StartService();
+    	mAccel.Start();
     }
     
     @Override

@@ -25,7 +25,7 @@ import org.w3c.dom.Text;
 import android.location.Location;
 import android.os.Environment;
 
-public class GPXSerializer {
+public class GPXSerializer  extends Serializer {
 	static final String GPX_STR =			"gpx";
 	static final String VERSION_STR =		"version";
 	static final String VERSION_VALUE =		"1.1";
@@ -46,11 +46,7 @@ public class GPXSerializer {
 	static final String BEARING = 			"bear";
 	static final String ACCURACY = 			"acc";
 	
-	static final String TIMEPATTERN = 		"yyyy-MM-dd'T'HH:mm:ss'Z'";
-	static final String TIMEPATTERN_FILE = 	"yyyy-MM-dd_HH-mm-ss";
 	static final String FILE_EXTENSION = 	".gpx";
-	static final String STORAGE_DIR = 		Environment.getExternalStorageDirectory().getPath()
-											+"/"+CREATOR_VALUE;
 	
 	static final long SEGMENT_TIME_INTERVAL = 5000; // milliseconds
 	

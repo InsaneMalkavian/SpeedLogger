@@ -83,8 +83,7 @@ public class SessionResult {
     	// then look at loclist itself
 		for (int i=1; i<mLocList.size(); i++) {
 			if (speed < mLocList.get(i).getSpeed()) {
-				// we found a closest largest fix
-				// weird linear interpolator
+				// we found a closest largest fix, do linear interpolation
 				return Interpolator.Lerp(mLocList.get(i-1).getSpeed(), mLocList.get(i-1).getTime(),
 						mLocList.get(i).getSpeed(), mLocList.get(i).getTime(), speed) - mStartTime;
 				//return mLocList.get(i).getTime() - mStartTime;
