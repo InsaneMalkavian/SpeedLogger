@@ -23,7 +23,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import android.location.Location;
-import android.os.Environment;
 
 public class GPXSerializer  extends Serializer {
 	static final String GPX_STR =			"gpx";

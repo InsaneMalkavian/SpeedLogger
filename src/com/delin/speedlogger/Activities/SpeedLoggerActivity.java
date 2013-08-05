@@ -194,6 +194,8 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	public void onSessionFinished(List<Location> locList) {
 		mTracking = false;
 		//mChronoHandler.removeCallbacks(mChronoChecker);
+		mAccel.Stop();
+		mAccel.SaveToFile();
 		mMeasurement.SetLocations(locList);
 		Intent intent = new Intent(this, ResultsActivity.class);
 		startActivity(intent);

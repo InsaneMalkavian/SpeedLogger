@@ -1,6 +1,7 @@
 package com.delin.speedlogger.Sensors;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -8,6 +9,7 @@ import android.hardware.SensorManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.delin.speedlogger.R;
 import com.delin.speedlogger.Serialization.AccelerationSerializer;
 
 public class AccelerationProcessor implements SensorEventListener {
@@ -17,21 +19,23 @@ public class AccelerationProcessor implements SensorEventListener {
 		SHAKING,
 		ANYTHING_ELSE_I_DONT_NEED
 	}
-	class AccelerationEvent {
-		float[] values = new float[3];
-		long time;
+	public class AccelerationEvent {
+		public float[] values = new float[3];
+		public long time;
 		AccelerationEvent(SensorEvent event) {
 			values = event.values.clone();
 			time = event.timestamp;
 		}
 	}
+	Context mContext = null;
 	private SensorManager mSensorManager = null;
 	private Sensor mAccelerometer = null;
 	private boolean mRunning = false;
 	List<AccelerationEvent> mEventList = new ArrayList<AccelerationEvent>();
 	
 	public AccelerationProcessor(Context context) {
-        mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+		mContext  = context;
+        mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         Start();
 	}
@@ -51,7 +55,15 @@ public class AccelerationProcessor implements SensorEventListener {
 	}
 	
 	public void SaveToFile() {
-		new AccelerationSerializer(this);
+		String prefsName = mContext.getString(R.string.DevPrefs);
+		SharedPreferences devPrefs = mContext.getSharedPreferences(prefsName,Context.MODE_PRIVATE);
+		if (devPrefs.getBoolean(mContext.getString(R.string.SaveTrackingSession), false)) {
+			new AccelerationSerializer(this);
+		}
+	}
+	
+	public List<AccelerationEvent> GetEvents() {
+		return mEventList;
 	}
 	
 	@Override
