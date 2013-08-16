@@ -119,10 +119,10 @@ public class GPXSerializer  extends Serializer {
 			loc.setLongitude(Float.parseFloat(eElement.getAttribute(LONGITUDE)));
 			loc.setSpeed(Float.parseFloat(eElement.getElementsByTagName(SPEED).item(0).getTextContent()));
 			loc.setAltitude(Float.parseFloat(eElement.getElementsByTagName(ALTITUDE).item(0).getTextContent()));
-			//loc.setAccuracy(Float.parseFloat(eElement.getElementsByTagName(ACCURACY).item(0).getTextContent()));			
-			//loc.setBearing(Float.parseFloat(eElement.getElementsByTagName(BEARING).item(0).getTextContent()));
 			try {
 				loc.setTime(mDateFormat.parse(eElement.getElementsByTagName(TIME).item(0).getTextContent()).getTime());
+				loc.setAccuracy(Float.parseFloat(eElement.getElementsByTagName(ACCURACY).item(0).getTextContent()));			
+				loc.setBearing(Float.parseFloat(eElement.getElementsByTagName(BEARING).item(0).getTextContent()));
 			} catch (ParseException e) { // null pointer exception isnt handled!
 				// that's why I don't like exceptions
 				e.printStackTrace();
