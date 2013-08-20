@@ -6,57 +6,72 @@
 
     <Button
         android:id="@+id/buttonStart"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/MainBorderPadding"
+        android:layout_marginRight="@dimen/MainBorderPadding"
+        android:layout_marginTop="@dimen/MainTopBtnPad"
         android:text="@string/start"
         android:textAllCaps="true" />
     
     <Button
         android:id="@+id/buttonPreferences"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/MainBorderPadding"
+        android:layout_marginRight="@dimen/MainBorderPadding"
         android:text="@string/Prefs"
         android:textAllCaps="true" />
 
     <Button
         android:id="@+id/buttonDevPrefs"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/MainBorderPadding"
+        android:layout_marginRight="@dimen/MainBorderPadding"
         android:text="Dev Preferences"
         android:textAllCaps="true" />
 
     <Button
         android:id="@+id/buttonStatus"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/MainBorderPadding"
+        android:layout_marginRight="@dimen/MainBorderPadding"
         android:text="Sensor Status"
         android:textAllCaps="true" />
 
     <Button
         android:id="@+id/buttonTest"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/MainBorderPadding"
+        android:layout_marginRight="@dimen/MainBorderPadding"
         android:text="Test"
         android:textAllCaps="true" />
 
     <Button
         android:id="@+id/chartpage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/MainBorderPadding"
+        android:layout_marginRight="@dimen/MainBorderPadding"
         android:text="ChartPage"
         android:textAllCaps="true" />
 
     <Button
         android:id="@+id/buttonLocalTimes"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/MainBorderPadding"
+        android:layout_marginRight="@dimen/MainBorderPadding"
         android:text="LocalTimes"
         android:textAllCaps="true" />
 

@@ -101,16 +101,16 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
         mTrackingSession.AddListener(this);
         mAccel = new AccelerationProcessor(this);
         
-        RotateAnimation rotateAnimation1 = new RotateAnimation(mPreviousAngle, -135.f+0*2,
+        RotateAnimation rotateAnimation1 = new RotateAnimation(mPreviousAngle, -138.f,
                 Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 1.0f);
+                Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnimation1.setInterpolator(new LinearInterpolator());
         long duration = 750;
 		rotateAnimation1.setDuration(duration);
 		rotateAnimation1.setFillAfter(true);
         View img = (ImageView)findViewById(R.id.imageView2);
 		img .startAnimation(rotateAnimation1);
-		mPreviousAngle=-135.f+0*2;
+		mPreviousAngle=-138.f+0*2;
     }
     
     @Override
@@ -215,23 +215,23 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	
 	@Override
 	public void onSessionLocationUpdate(Location location) {
-		final float mult = 3.6f*40/45;
+		final float mult = 3.6f*90/77;
     	//mTextView.setText(Logger.LocToStr(location));
 		if (mCurrentSeries!=null && mChartView!=null && mTracking) {
 			mCurrentSeries.add((location.getTime()-mStartTime)/1000, Converter.ms2kph(location.getSpeed()));        
         	mChartView.repaint();
         }
         
-        RotateAnimation rotateAnimation1 = new RotateAnimation(mPreviousAngle, -135.f+location.getSpeed()*mult,
+        RotateAnimation rotateAnimation1 = new RotateAnimation(mPreviousAngle, -138.f+location.getSpeed()*mult,
                 Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 1.0f);
+                Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnimation1.setInterpolator(new LinearInterpolator());
-        long duration = 750;
+        long duration = 975;
 		rotateAnimation1.setDuration(duration);
 		rotateAnimation1.setFillAfter(true);
         View img = (ImageView)findViewById(R.id.imageView2);
 		img .startAnimation(rotateAnimation1);
-		mPreviousAngle=-135.f+location.getSpeed()*mult;
+		mPreviousAngle=-138.f+location.getSpeed()*mult;
 	}
 
 	Runnable mChronoChecker = new Runnable() {

@@ -88,17 +88,17 @@ public class ResultsActivity extends Activity {
 		Location atSpeed = interp.TimeBySpeed(Converter.kph2ms(maxSpeed));
 		mTime.setText(Float.toString((float)(atSpeed.getTime()-locList.get(0).getTime())/1000)+" sec");
 		*/
-		float speeds = Converter.kph2ms(10);
+		float speeds = Converter.kph2ms(60);
 		if (speeds<maxSpeed) {
 			float time = (float)result.GetTimeAtSpeed(speeds)/1000;
 			mZero60.setText(String.format("%.3f", time)+" sec");
 		}
-		speeds = Converter.kph2ms(20);
+		speeds = Converter.kph2ms(80);
 		if (speeds<maxSpeed) {
 			float time = (float)result.GetTimeAtSpeed(speeds)/1000;
 			mZero80.setText(String.format("%.3f", time)+" sec");
 		}
-		speeds = Converter.kph2ms(30);
+		speeds = Converter.kph2ms(100);
 		if (speeds<maxSpeed) {
 			float time = (float)result.GetTimeAtSpeed(speeds)/1000;
 			mZero100.setText(String.format("%.3f", time)+" sec");

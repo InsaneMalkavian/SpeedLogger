@@ -1,6 +1,7 @@
 package com.delin.speedlogger.Serialization;
 
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,12 +17,14 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
  
+
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
 import android.location.Location;
 
 public class GPXSerializer  extends Serializer {
@@ -116,11 +119,11 @@ public class GPXSerializer  extends Serializer {
 			loc.setLongitude(Float.parseFloat(eElement.getAttribute(LONGITUDE)));
 			loc.setSpeed(Float.parseFloat(eElement.getElementsByTagName(SPEED).item(0).getTextContent()));
 			loc.setAltitude(Float.parseFloat(eElement.getElementsByTagName(ALTITUDE).item(0).getTextContent()));
-			loc.setAccuracy(Float.parseFloat(eElement.getElementsByTagName(ACCURACY).item(0).getTextContent()));			
-			loc.setBearing(Float.parseFloat(eElement.getElementsByTagName(BEARING).item(0).getTextContent()));
+			//loc.setAccuracy(Float.parseFloat(eElement.getElementsByTagName(ACCURACY).item(0).getTextContent()));			
+			//loc.setBearing(Float.parseFloat(eElement.getElementsByTagName(BEARING).item(0).getTextContent()));
 			try {
 				loc.setTime(mDateFormat.parse(eElement.getElementsByTagName(TIME).item(0).getTextContent()).getTime());
-			} catch (Exception e) {
+			} catch (ParseException e) { // null pointer exception isnt handled!
 				// that's why I don't like exceptions
 				e.printStackTrace();
 			}		
@@ -205,7 +208,6 @@ public class GPXSerializer  extends Serializer {
 	public void NewTrack() {
 		mTrack = mDoc.createElement(TRACK_STR);
 		mRootElement.appendChild(mTrack);
-		NewSegment();
 	}
 	
 	public void Stop() {

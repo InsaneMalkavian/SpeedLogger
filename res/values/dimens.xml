@@ -2,4 +2,7 @@
 <resources>
     <dimen name="ResSpace">5dp</dimen>
     <dimen name="ResNewPar">15dp</dimen>
+    <dimen name="MainBorderPadding">10dp</dimen>
+    <dimen name="MainTopBtnPad">25dp</dimen>
+    <dimen name="TrackTimeDist">20dp</dimen>
 </resources>

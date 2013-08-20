@@ -6,14 +6,14 @@
         <ele>46.5</ele>
         <hdop>8.0</hdop>
         <time>2013-08-09T10:33:48Z</time>
-		<speed>2.5</speed>
+        <speed>2.5</speed>
         <acc>4.0</acc>
       </trkpt>
       <trkpt lat="55.6178949" lon="12.6408757">
         <ele>46.5</ele>
         <hdop>9.0</hdop>
         <time>2013-08-09T10:33:49Z</time>
-		<speed>0.0</speed>
+        <speed>0.0</speed>
         <acc>4.0</acc>
       </trkpt>
       <trkpt lat="55.6179293" lon="12.6409098">
@@ -41,7 +41,7 @@
         <ele>47.39999999999998</ele>
         <hdop>14.0</hdop>
         <time>2013-08-09T10:33:55Z</time>
-        <speed>3.5625</speed>
+        <speed>3.1625</speed>
         <acc>4.0</acc>
       </trkpt>
       <trkpt lat="55.6178824" lon="12.64118">
@@ -104,7 +104,7 @@
         <ele>49.89999999999998</ele>
         <hdop>9.0</hdop>
         <time>2013-08-09T10:34:11Z</time>
-        <speed>5.25</speed>
+        <speed>5.15</speed>
         <acc>4.0</acc>
       </trkpt>
       <trkpt lat="55.6171832" lon="12.6410721">
@@ -132,7 +132,7 @@
         <ele>50.299999999999955</ele>
         <hdop>9.0</hdop>
         <time>2013-08-09T10:34:17Z</time>
-        <speed>4.8125</speed>
+        <speed>4.9125</speed>
         <acc>4.0</acc>
       </trkpt>
       <trkpt lat="55.6169368" lon="12.6410194">
@@ -153,7 +153,7 @@
         <ele>49.799999999999955</ele>
         <hdop>8.0</hdop>
         <time>2013-08-09T10:34:21Z</time>
-        <speed>5.25</speed>
+        <speed>5.35</speed>
         <acc>4.0</acc>
       </trkpt>
       <trkpt lat="55.616732" lon="12.6410027">
@@ -328,14 +328,14 @@
         <ele>49.799999999999955</ele>
         <hdop>7.0</hdop>
         <time>2013-08-09T10:34:59Z</time>
-        <speed>8.4375</speed>
+        <speed>7.4375</speed>
         <acc>4.0</acc>
       </trkpt>
       <trkpt lat="55.6148352" lon="12.6386809">
         <ele>49.60000000000002</ele>
         <hdop>7.0</hdop>
         <time>2013-08-09T10:35:00Z</time>
-        <speed>8.9375</speed>
+        <speed>7.9375</speed>
         <acc>4.0</acc>
       </trkpt>
       <trkpt lat="55.6147154" lon="12.6385211">
