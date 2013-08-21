@@ -142,7 +142,6 @@ public class TrackingSession implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
-		Log.i("TrackingSession", "Fix has come - onLocationChanged");
 		// we've got a new fix
 		mBaseLocation = location; // update last known location
 		for (TrackingSessionListener listener : mListeners)
@@ -152,7 +151,7 @@ public class TrackingSession implements LocationListener {
 		if (mWriteGPX) { // save fix to gpx track
 			mGpxLog.AddFix(location);
 		}
-		if (mGPSEnabled == false) return; // location has come from cell/wifi - so just skip it
+		if (mGPSEnabled == false) return; // gps is off, location has come from cell/wifi - so just skip it
 		switch (mState)
 		{ // update logic
 		case WARMUP:
@@ -204,6 +203,7 @@ public class TrackingSession implements LocationListener {
 			else {
 				// if not start - just resave prestart loc
 				mReadyLoc = location;
+				mReadyLoc.setTime(System.currentTimeMillis());
 				// we can calculate origin by taking average fix, not last one
 			}
 			break;

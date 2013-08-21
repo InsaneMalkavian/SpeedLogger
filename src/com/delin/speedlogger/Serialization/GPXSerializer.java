@@ -82,15 +82,15 @@ public class GPXSerializer  extends Serializer {
 	}
 	
 	public Location GetFix() {
-		try{
+		//try{
 			if (mGPSFixNumber==mList.getLength()) mGPSFixNumber=0;
 			Node nNode = mList.item(mGPSFixNumber++);
 			//System.out.println("\nCurrent Element :" + nNode.getNodeName());
 			return NodeToLoc(nNode);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}	
+		//} catch (Exception e) {
+		//	e.printStackTrace();
+		//	return null;
+		//}	
 	}
 	
 	public List<Location> GetAllFixes() {
@@ -123,7 +123,7 @@ public class GPXSerializer  extends Serializer {
 				loc.setTime(mDateFormat.parse(eElement.getElementsByTagName(TIME).item(0).getTextContent()).getTime());
 				loc.setAccuracy(Float.parseFloat(eElement.getElementsByTagName(ACCURACY).item(0).getTextContent()));			
 				loc.setBearing(Float.parseFloat(eElement.getElementsByTagName(BEARING).item(0).getTextContent()));
-			} catch (ParseException e) { // null pointer exception isnt handled!
+			} catch (Exception e) { // null pointer exception isnt handled!
 				// that's why I don't like exceptions
 				e.printStackTrace();
 			}		

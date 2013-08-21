@@ -41,8 +41,8 @@ import com.delin.speedlogger.Utils.Logger;
 
 public class SpeedLoggerActivity extends Activity implements TrackingSessionListener {
 	
-	Button mButton;
-	TextView mTextView;
+	TextView mTVHeader;
+	TextView mTVUNderDash;
 	TrackingSession mTrackingSession;
 	MeasurementResult mMeasurement;
 	AccelerationProcessor mAccel;
@@ -92,9 +92,8 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 		if (prefs.getBoolean(getString(R.string.ScreenAwake), false))
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
-        mButton = (Button)findViewById(R.id.button1);
-        mTextView = (TextView)findViewById(R.id.textView1);
-        mButton.setOnClickListener(mOnClickListener);
+        mTVHeader = (TextView)findViewById(R.id.statusHeader);
+        mTVUNderDash = (TextView)findViewById(R.id.tvUnderDash);
 
         mMeasurement = MeasurementResult.GetInstance();
         mTrackingSession = new TrackingSession(this);
@@ -149,7 +148,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
     private OnClickListener mOnClickListener = new OnClickListener() {
         public void onClick(View v) {
         	Location location = mTrackingSession.GetLastLocation();
-        	mTextView.setText(Logger.LocToStr(location));
+        	mTVHeader.setText(Logger.LocToStr(location));
         };
     };
         
@@ -158,29 +157,29 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
     	switch (mWarmupState)
     	{
     	case NO_GPS:
-    		mButton.setText("GPS Service disabled, please enable GPS");
+    		mTVHeader.setText("GPS Service disabled, please enable GPS");
     		break;
     	case WAITING_FIX:
-			mButton.setText("Warming up, please wait until fix will be received");
+    		mTVHeader.setText("Warming up, please wait until fix will be received");
 			break;
     	case BAD_ACCURACY:
-			mButton.setText("Inaccurate fix, please wait for stable fix");
+    		mTVHeader.setText("Inaccurate fix, please wait for stable fix");
 			break;
     	case HIGH_SPEED:
-    		mButton.setText("Stop moving before we can start.");
+    		mTVHeader.setText("Stop moving before we can start.");
     		break;
     	}
 	}
 
 	@Override
 	public void onSessionReady() {
-		mButton.setText("Ready to start, you can move now");		
+		mTVHeader.setText("Ready to start, you can move now");		
 	}
 
 	@Override
 	public void onSessionStart(long startTime) {
 		mTracking = true;
-		mButton.setText("Push, push, push");
+		mTVHeader.setText("Push, push, push");
 		mStartTime = startTime;
 		mChronoChecker.run(); 
 		if (mCurrentSeries!=null && mChartView!=null && mTracking) {
@@ -205,7 +204,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	@Override
 	public void onSessionError() {
 		mTracking = false;
-		mButton.setText("Error occured!");
+		mTVHeader.setText("Error occured!");
 	}
 
 	@Override
@@ -237,7 +236,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	Runnable mChronoChecker = new Runnable() {
 	     @Override 
 	     public void run() {
-	         mButton.setText(Long.toString(System.currentTimeMillis() - mStartTime));
+	    	 mTVUNderDash.setText(Long.toString(System.currentTimeMillis() - mStartTime));
 	    	 mChronoHandler.postDelayed(mChronoChecker, mChronoInterval);
 	     }
 	};
