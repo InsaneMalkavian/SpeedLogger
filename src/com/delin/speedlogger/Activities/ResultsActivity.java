@@ -7,15 +7,46 @@ import com.delin.speedlogger.Results.SessionResult;
 import com.delin.speedlogger.TrackingSession.MeasurementResult;
 import com.delin.speedlogger.Utils.Converter;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.CheckBox;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 public class ResultsActivity extends Activity {
+	class TableWrapper {
+		TableRow mRow;
+		TextView mLeftText;
+		TextView mRightText;
+		TableWrapper (LinearLayout parent, Context context, String leftText, String rightText) {
+			mRow = new TableRow(context);
+			TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT);
+			//params. = 1.f;
+			mRow.setLayoutParams(new TableRow.LayoutParams(params));
+			parent.addView(mRow);
+			
+			mLeftText = new TextView(context);
+			mRightText = new TextView(context);
+			mLeftText.setText(leftText);
+			mRightText.setText(rightText);
+			mLeftText.setGravity(Gravity.RIGHT);
+			mLeftText.setTextAppearance(context, android.R.attr.textAppearanceSmall);
+			mLeftText.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT));
+			mRightText.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT));
+	        
+			mRow.addView(mLeftText);
+	        mRow.addView(mRightText);
+		}
+		public TableRow GetRow() {return mRow;}
+	}
 	TextView mMaxSpeed;
 	TextView mDistance;
 	TextView mTime;
@@ -26,6 +57,7 @@ public class ResultsActivity extends Activity {
 	CheckBox mStraightLine;
 	Button mLocalTimesButton;
 	MeasurementResult mMeasurement;
+	TableWrapper mTableWrapperRow;
 	float[] mSpeeds = {60.f, 80.f, 100.f, 120.f, 150.f, 180.f, 200.f, 250.f, 300.f, 400.f}; // kmph
 	float[] mDistances = {100.f, 200.f, 400.f, 800.f, 1000.f}; // meters
 	
@@ -103,6 +135,23 @@ public class ResultsActivity extends Activity {
 			float time = (float)result.GetTimeAtSpeed(speeds)/1000;
 			mZero100.setText(String.format("%.3f", time)+" sec");
 		}
+		
+		TableLayout table = (TableLayout)findViewById(R.id.TableLayout01);
+        mTableWrapperRow = new TableWrapper(table, this, "Left", "Right");
+		
+		Button button = new Button(this);
+        button.setText("One more Button");
+        button.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+        LinearLayout buttons = (LinearLayout)findViewById(R.id.LinearLayout01);
+        buttons.addView(button);
+/*		TextView mLeftText = new TextView(this);
+		mLeftText.setText("Left");
+		mLeftText.setGravity(Gravity.RIGHT);
+		mLeftText.setTextAppearance(this, android.R.attr.textAppearanceSmall);
+		mLeftText.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+  
+		buttons.addView(mLeftText);
+*/
 	}
 	
 	void ShowZeroResults() {
