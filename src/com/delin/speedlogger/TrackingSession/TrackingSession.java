@@ -37,8 +37,10 @@ public class TrackingSession implements LocationListener {
 	GPXSerializer mGpxLog = null;
 	TrackingState mState = TrackingState.IDLE;
 	WarmupState mWarmupState = WarmupState.WAITING_FIX;
+	boolean mStartLocked = false;
 	Vector<TrackingSessionListener> mListeners = new Vector<TrackingSessionListener>();
 	Context mContext;
+	long mOffsetTime = 0; // device time - satellite time, in ms
 	
 	public TrackingSession(Context context) {
 		mContext = context;
@@ -188,17 +190,24 @@ public class TrackingSession implements LocationListener {
 				mState = TrackingState.WARMUP;
 				SetWarmingState(WarmupState.BAD_ACCURACY);
 			}
-			// here is some logic to make it start
-			else if (location.hasSpeed() && location.getSpeed()>SPEED_THRESHOLD) { // todo should be zero
-				mState = TrackingState.TRACKING;
-				for (TrackingSessionListener listener : mListeners)
-				{
-					listener.onSessionStart(mReadyLoc.getTime());
+			// here is some logic to make it start or get back to warming if we moved
+			else if (location.hasSpeed() && location.getSpeed()>SPEED_THRESHOLD) {
+				if (mStartLocked == false) { // autostart, let's go
+					mState = TrackingState.TRACKING;
+					mOffsetTime = System.currentTimeMillis() - location.getTime();
+					for (TrackingSessionListener listener : mListeners)
+					{
+						listener.onSessionStart(mReadyLoc.getTime());
+					}
+					// push mReadyLoc to list
+					mLocList.add(mReadyLoc);
+					// push current loc to list
+					mLocList.add(location);
 				}
-				// push mReadyLoc to list
-				mLocList.add(mReadyLoc);
-				// push current loc to list
-				mLocList.add(location);
+				else { // autostart blocked, get back to warming up
+					mState = TrackingState.WARMUP;
+					SetWarmingState(WarmupState.HIGH_SPEED);					
+				}
 			}
 			else {
 				// if not start - just resave prestart loc
@@ -264,6 +273,25 @@ public class TrackingSession implements LocationListener {
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
+	}
+	
+	public long GetOffsetTime() {
+		return mOffsetTime;
+	}
+	
+	/**
+	 * Lock/unlock automatic start 
+	 * 
+	 * Tracking session won't start automatically if it's blocked. Note that the 
+	 * session still will be receiving gps fixes and staying in warming/ready state.
+	 * When block is disabled session can start in normal order (in case accuracy and
+	 * speed satisfy requirements) 
+	 * 
+	 * @param state true to lock session, false to release
+	 * 
+	 */
+	public void SetStartLocked(boolean state) {
+		mStartLocked = state;
 	}
 	
 	private void SessionDone() {

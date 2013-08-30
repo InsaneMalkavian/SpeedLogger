@@ -26,9 +26,12 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.delin.speedlogger.R;
 import com.delin.speedlogger.Sensors.AccelerationProcessor;
@@ -43,6 +46,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	
 	TextView mTVHeader;
 	TextView mTVUNderDash;
+	ToggleButton mLockStartButton;
 	TrackingSession mTrackingSession;
 	MeasurementResult mMeasurement;
 	AccelerationProcessor mAccel;
@@ -53,7 +57,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	XYSeries mCurrentSeries = null;
 	GraphicalView mChartView = null;	
 	
-	long mStartTime=0;
+	long mStartTime=0; // device time in UTC since 1970
 	
 	private int mChronoInterval = 15; // 15 milliseconds by default
 	private Handler mChronoHandler = new Handler(); // timer is used to draw time since start
@@ -75,7 +79,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
         mRenderer.setLegendTextSize(15);
         mRenderer.setMargins(new int[] { 20, 30, 15, 0 });
         //mRenderer.setZoomButtonsVisible(true);
-        mRenderer.setPointSize(5);
+        mRenderer.setPointSize(3);
         
         // add series
         String seriesTitle = "Series " + (mDataset.getSeriesCount() + 1);
@@ -94,6 +98,8 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 		
         mTVHeader = (TextView)findViewById(R.id.statusHeader);
         mTVUNderDash = (TextView)findViewById(R.id.tvUnderDash);
+        ToggleButton lockStartButton = (ToggleButton)findViewById(R.id.toggleLockStart);
+        lockStartButton.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
         mMeasurement = MeasurementResult.GetInstance();
         mTrackingSession = new TrackingSession(this);
@@ -151,7 +157,16 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
         	mTVHeader.setText(Logger.LocToStr(location));
         };
     };
-        
+
+    private OnCheckedChangeListener mOnCheckedChangeListener = new OnCheckedChangeListener() {
+		@Override
+		public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+			// toggle means autostart, tracking session works with autostartlock,
+			// so we negotiate an option, not quite obvious
+			mTrackingSession.SetStartLocked(!arg1);
+		};
+    };
+
     @Override
 	public void onSessionWarmingUp(WarmupState mWarmupState) {
     	switch (mWarmupState)
@@ -184,7 +199,8 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 		mChronoChecker.run(); 
 		if (mCurrentSeries!=null && mChartView!=null && mTracking) {
 			mCurrentSeries.add(0, Converter.ms2kph(0));
-			mCurrentSeries.add((mTrackingSession.GetLastLocation().getTime()-mStartTime)/1000, Converter.ms2kph(mTrackingSession.GetLastLocation().getSpeed()));
+			mCurrentSeries.add((mTrackingSession.GetLastLocation().getTime()+mTrackingSession.GetOffsetTime()-mStartTime)/1000,
+					Converter.ms2kph(mTrackingSession.GetLastLocation().getSpeed()));
         	mChartView.repaint();
         }
 	}
@@ -217,7 +233,8 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 		final float mult = 3.6f*90/77;
     	//mTextView.setText(Logger.LocToStr(location));
 		if (mCurrentSeries!=null && mChartView!=null && mTracking) {
-			mCurrentSeries.add((location.getTime()-mStartTime)/1000, Converter.ms2kph(location.getSpeed()));        
+			mCurrentSeries.add((location.getTime()+mTrackingSession.GetOffsetTime()-mStartTime)/1000,
+					Converter.ms2kph(location.getSpeed()));        
         	mChartView.repaint();
         }
         
