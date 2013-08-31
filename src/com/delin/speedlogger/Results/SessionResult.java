@@ -207,7 +207,10 @@ public class SessionResult {
 				mTotalTime = mLocList.get(i).getTime() - mStartTime;
 			}
 		}		
-		mTotalDistance = Geometry.DistBetweenLocs(origin,dest,false);
+		mTotalDistance = Geometry.DistBetweenLocs(origin,dest,false); // seems incorrect
+		float[] results = new float[3];
+		Location.distanceBetween(origin.getLatitude(), origin.getLongitude(), dest.getLatitude(), dest.getLongitude(), results);
+		mTotalDistance = results[0];
     }
 
 }

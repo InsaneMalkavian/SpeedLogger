@@ -206,7 +206,7 @@ public class TrackingSession implements LocationListener {
 				}
 				else { // autostart blocked, get back to warming up
 					mState = TrackingState.WARMUP;
-					SetWarmingState(WarmupState.HIGH_SPEED);					
+					SetWarmingState(WarmupState.HIGH_SPEED);
 				}
 			}
 			else {

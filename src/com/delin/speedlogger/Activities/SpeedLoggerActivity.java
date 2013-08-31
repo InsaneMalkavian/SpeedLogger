@@ -19,13 +19,11 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
@@ -40,12 +38,12 @@ import com.delin.speedlogger.TrackingSession.TrackingSession;
 import com.delin.speedlogger.TrackingSession.TrackingSession.WarmupState;
 import com.delin.speedlogger.TrackingSession.TrackingSessionListener;
 import com.delin.speedlogger.Utils.Converter;
-import com.delin.speedlogger.Utils.Logger;
 
 public class SpeedLoggerActivity extends Activity implements TrackingSessionListener {
 	
 	TextView mTVHeader;
 	TextView mTVUNderDash;
+	TextView mTVOdometer;
 	ToggleButton mLockStartButton;
 	TrackingSession mTrackingSession;
 	MeasurementResult mMeasurement;
@@ -59,9 +57,8 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	
 	long mStartTime=0; // device time in UTC since 1970
 	
-	private int mChronoInterval = 15; // 15 milliseconds by default
-	private Handler mChronoHandler = new Handler(); // timer is used to draw time since start
-	
+	static final private int mChronoInterval = 15; // 15 milliseconds by default
+	private Handler mChronoHandler = new Handler(); // timer is used to draw time since start	
 
 	float mPreviousAngle = -90.0f;
 	
@@ -98,6 +95,8 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 		
         mTVHeader = (TextView)findViewById(R.id.statusHeader);
         mTVUNderDash = (TextView)findViewById(R.id.tvUnderDash);
+        mTVOdometer = (TextView)findViewById(R.id.textOdometer);
+        mTVOdometer.setText("0000");
         ToggleButton lockStartButton = (ToggleButton)findViewById(R.id.toggleLockStart);
         lockStartButton.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
@@ -150,13 +149,6 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
     	mTrackingSession.RemoveListener(this);
     	mTrackingSession = null;
     }
-    
-    private OnClickListener mOnClickListener = new OnClickListener() {
-        public void onClick(View v) {
-        	Location location = mTrackingSession.GetLastLocation();
-        	mTVHeader.setText(Logger.LocToStr(location));
-        };
-    };
 
     private OnCheckedChangeListener mOnCheckedChangeListener = new OnCheckedChangeListener() {
 		@Override
@@ -230,15 +222,16 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	
 	@Override
 	public void onSessionLocationUpdate(Location location) {
-		final float mult = 3.6f*90/77;
-    	//mTextView.setText(Logger.LocToStr(location));
+		// draw chartline if tracking
 		if (mCurrentSeries!=null && mChartView!=null && mTracking) {
 			mCurrentSeries.add((location.getTime()+mTrackingSession.GetOffsetTime()-mStartTime)/1000,
 					Converter.ms2kph(location.getSpeed()));        
         	mChartView.repaint();
         }
         
-        RotateAnimation rotateAnimation1 = new RotateAnimation(mPreviousAngle, -138.f+location.getSpeed()*mult,
+		// draw speedometer arrow
+		final float mult = 3.6f*90/77;
+		RotateAnimation rotateAnimation1 = new RotateAnimation(mPreviousAngle, -138.f+location.getSpeed()*mult,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnimation1.setInterpolator(new LinearInterpolator());
@@ -248,6 +241,14 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
         View img = (ImageView)findViewById(R.id.imageView2);
 		img .startAnimation(rotateAnimation1);
 		mPreviousAngle=-138.f+location.getSpeed()*mult;
+		
+		// update odometer
+		if (mTracking) {
+			float[] results = new float[3];
+			Location.distanceBetween(mTrackingSession.GetReadyLocation().getLatitude(), mTrackingSession.GetReadyLocation().getLongitude(),
+					location.getLatitude(), location.getLongitude(), results);
+			mTVOdometer.setText(Long.toString((long) results[0]));
+		}
 	}
 
 	Runnable mChronoChecker = new Runnable() {
