@@ -5,6 +5,7 @@ import java.util.List;
 import com.delin.speedlogger.R;
 import com.delin.speedlogger.Results.ResultsManager;
 import com.delin.speedlogger.Results.SessionResult;
+import com.delin.speedlogger.Results.StoredRecord;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -19,7 +20,7 @@ import android.widget.TextView;
 public class LocalTimesActivity extends Activity {
 	TableLayout mHeaderTable;
 	TableLayout mValuesTable;
-	List<SessionResult> mResults;
+	List<StoredRecord> mResults;
 	Button mClearButton;
 	
     @Override
@@ -67,8 +68,8 @@ public class LocalTimesActivity extends Activity {
         		ShowLocalResults();
         	}
         	else{
-        		SessionResult result = mResults.get(v.getId());
-        		Log.i("LocalTimesActivity", result.getLocations().toString());
+        		StoredRecord result = mResults.get(v.getId());
+        		Log.i("LocalTimesActivity", result.toString());
         		// TODO: here we go to the result details page (chart + stuff)
         	}
         }

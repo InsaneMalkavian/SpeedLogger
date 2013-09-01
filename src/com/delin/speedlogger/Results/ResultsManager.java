@@ -10,7 +10,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import android.content.Context;
 
 public class ResultsManager {
-	List<SessionResult> mResults = new ArrayList<SessionResult>();
+	List<StoredRecord> mResults = new ArrayList<StoredRecord>();
 	private Context mContext;
 	private DBManager mDatabase;
 	
@@ -28,18 +28,17 @@ public class ResultsManager {
 		return instance;
 	}
 	
-	public void AddResult(SessionResult result) {
+	public void AddResult(StoredRecord result) {
 		mResults.add(result);
-		mDatabase.InsertSessionResult(result);
-		result.SaveGPX();
+		mDatabase.InsertResult(result);
 	}
 	
-	public List<SessionResult> GetResults() {
+	public List<StoredRecord> GetResults() {
 		return mResults;
 	}
 	
 	private void LoadData() {	
-		mResults = mDatabase.GetSessionResults();
+		mResults = mDatabase.GetResults();
 		// if database is empty use hardcoded values
 		// TODO: delete after debug
 		if(mResults.isEmpty()) LoadDummyData();
@@ -70,7 +69,6 @@ public class ResultsManager {
 	
 	public void ClearLocalResults() {
 		mDatabase.ClearLocalResults();
-		for(SessionResult r : mResults) r.DeleteGPX();
 		mResults.clear();
 	}
 

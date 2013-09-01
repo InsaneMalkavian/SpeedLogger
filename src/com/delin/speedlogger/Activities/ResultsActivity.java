@@ -4,6 +4,7 @@ import com.delin.speedlogger.R;
 import com.delin.speedlogger.Math.Geometry;
 import com.delin.speedlogger.Results.ResultsManager;
 import com.delin.speedlogger.Results.SessionResult;
+import com.delin.speedlogger.Results.StoredRecord;
 import com.delin.speedlogger.TrackingSession.MeasurementResult;
 import com.delin.speedlogger.Utils.Converter;
 import android.app.Activity;
@@ -95,7 +96,7 @@ public class ResultsActivity extends Activity {
 		mStraightLine.setChecked(isStraightLine);
 		
 		if(isStraightLine){ // Save result via ResultsManager
-			ResultsManager.GetInstance().AddResult(result);
+			ResultsManager.GetInstance().AddResult(new StoredRecord(result));
 		}
 		
 		/*Log.i("Results Activity","Locs in path: " + Integer.toString(locList.size()));

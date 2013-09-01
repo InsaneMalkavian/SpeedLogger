@@ -193,23 +193,6 @@ public class SessionResult {
     	return mStartTime; 
     }
     
-    public void SetStartTime(long startTime) {
-		mStartTime = startTime;
-		mFilename = Long.toString(mStartTime) + ".gpx";
-	}
-
-	public void SetMaxSpeed(float maxSpeed) {
-		mMaxSpeed = maxSpeed;
-	}
-
-	public void SetTotalDistance(float totalDistance) {
-		mTotalDistance = totalDistance;
-	}
-
-	public void SetTotalTime(long totalTime) {
-		mTotalTime = totalTime;
-	}
-    
     private void Recalc() {
     	mValid = false;
 		if(mLocList == null || mLocList.size() < 2) return;
