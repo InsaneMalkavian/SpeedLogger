@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.delin.speedlogger.Sensors.AccelerationProcessor;
 import com.delin.speedlogger.Sensors.AccelerationProcessor.AccelerationEvent;
+import com.delin.speedlogger.Utils.StorageProxy;
 
 public class AccelerationSerializer extends Serializer {
 	
@@ -17,7 +18,7 @@ public class AccelerationSerializer extends Serializer {
 	public AccelerationSerializer(AccelerationProcessor accel) {
 		String filename;
 		SimpleDateFormat dateFormat = new SimpleDateFormat(TIMEPATTERN_FILE);
-		filename = STORAGE_DIR+"/"+dateFormat.format(new Date())+FILE_EXTENSION;
+		filename = StorageProxy.GetInstance().GetWorkingDir()+"/"+dateFormat.format(new Date())+FILE_EXTENSION;
 
 		PrintStream printStream = null;
 

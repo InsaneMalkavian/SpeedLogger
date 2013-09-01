@@ -6,6 +6,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +36,12 @@ public class AccelerationProcessor implements SensorEventListener {
 	List<AccelerationEvent> mEventList = new ArrayList<AccelerationEvent>();
 	
 	public AccelerationProcessor(Context context) {
-		mContext  = context;
-        mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        Start();
+		if (!Build.BRAND.equalsIgnoreCase("generic")) { // we are on emulator
+			mContext  = context;
+	        mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
+	        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+	        Start();
+		}
 	}
 	
 	public void Start() {
@@ -46,7 +50,9 @@ public class AccelerationProcessor implements SensorEventListener {
 	}
 
 	public void Stop() {
-		mSensorManager.unregisterListener(this);
+		if (mSensorManager!=null) {
+			mSensorManager.unregisterListener(this);
+		}
 		mRunning = false;
 	}
 	
@@ -55,10 +61,12 @@ public class AccelerationProcessor implements SensorEventListener {
 	}
 	
 	public void SaveToFile() {
-		String prefsName = mContext.getString(R.string.DevPrefs);
-		SharedPreferences devPrefs = mContext.getSharedPreferences(prefsName,Context.MODE_PRIVATE);
-		if (devPrefs.getBoolean(mContext.getString(R.string.SaveTrackingSession), false)) {
-			new AccelerationSerializer(this);
+		if (mSensorManager!=null) {
+			String prefsName = mContext.getString(R.string.DevPrefs);
+			SharedPreferences devPrefs = mContext.getSharedPreferences(prefsName,Context.MODE_PRIVATE);
+			if (devPrefs.getBoolean(mContext.getString(R.string.SaveTrackingSession), false)) {
+				new AccelerationSerializer(this);
+			}
 		}
 	}
 	

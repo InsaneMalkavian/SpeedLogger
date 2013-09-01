@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -15,7 +14,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
- 
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -23,6 +21,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
+import com.delin.speedlogger.Utils.StorageProxy;
 
 import android.location.Location;
 
@@ -53,6 +53,7 @@ public class GPXSerializer  extends Serializer {
 	
 	boolean mStopped = false;
 	boolean mWriteMode = true;
+	boolean mValid = true;
 	
 	String mFilename = null;
 	DocumentBuilderFactory docFactory = null;
@@ -70,12 +71,12 @@ public class GPXSerializer  extends Serializer {
 	
 	public GPXSerializer() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(TIMEPATTERN_FILE);
-		mFilename = STORAGE_DIR+"/"+dateFormat.format(new Date())+FILE_EXTENSION;
+		mFilename = StorageProxy.GetInstance().GetWorkingDir() + "/" +dateFormat.format(new Date())+FILE_EXTENSION;
 		Initialize();
 	}
 	
 	public GPXSerializer(String filename, boolean write) {
-		mFilename = STORAGE_DIR + "/" + filename;
+		mFilename = StorageProxy.GetInstance().GetWorkingDir() + "/" + filename;
 		mWriteMode = write;
 		Initialize();
 	}
@@ -262,10 +263,15 @@ public class GPXSerializer  extends Serializer {
 			mList = mDoc.getElementsByTagName(TRKPOINT_STR);
 		} catch (Exception e) {
 			e.printStackTrace();
+			mValid = false;
 		}
 	}
 	
 	public static void DeleteGPX(String filename) {
-		new File(STORAGE_DIR + "/" + filename).delete();
+		new File(StorageProxy.GetInstance().GetWorkingDir() + "/" + filename).delete();
+	}
+	
+	public boolean isValid() {
+		return mValid;
 	}
 }

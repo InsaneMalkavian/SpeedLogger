@@ -38,4 +38,5 @@
     <string name="Times0100">0 - 100:</string>
     <string name="Times0120">0 - 120:</string>
     <string name="Times80120">80 - 120:</string>
+    <string name="AppTitle">SpeedLogger</string>
 </resources>

@@ -9,10 +9,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 
-public class FileGPSProvider extends GPSProvider {
-	static final String GPS_DIR_NAME = "FileGPS";
-	static final String DEFAULT_GPX = GPS_DIR_NAME + "/" + "default.gpx";
-	
+public class FileGPSProvider extends GPSProvider {	
 	GPXSerializer mGPXReader = null;
 	Timer mTimer = null;
 
@@ -21,28 +18,31 @@ public class FileGPSProvider extends GPSProvider {
 		// get gpx filename from devPrefs
 		String devPrefsName = context.getString(R.string.DevPrefs);
 		SharedPreferences devPrefs = context.getSharedPreferences(devPrefsName,Context.MODE_PRIVATE);
-		String gpxFilename = devPrefs.getString(context.getString(R.string.FileWithGPS),DEFAULT_GPX);
+		String noFile = "noFile";
+		String gpxFilename = devPrefs.getString(context.getString(R.string.FileWithGPS),noFile);
 		// load gpx & launch provider
 		mGPXReader = new GPXSerializer(gpxFilename, false);
-		mTimer = new Timer(new Runnable() {
-			@Override
-		     public void run() {
-				Location loc = mGPXReader.GetFix();
-				loc.setTime(System.currentTimeMillis());
-		    	mListener.onLocationChanged(loc);
-		    };
-		});
+		if (mGPXReader.isValid()) {
+			mTimer = new Timer(new Runnable() {
+				@Override
+			     public void run() {
+					Location loc = mGPXReader.GetFix();
+					loc.setTime(System.currentTimeMillis());
+			    	mListener.onLocationChanged(loc);
+			    };
+			});
+		}
 	}
 
 	@Override
 	public void Start() {
 		// run timer
-		mTimer.start(1L * 1000);
+		if (mTimer!=null) mTimer.start(1L * 1000);
 	}
 
 	@Override
 	public void Stop() {
-		mTimer.stop();
+		if (mTimer!=null) mTimer.stop();
 	}
 
 }

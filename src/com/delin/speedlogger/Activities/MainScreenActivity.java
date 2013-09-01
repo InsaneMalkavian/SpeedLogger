@@ -2,6 +2,7 @@ package com.delin.speedlogger.Activities;
 
 import com.delin.speedlogger.R;
 import com.delin.speedlogger.Results.ResultsManager;
+import com.delin.speedlogger.Utils.StorageProxy;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -40,6 +41,8 @@ public class MainScreenActivity extends Activity {
         mChartPage.setOnClickListener(mOnClickListener);
         mLocalTimesButton = (Button)findViewById(R.id.buttonLocalTimes);
         mLocalTimesButton.setOnClickListener(mOnClickListener);
+        
+        StorageProxy.GetInstance(this);
         
         mResultsManager = ResultsManager.GetInstance();
         // load data if it's the first time we came here
