@@ -215,15 +215,16 @@ public class SessionResult {
 		if(mLocList == null || mLocList.size() < 2) return;
 		mValid = true;
 		Location origin = mLocList.get(0);
-		Location dest = mLocList.get(mLocList.size()-1);
+		Location dest = mLocList.get(0);
 		
 		mStartTime = mLocList.get(0).getTime();
 		for (int i=1; i<mLocList.size(); i++){
 			if (mMaxSpeed < mLocList.get(i).getSpeed()) {
-				mMaxSpeed = mLocList.get(i).getSpeed();
-				mTotalTime = mLocList.get(i).getTime() - mStartTime;
+				dest = mLocList.get(i);
+				mMaxSpeed = dest.getSpeed();
 			}
-		}		
+		}
+		mTotalTime = dest.getTime() - mStartTime;
 		mTotalDistance = Geometry.DistBetweenLocs(origin,dest,false); // seems incorrect
 		float[] results = new float[3];
 		Location.distanceBetween(origin.getLatitude(), origin.getLongitude(), dest.getLatitude(), dest.getLongitude(), results);
