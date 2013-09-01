@@ -41,26 +41,26 @@ import com.delin.speedlogger.Utils.Converter;
 
 public class SpeedLoggerActivity extends Activity implements TrackingSessionListener {
 	
-	TextView mTVHeader;
-	TextView mTVUNderDash;
-	TextView mTVOdometer;
-	ToggleButton mLockStartButton;
-	TrackingSession mTrackingSession;
-	MeasurementResult mMeasurement;
-	AccelerationProcessor mAccel;
-	boolean mTracking = false; // indicates user in tracking mode. We only set it to true and don't need to set false anymore
+	private TextView mTVHeader;
+	private TextView mTVUNderDash;
+	private TextView mTVOdometer;
+	private ToggleButton mLockStartButton;
+	private TrackingSession mTrackingSession;
+	private MeasurementResult mMeasurement;
+	private AccelerationProcessor mAccel;
+	private boolean mTracking = false; // indicates user in tracking mode. We only set it to true and don't need to set false anymore
 
-	XYMultipleSeriesDataset mDataset = new XYMultipleSeriesDataset();
-	XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
-	XYSeries mCurrentSeries = null;
-	GraphicalView mChartView = null;	
+	private XYMultipleSeriesDataset mDataset = new XYMultipleSeriesDataset();
+	private XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
+	private XYSeries mCurrentSeries = null;
+	private GraphicalView mChartView = null;	
 	
-	long mStartTime=0; // device time in UTC since 1970
+	private long mStartTime=0; // device time in UTC since 1970
 	
 	static final private int mChronoInterval = 15; // 15 milliseconds by default
 	private Handler mChronoHandler = new Handler(); // timer is used to draw time since start	
 
-	float mPreviousAngle = -90.0f;
+	private float mPreviousAngle = -90.0f;
 	
     /** Called when the activity is first created. */
     @Override
@@ -74,7 +74,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
         mRenderer.setChartTitleTextSize(20);
         mRenderer.setLabelsTextSize(15);
         mRenderer.setLegendTextSize(15);
-        mRenderer.setMargins(new int[] { 20, 30, 15, 0 });
+        mRenderer.setMargins(new int[] { 20, 5, 15, 0 });
         //mRenderer.setZoomButtonsVisible(true);
         mRenderer.setPointSize(3);
         
@@ -97,8 +97,8 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
         mTVUNderDash = (TextView)findViewById(R.id.tvUnderDash);
         mTVOdometer = (TextView)findViewById(R.id.textOdometer);
         mTVOdometer.setText("0000");
-        ToggleButton lockStartButton = (ToggleButton)findViewById(R.id.toggleLockStart);
-        lockStartButton.setOnCheckedChangeListener(mOnCheckedChangeListener);
+        mLockStartButton = (ToggleButton)findViewById(R.id.toggleLockStart);
+        mLockStartButton.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
         mMeasurement = MeasurementResult.GetInstance();
         mTrackingSession = new TrackingSession(this);
@@ -195,6 +195,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 					Converter.ms2kph(mTrackingSession.GetLastLocation().getSpeed()));
         	mChartView.repaint();
         }
+		mLockStartButton.setVisibility(View.GONE); // we don't need it anymore, hide to free screenspace for chart
 	}
 
 	@Override
