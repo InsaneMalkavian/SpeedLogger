@@ -32,8 +32,8 @@ public class StorageProxy {
 			mWorkingDir = context.getApplicationInfo().dataDir; // should exist
 		}
 		
-		String fileGPS = mWorkingDir + File.separator + FILE_GPS;
-		File dir = new File(fileGPS);
+		mFileGPSDir = mWorkingDir + File.separator + FILE_GPS;
+		File dir = new File(mFileGPSDir);
 		if (dir.isDirectory() == false) { // create dir to storage file gpxies
 			dir.mkdir();
 		}
