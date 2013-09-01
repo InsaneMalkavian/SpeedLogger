@@ -4,6 +4,7 @@ import java.io.File;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 public class StorageProxy {
 	public final static String APP_NAME = "SpeedLogger";
@@ -45,6 +46,7 @@ public class StorageProxy {
 	}
 
 	public String GetFileGPSDir() {
+		Log.i("StorageProxy", "mFileGPSDir: " + mFileGPSDir);
 		return mFileGPSDir;
 	}
 }
