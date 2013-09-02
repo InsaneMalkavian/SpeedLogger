@@ -123,10 +123,11 @@ public class DBManager extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if (oldVersion >= newVersion)
-			return;
-		// here we will transform DB and try to save old data
-		// we will possibly need it in the far future
+		Log.i("onUpgrade", "oldVersion: " + oldVersion + "  newVersion: " + newVersion);
+		// later we'll try to transform DB and save old data here;
+		// currently it deletes old DB and creates a new one
+		db.execSQL("DROP TABLE IF EXISTS "+ LOCAL_RESULTS);
+		onCreate(db);
 	}
 
 }
