@@ -1,15 +1,25 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <EditTextPreference 
-        android:key="CarBrand" 
+        android:key="@string/CarBrand" 
         android:title="@string/CarBrand" 
         android:defaultValue="Nissan"/>
     <EditTextPreference 
-        android:key="CarModel" 
+        android:key="@string/CarModel" 
         android:title="@string/CarModel" 
         android:defaultValue="Pathfinder"/>
     <EditTextPreference 
-        android:key="CarEnginePower" 
-        android:title="@string/CarEnginePower" 
-        android:numeric="integer"/>
+        android:key="@string/CarModelIndex" 
+        android:title="@string/CarModelIndex"/>
+    <EditTextPreference 
+        android:key="@string/CarGearbox"
+        android:title="@string/CarGearbox"/>
+    <EditTextPreference 
+        android:key="@string/CarHorsePower" 
+        android:title="@string/CarHorsePower" 
+        android:inputType="number"/>
+	<EditTextPreference 
+        android:key="@string/CarTorque" 
+        android:title="@string/CarTorque" 
+        android:inputType="number"/>
     <CheckBoxPreference android:key="@string/ScreenAwake" android:title="@string/ScreenAwake"/>
 </PreferenceScreen>
