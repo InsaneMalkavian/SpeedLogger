@@ -5,6 +5,7 @@ import com.delin.speedlogger.Results.ResultsManager;
 import com.delin.speedlogger.Utils.StorageProxy;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +22,8 @@ public class MainScreenActivity extends Activity {
 	Button mLocalTimesButton;
 	
 	ResultsManager mResultsManager;
+	
+	private static Context mAppContext = null;
 	
     /** Called when the activity is first created. */
     @Override
@@ -42,12 +45,13 @@ public class MainScreenActivity extends Activity {
         mLocalTimesButton = (Button)findViewById(R.id.buttonLocalTimes);
         mLocalTimesButton.setOnClickListener(mOnClickListener);
         
+        setAppContext(getApplicationContext());
         StorageProxy.GetInstance(this);
         
         mResultsManager = ResultsManager.GetInstance();
         // load data if it's the first time we came here
         if(savedInstanceState == null)
-        mResultsManager.Init(this);
+        	mResultsManager.Init(this);
     }
 
 	private OnClickListener mOnClickListener = new OnClickListener() {
@@ -80,4 +84,12 @@ public class MainScreenActivity extends Activity {
 	    	if (intent != null) startActivity(intent);    		
 	    }
 	};
+	
+	public static Context getAppContext(){
+		return mAppContext;
+	}
+	
+	public static void setAppContext(Context ctx){
+		mAppContext = ctx;
+	}
 }
