@@ -42,6 +42,7 @@ public class LocalTimesActivity extends Activity {
     	TableRow row;
     	TextView text;
     	for(int i = 0; i<mResults.size(); ++i){
+    		Log.i("LocalResults", i + ")  " + mResults.get(i).toString());
     		row = new TableRow(this);
     		row.setId(i);
     		row.setOnClickListener(mOnClickListener);
