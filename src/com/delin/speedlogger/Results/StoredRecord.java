@@ -1,5 +1,11 @@
 package com.delin.speedlogger.Results;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import com.delin.speedlogger.R;
+import com.delin.speedlogger.Activities.MainScreenActivity;
+
 public class StoredRecord {
 	public class CarInfo {
 		String 	mBrand;
@@ -12,6 +18,23 @@ public class StoredRecord {
 		
 		public CarInfo(){
 			
+		}
+		
+		/**
+		 * Creates a car and fills its info from user preferences
+		 */
+		public CarInfo(SharedPreferences prefs){
+			Context ctx = MainScreenActivity.getAppContext();
+			
+			mBrand 		= prefs.getString(ctx.getString(R.string.CarBrand), 	 "");
+			mModel 		= prefs.getString(ctx.getString(R.string.CarModel), 	 "");
+			mModelIndex = prefs.getString(ctx.getString(R.string.CarModelIndex), "");
+			mGearbox 	= prefs.getString(ctx.getString(R.string.CarGearbox), 	 "");
+			
+			String horsePower = prefs.getString(ctx.getString(R.string.CarHorsePower), "0");
+			String torque 	  = prefs.getString(ctx.getString(R.string.CarTorque), 	   "0");
+			mHorsePower 	  = Integer.parseInt(horsePower);
+			mTorque 		  = Integer.parseInt(torque);
 		}
 		
 		//========SETTERS==========================
@@ -92,11 +115,15 @@ public class StoredRecord {
 	}
 	
 	public StoredRecord(SessionResult result) {
-		SetCar				(new CarInfo());
 		SetStartTime		(result.GetStartTime());
 		SetTotalTime		(result.GetTotalTime());
 		SetMaxSpeed			(result.GetMaxSpeed());
 		SetTotalDistance	(result.GetTotalDistance());
+		
+		Context ctx = MainScreenActivity.getAppContext();
+		String prefsName = ctx.getString(R.string.Prefs);
+		SharedPreferences prefs = ctx.getSharedPreferences(prefsName, Context.MODE_PRIVATE);
+	    SetCar(new CarInfo(prefs));
 	}
 	
 	/**

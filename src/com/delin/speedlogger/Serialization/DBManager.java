@@ -65,18 +65,12 @@ public class DBManager extends SQLiteOpenHelper {
 	    values.put(MAX_SPEED, 		result.GetMaxSpeed());
 	    values.put(TOTAL_DISTANCE, 	result.GetTotalDistance());
 	    values.put(TOTAL_TIME, 		result.GetTotalTime());
-//	    values.put(CAR_BRAND, 		result.GetCar().GetBrand());
-//	    values.put(CAR_MODEL, 		result.GetCar().GetModel());
-//	    values.put(CAR_MODEL_INDEX, result.GetCar().GetModelIndex());
-//	    values.put(CAR_GEARBOX, 	result.GetCar().GetGearbox());
-//	    values.put(CAR_HORSE_POWER, result.GetCar().GetHorsePower());
-//	    values.put(CAR_TORQUE, 		result.GetCar().GetTorque());
-	    values.put(CAR_BRAND, 		"");
-	    values.put(CAR_MODEL, 		"");
-	    values.put(CAR_MODEL_INDEX, "");
-	    values.put(CAR_GEARBOX, 	"");
-	    values.put(CAR_HORSE_POWER, "");
-	    values.put(CAR_TORQUE, 		"");
+	    values.put(CAR_BRAND, 		result.GetCar().GetBrand());
+	    values.put(CAR_MODEL, 		result.GetCar().GetModel());
+	    values.put(CAR_MODEL_INDEX, result.GetCar().GetModelIndex());
+	    values.put(CAR_GEARBOX, 	result.GetCar().GetGearbox());
+	    values.put(CAR_HORSE_POWER, result.GetCar().GetHorsePower());
+	    values.put(CAR_TORQUE, 		result.GetCar().GetTorque());
 	    
 	    SQLiteDatabase db = getWritableDatabase(DATABASE_PASSWORD);
 	    db.insert(LOCAL_RESULTS, null, values);
