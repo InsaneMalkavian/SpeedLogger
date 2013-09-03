@@ -63,7 +63,21 @@ public class StoredRecord {
 		public long GetTorque() {
 			return mTorque;
 		}
+		
+		@Override
+		public String toString() {
+			return new String
+					(
+						"mBrand = " 		+ mBrand		+ "; " +
+						"mModel = " 		+ mModel		+ "; " +
+						"mModelIndex = "	+ mModelIndex	+ "; " +
+						"mGearbox = "		+ mGearbox		+ "; " +
+						"mHorsePower = " 	+ mHorsePower	+ "; " +
+						"mTorque = " 		+ mTorque		+ "; "
+					);
+		}
 	}
+	
 	private long mStartTime = 0;
 	private long mTotalTime = 0;
 	private float mMaxSpeed = 0;
@@ -149,5 +163,17 @@ public class StoredRecord {
 	public void SetCar(CarInfo car) {
     	mCar = car; 
     }
+	
+	@Override
+	public String toString() {
+		return new String
+				(
+					"mStartTime = " 	+ mStartTime 	  + "; " +
+					"mTotalTime = " 	+ mTotalTime 	  + "; " +
+					"mMaxSpeed = " 		+ mMaxSpeed  	  + "; " +
+					"mTotalDistance = " + mTotalDistance  + "; " +
+					"mCar = (" 			+ mCar.toString() + ") "
+				);
+	}
 	
 }
