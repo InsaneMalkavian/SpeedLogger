@@ -45,6 +45,7 @@
             android:theme="@android:style/Theme.NoTitleBar">
         </activity>
         <activity android:name=".Activities.SensorStatusActivity" android:theme="@android:style/Theme.Black.NoTitleBar"></activity>
+        <activity android:name=".Activities.ResultDetailsActivity"></activity>
         
     </application>
 

@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import com.delin.speedlogger.R;
 import com.delin.speedlogger.Results.ResultsManager;
 import com.delin.speedlogger.Results.StoredRecord;
+import com.delin.speedlogger.Utils.Converter;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -46,13 +47,14 @@ public class ResultDetailsActivity extends Activity {
 	
 	void ShowDetails(){
 		StoredRecord result = ResultsManager.GetInstance().GetSelectedResult();
-    	mTotalDistance	.setText(Float	.toString	(result.GetTotalDistance()));
-    	mTotalTime 		.setText(Long	.toString	(result.GetTotalTime()));
-    	mMaxSpeed		.setText(Float	.toString	(result.GetMaxSpeed()));
-    	mCarInfo		.setText(result.GetCar().GetBrand() + " " +
-    							 result.GetCar().GetModel() + " " +
-    							 result.GetCar().GetModelIndex() + ", " +
-    							 Long.toString(result.GetCar().GetHorsePower()) + " HP");
+
+    	mTotalDistance.setText(String.format("%.3f", result.GetTotalDistance()) + " meters");
+    	mTotalTime.setText(String.format("%.3f", (float)result.GetTotalTime()/1000) + " sec");
+    	mMaxSpeed.setText(String.format("%.3f", Converter.ms2kph(result.GetMaxSpeed())) + " km/h");
+    	mCarInfo.setText(result.GetCar().GetBrand() + " " +
+    					 result.GetCar().GetModel() + " " +
+    					 result.GetCar().GetModelIndex() + ", " +
+    					 Long.toString(result.GetCar().GetHorsePower()) + " HP");
 	}
 
 }
