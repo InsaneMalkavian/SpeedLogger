@@ -11,6 +11,7 @@ import android.content.Context;
 
 public class ResultsManager {
 	List<StoredRecord> mResults = new ArrayList<StoredRecord>();
+	StoredRecord mSelectedResult;
 	private Context mContext;
 	private DBManager mDatabase;
 	
@@ -70,6 +71,14 @@ public class ResultsManager {
 	public void ClearLocalResults() {
 		mDatabase.ClearLocalResults();
 		mResults.clear();
+	}
+	
+	public void SetSelectedResult(StoredRecord result){
+		mSelectedResult = result;
+	}
+	
+	public StoredRecord GetSelectedResult(){
+		return mSelectedResult;
 	}
 
 }

@@ -3,6 +3,7 @@
 
     <string name="hello">Hello World, SpeedLoggerActivity!</string>
     <string name="app_name">SpeedLogger</string>
+    <string name="CarInfo">Car Info</string>
     <string name="CarBrand">Brand</string>
     <string name="CarModel">Model</string>
     <string name="CarModelIndex">Model index</string>
@@ -20,10 +21,12 @@
     <string name="RealGPS">RealGPS</string>
     <string name="ProviderGPS">GPS Provider</string>
     <string name="FileWithGPS">File with GPS</string>
+
     <string-array name="GpsList">
         <item>@string/FileGPS</item>
         <item>@string/RealGPS</item>
     </string-array>
+
     <string name="DevPrefs">DevPrefs</string>
     <string name="ScreenAwake">Keep Screen Awake</string>
     <string name="SaveTrackingSession">Save TrackingSession</string>
@@ -44,4 +47,8 @@
     <string name="AppTitle">SpeedLogger</string>
     <string name="Autostart_on">AUTOSTART ON</string>
     <string name="Autostart_off">AUTOSTART OFF</string>
+    <string name="title_activity_result_details">Result details</string>
+    <string name="action_settings">Settings</string>
+    <string name="Back">Back</string>
+
 </resources>

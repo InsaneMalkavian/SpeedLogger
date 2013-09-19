@@ -9,6 +9,7 @@ import com.delin.speedlogger.Results.StoredRecord;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -70,8 +71,9 @@ public class LocalTimesActivity extends Activity {
         	}
         	else{
         		StoredRecord result = mResults.get(v.getId());
-        		Log.i("LocalTimesActivity", result.toString());
-        		// TODO: here we go to the result details page (chart + stuff)
+        		ResultsManager.GetInstance().SetSelectedResult(result);
+        		Intent intent = new Intent(v.getContext(), ResultDetailsActivity.class);
+        		startActivity(intent);
         	}
         }
     };
