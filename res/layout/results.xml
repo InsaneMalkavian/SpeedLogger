@@ -190,10 +190,31 @@
         android:longClickable="false"
         android:text="Path is a straight line" />
 
-	<Button
-        android:id="@+id/buttonLocalTimes"
+    <CheckBox
+        android:id="@+id/cbUphill"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LocalTimes" />
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:linksClickable="false"
+        android:longClickable="false"
+        android:text="Uphill/downhill is ok" />
+
+	<Button
+	    android:id="@+id/buttonLocalTimes"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="@dimen/MainBorderPadding"
+	    android:layout_marginRight="@dimen/MainBorderPadding"
+	    android:text="@string/LocalTimes" />
+
+	<Button
+	    android:id="@+id/buttonTestAgain"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="@dimen/MainBorderPadding"
+	    android:layout_marginRight="@dimen/MainBorderPadding"
+	    android:text="@string/RunOnceMoreTime" />
 
 </LinearLayout>

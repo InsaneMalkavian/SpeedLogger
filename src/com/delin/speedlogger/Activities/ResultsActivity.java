@@ -55,7 +55,6 @@ public class ResultsActivity extends Activity {
 	TextView mZero100;
 	TextView[] mSpeedsViews = null;
 	CheckBox mStraightLine;
-	Button mLocalTimesButton;
 	MeasurementResult mMeasurement;
 	TableWrapper mTableWrapperRow;
 	float[] mSpeeds = {60.f, 80.f, 100.f, 120.f, 150.f, 180.f, 200.f, 250.f, 300.f, 400.f}; // kmph
@@ -65,8 +64,11 @@ public class ResultsActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.results);
-		mLocalTimesButton = (Button)findViewById(R.id.buttonLocalTimes);
-		mLocalTimesButton.setOnClickListener(mOnClickListener);
+		Button btn = (Button)findViewById(R.id.buttonLocalTimes);
+		btn.setOnClickListener(mOnClickListener);
+		btn = (Button)findViewById(R.id.buttonTestAgain);
+		btn.setOnClickListener(mOnClickListener);
+
 		mMaxSpeed = (TextView)findViewById(R.id.textMaxSpeed);
 		mDistance = (TextView)findViewById(R.id.textDistance);
 		mTime = (TextView)findViewById(R.id.totalTimevalue);
@@ -170,8 +172,11 @@ public class ResultsActivity extends Activity {
 	    	case R.id.buttonLocalTimes:
 	    		intent = new Intent(v.getContext(), LocalTimesActivity.class);
 	    		break;
+	    	case R.id.buttonTestAgain:
+	    		intent = new Intent(v.getContext(), SpeedLoggerActivity.class);
+	    		break;
 	    	}
-	    	if (intent != null) startActivity(intent);   
+	    	if (intent != null) startActivity(intent);
         }
     };
 }

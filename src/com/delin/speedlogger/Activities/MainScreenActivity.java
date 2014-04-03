@@ -56,7 +56,6 @@ public class MainScreenActivity extends Activity {
 	    	switch (v.getId()) {
 	    	case R.id.buttonStart:
 	    		intent = new Intent(v.getContext(), SpeedLoggerActivity.class);
-	    		intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY); // don't keep on stack
 	    		break;
 	    	case R.id.buttonPreferences:
 	    		intent = new Intent(v.getContext(), PreferencesActivity.class);

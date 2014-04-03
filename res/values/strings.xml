@@ -41,4 +41,6 @@
     <string name="AppTitle">SpeedLogger</string>
     <string name="Autostart_on">AUTOSTART ON</string>
     <string name="Autostart_off">AUTOSTART OFF</string>
+    <string name="RunOnceMoreTime">RUN ONCE MORE TIME</string>
+    <string name="LocalTimes">LOCAL TIMES</string>
 </resources>
