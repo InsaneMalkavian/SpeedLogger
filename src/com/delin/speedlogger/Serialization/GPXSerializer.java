@@ -117,8 +117,8 @@ public class GPXSerializer  extends Serializer {
 			Element eElement = (Element) nNode;
 			loc.setLatitude(Float.parseFloat(eElement.getAttribute(LATITUDE))); // we assume lat/lon is always with us
 			loc.setLongitude(Float.parseFloat(eElement.getAttribute(LONGITUDE)));
-			loc.setAltitude(Float.parseFloat(eElement.getElementsByTagName(ALTITUDE).item(0).getTextContent()));
 			try {
+				loc.setAltitude(Float.parseFloat(eElement.getElementsByTagName(ALTITUDE).item(0).getTextContent()));
 				loc.setSpeed(Float.parseFloat(eElement.getElementsByTagName(SPEED).item(0).getTextContent()));
 				loc.setTime(mDateFormat.parse(eElement.getElementsByTagName(TIME).item(0).getTextContent()).getTime());
 				loc.setAccuracy(Float.parseFloat(eElement.getElementsByTagName(ACCURACY).item(0).getTextContent()));			
@@ -126,7 +126,7 @@ public class GPXSerializer  extends Serializer {
 			} catch (Exception e) { // null pointer exception isnt handled!
 				// that's why I don't like exceptions
 				e.printStackTrace();
-			}		
+			}
 		}
 		return loc;
 	}

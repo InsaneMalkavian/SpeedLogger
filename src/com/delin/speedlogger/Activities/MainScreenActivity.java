@@ -12,42 +12,35 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 public class MainScreenActivity extends Activity {
-	Button mStartButton;
-	Button mPreferencesButton;
-	Button mDevPrefsButton;
-	Button mLocationStatusButton;
-	Button mTestButton;
-	Button mChartPage;
-	Button mLocalTimesButton;
 	
-	ResultsManager mResultsManager;
+	private ResultsManager mResultsManager;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainscreen);
-        mStartButton = (Button)findViewById(R.id.buttonStart);
-        mStartButton.setOnClickListener(mOnClickListener);
-        mPreferencesButton = (Button)findViewById(R.id.buttonPreferences);
-        mPreferencesButton.setOnClickListener(mOnClickListener);
-        mDevPrefsButton = (Button)findViewById(R.id.buttonDevPrefs);
-        mDevPrefsButton.setOnClickListener(mOnClickListener);
-        mLocationStatusButton = (Button)findViewById(R.id.buttonStatus);
-        mLocationStatusButton.setOnClickListener(mOnClickListener);
-        mTestButton = (Button)findViewById(R.id.buttonTest);
-        mTestButton.setOnClickListener(mOnClickListener);
-        mChartPage = (Button)findViewById(R.id.chartpage);
-        mChartPage.setOnClickListener(mOnClickListener);
-        mLocalTimesButton = (Button)findViewById(R.id.buttonLocalTimes);
-        mLocalTimesButton.setOnClickListener(mOnClickListener);
+        Button btn = (Button)findViewById(R.id.buttonStart);
+        btn.setOnClickListener(mOnClickListener);
+        btn = (Button)findViewById(R.id.buttonPreferences);
+        btn.setOnClickListener(mOnClickListener);
+        btn = (Button)findViewById(R.id.buttonDevPrefs);
+        btn.setOnClickListener(mOnClickListener);
+        btn = (Button)findViewById(R.id.buttonStatus);
+        btn.setOnClickListener(mOnClickListener);
+        btn = (Button)findViewById(R.id.buttonTest);
+        btn.setOnClickListener(mOnClickListener);
+        btn = (Button)findViewById(R.id.chartpage);
+        btn.setOnClickListener(mOnClickListener);
+        btn = (Button)findViewById(R.id.buttonLocalTimes);
+        btn.setOnClickListener(mOnClickListener);
         
         StorageProxy.GetInstance(this);
         
-        mResultsManager = ResultsManager.GetInstance();
+        mResultsManager = ResultsManager.getInstance();
         // load data if it's the first time we came here
         if(savedInstanceState == null)
-        mResultsManager.Init(this);
+        mResultsManager.init(this);
     }
 
 	private OnClickListener mOnClickListener = new OnClickListener() {

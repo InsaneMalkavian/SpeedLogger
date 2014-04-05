@@ -46,14 +46,13 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 	private TextView mTVOdometer;
 	private ToggleButton mLockStartButton;
 	private TrackingSession mTrackingSession;
-	private MeasurementResult mMeasurement;
 	private AccelerationProcessor mAccel;
 	private boolean mTracking = false; // indicates user in tracking mode. We only set it to true and don't need to set false anymore
 
 	private XYMultipleSeriesDataset mDataset = new XYMultipleSeriesDataset();
 	private XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
-	private XYSeries mCurrentSeries = null;
-	private GraphicalView mChartView = null;	
+	private XYSeries mCurrentSeries;
+	private GraphicalView mChartView;	
 	
 	private long mStartTime=0; // device time in UTC since 1970
 	
@@ -100,7 +99,6 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
         mLockStartButton = (ToggleButton)findViewById(R.id.toggleLockStart);
         mLockStartButton.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
-        mMeasurement = MeasurementResult.GetInstance();
         mTrackingSession = new TrackingSession(this);
         mTrackingSession.AddListener(this);
         mAccel = new AccelerationProcessor(this);
@@ -204,7 +202,7 @@ public class SpeedLoggerActivity extends Activity implements TrackingSessionList
 		//mChronoHandler.removeCallbacks(mChronoChecker);
 		mAccel.Stop();
 		mAccel.SaveToFile();
-		mMeasurement.SetLocations(locList);
+		MeasurementResult.INSTANCE.setLocations(locList);
 		Intent intent = new Intent(this, ResultsActivity.class);
 		startActivity(intent);
 		finish();

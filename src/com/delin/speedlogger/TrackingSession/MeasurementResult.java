@@ -5,27 +5,23 @@ import java.util.List;
 
 import android.location.Location;
 
-public class MeasurementResult {
+public enum MeasurementResult {
 	/**
-	 * This class stores location list and provides access to it for any activities.
+	 * This class stores location list and provides access to it for any activity.
 	 */
-	private List<Location> mLocList = new ArrayList<Location>();
-    private static final MeasurementResult instance = new MeasurementResult();    
-    private MeasurementResult() {}
-    public static MeasurementResult GetInstance() {
-        return instance;
+    INSTANCE;
+	private List<Location> locList = new ArrayList<Location>();
+
+    public void addLocation(Location loc) {
+    	locList.add(loc);
     }
     
-    public void AddLocation(Location loc) {
-    	mLocList.add(loc);
-    }
-    
-    public List<Location> GetLocations() {
-    	return mLocList;
+    public List<Location> getLocations() {
+    	return locList;
     }
 
-    public void SetLocations(List<Location> locs) { // do a full copy
-    	mLocList.clear();
-    	mLocList.addAll(locs);
+    public void setLocations(List<Location> locs) { // do a full copy
+    	locList.clear();
+    	locList.addAll(locs);
     }
 }
