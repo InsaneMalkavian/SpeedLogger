@@ -32,8 +32,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.delin.speedlogger.R;
+import com.delin.speedlogger.Results.MeasurementResult;
 import com.delin.speedlogger.Sensors.AccelerationProcessor;
-import com.delin.speedlogger.TrackingSession.MeasurementResult;
 import com.delin.speedlogger.TrackingSession.TrackingSession;
 import com.delin.speedlogger.TrackingSession.TrackingSession.WarmupState;
 import com.delin.speedlogger.TrackingSession.TrackingSessionListener;
