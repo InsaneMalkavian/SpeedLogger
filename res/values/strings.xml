@@ -43,4 +43,6 @@
     <string name="Autostart_off">AUTOSTART OFF</string>
     <string name="RunOnceMoreTime">RUN ONCE MORE TIME</string>
     <string name="LocalTimes">LOCAL TIMES</string>
+    <string name="StraightLine">STRAIGHT LINE</string>
+    <string name="DownhillOk">DOWNHILL VALID</string>
 </resources>

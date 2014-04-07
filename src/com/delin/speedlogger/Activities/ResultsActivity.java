@@ -46,7 +46,6 @@ public class ResultsActivity extends Activity {
     private TextView mMaxSpeed;
     private TextView mDistance;
     private TextView mTime;
-    private TextView mZero60;
     private final static float speedDiff = 20.f;
 
     public void onCreate(Bundle savedInstanceState){
@@ -60,7 +59,6 @@ public class ResultsActivity extends Activity {
         mMaxSpeed = (TextView)findViewById(R.id.textMaxSpeed);
         mDistance = (TextView)findViewById(R.id.textDistance);
         mTime = (TextView)findViewById(R.id.totalTimevalue);
-        mZero60 = (TextView)findViewById(R.id.zero60value);
 
         HandleResults();
     }

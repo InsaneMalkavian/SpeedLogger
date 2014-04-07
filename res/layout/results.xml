@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background"
     android:orientation="vertical" >
+
         
     <TextView
         android:id="@+id/tvUnderDash"
@@ -15,6 +16,15 @@
         android:textAllCaps="true"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
@@ -111,71 +121,6 @@
         android:id="@+id/TableLayout01"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-        <TableRow
-            android:id="@+id/tableRow2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-		<TextView
-                android:id="@+id/zero60"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:gravity="right"
-                android:text="@string/Times060"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-		<TextView
-                android:id="@+id/zero60value"
-                android:layout_width="match_parent"
-                android:layout_weight="0.5"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/ResSpace"
-                android:text="@string/Na"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRowZero80"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-        <TextView
-                android:id="@+id/zero80"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:gravity="right"
-                android:text="@string/Times080"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-		<TextView
-                android:id="@+id/zero80value"
-                android:layout_width="match_parent"
-                android:layout_weight="0.5"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/ResSpace"
-                android:text="@string/Na"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-        </TableRow>
-        
-        <TableRow
-            android:id="@+id/tableRow4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-		<TextView
-                android:id="@+id/zero100"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:gravity="right"
-                android:text="@string/Times0100"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-		<TextView
-                android:id="@+id/zero100value"
-                android:layout_width="match_parent"
-                android:layout_weight="0.5"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/ResSpace"
-                android:text="@string/Na"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-        </TableRow>
         
     </TableLayout>
 
@@ -188,7 +133,7 @@
         android:focusableInTouchMode="false"
         android:linksClickable="false"
         android:longClickable="false"
-        android:text="Path is a straight line" />
+        android:text="@string/StraightLine" />
 
     <CheckBox
         android:id="@+id/cbUphill"
@@ -199,7 +144,7 @@
         android:focusableInTouchMode="false"
         android:linksClickable="false"
         android:longClickable="false"
-        android:text="Uphill/downhill is ok" />
+        android:text="@string/DownhillOk" />
 
 	<Button
 	    android:id="@+id/buttonLocalTimes"
@@ -216,5 +161,7 @@
 	    android:layout_marginLeft="@dimen/MainBorderPadding"
 	    android:layout_marginRight="@dimen/MainBorderPadding"
 	    android:text="@string/RunOnceMoreTime" />
-
+        </LinearLayout>
+    </ScrollView>
+	
 </LinearLayout>
