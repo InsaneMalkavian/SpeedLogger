@@ -65,7 +65,10 @@ public class LocalTimesActivity extends Activity {
 					// TODO Auto-generated method stub
 		            Intent intent = null;
 		            intent = new Intent(v.getContext(), StoredRecordActivity.class);
-		            if (intent != null) startActivity(intent);
+		            if (intent != null) {
+		            	//intent.p
+		            	startActivity(intent);
+		            }
 				}
 			});
             mValuesTable.addView(row);
