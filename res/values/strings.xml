@@ -45,4 +45,6 @@
     <string name="LocalTimes">LOCAL TIMES</string>
     <string name="StraightLine">STRAIGHT LINE</string>
     <string name="DownhillOk">DOWNHILL VALID</string>
+    <string name="SubmitToServer">SUBMIT TO SERVER</string>
+    <string name="CarInformation">Car Information</string>
 </resources>

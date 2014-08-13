@@ -5,10 +5,10 @@ import java.util.List;
 
 import android.location.Location;
 
+/**
+ * This class stores location list and provides access to it for any activity.
+ */
 public enum MeasurementResult {
-    /**
-     * This class stores location list and provides access to it for any activity.
-     */
     INSTANCE;
     private List<Location> locList = new ArrayList<Location>();
 

@@ -10,6 +10,7 @@ import com.delin.speedlogger.Results.SessionResult;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,6 +58,16 @@ public class LocalTimesActivity extends Activity {
             text = new TextView(this);
             text.setText(Long.toString(mResults.get(i).GetTotalTime()));
             row.addView(text);
+
+            row.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+		            Intent intent = null;
+		            intent = new Intent(v.getContext(), StoredRecordActivity.class);
+		            if (intent != null) startActivity(intent);
+				}
+			});
             mValuesTable.addView(row);
         }
     }

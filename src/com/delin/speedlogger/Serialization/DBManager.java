@@ -5,11 +5,11 @@ import java.util.List;
 
 import com.delin.speedlogger.Results.SessionResult;
 
-import net.sqlcipher.database.SQLiteDatabase;
-import net.sqlcipher.database.SQLiteOpenHelper;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
@@ -30,18 +30,6 @@ public class DBManager extends SQLiteOpenHelper {
 	public DBManager(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
-
-	@Override
-	public void onCreate(SQLiteDatabase db) {
-		String sql = "create table " + LOCAL_RESULTS + "( " + 
-						BaseColumns._ID + " integer primary key autoincrement, " + 
-						START_TIME 		+ " integer not null, " + 
-						MAX_SPEED 		+ " real not null, " + 
-						DISTANCE 		+ " real not null, " + 
-						DURATION 		+ " integer not null" + ");";
-		db.execSQL(sql);
-		Log.i("DBManager", "onCreate(): " + sql);
-	}
 	
 	public void InsertSessionResult(SessionResult result) {
 	    ContentValues values = new ContentValues();
@@ -50,7 +38,7 @@ public class DBManager extends SQLiteOpenHelper {
 	    values.put(DISTANCE, result.GetTotalDistance());
 	    values.put(DURATION, result.GetTotalTime());
 	    
-	    SQLiteDatabase db = getWritableDatabase(PASSWORD);
+	    SQLiteDatabase db = getWritableDatabase();
 	    db.insert(LOCAL_RESULTS, null, values);
 	    db.close();
 	    
@@ -59,7 +47,7 @@ public class DBManager extends SQLiteOpenHelper {
 	
 	public List<SessionResult> GetSessionResults() {
 		// load data from DB
-		SQLiteDatabase db = getReadableDatabase(PASSWORD);
+		SQLiteDatabase db = getReadableDatabase();
 	    Cursor cursor = db.query(LOCAL_RESULTS,null,null,null,null,null,null);
 	    // parse data
 	    List<SessionResult> results = new ArrayList<SessionResult>();
@@ -79,7 +67,7 @@ public class DBManager extends SQLiteOpenHelper {
 	
 	public void ClearLocalResults() {
 		String sql = "delete from " + LOCAL_RESULTS;
-		SQLiteDatabase db = getWritableDatabase(PASSWORD);
+		SQLiteDatabase db = getWritableDatabase();
 		db.execSQL(sql);
 		db.close();
 	}
@@ -91,6 +79,19 @@ public class DBManager extends SQLiteOpenHelper {
 		// currently it deletes old DB and creates a new one
 		db.execSQL("DROP TABLE IF EXISTS "+ LOCAL_RESULTS);
 		onCreate(db);
+	}
+
+	@Override
+	public void onCreate(SQLiteDatabase arg0) {
+		String sql = "create table " + LOCAL_RESULTS + "( " + 
+				BaseColumns._ID + " integer primary key autoincrement, " + 
+				START_TIME 		+ " integer not null, " + 
+				MAX_SPEED 		+ " real not null, " + 
+				DISTANCE 		+ " real not null, " + 
+				DURATION 		+ " integer not null" + ");";
+		arg0.execSQL(sql);
+Log.i("DBManager", "onCreate(): " + sql);
+		
 	}
 
 }

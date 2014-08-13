@@ -5,9 +5,8 @@ import java.util.List;
 
 import com.delin.speedlogger.Serialization.DBManager;
 
-import net.sqlcipher.database.SQLiteDatabase;
-
 import android.content.Context;
+//import android.database.sqlite.SQLiteDatabase;
 
 public class ResultsManager {
     List<SessionResult> results = new ArrayList<SessionResult>();
@@ -19,7 +18,7 @@ public class ResultsManager {
 
     public void init(Context context) {
         mContext = context;
-        SQLiteDatabase.loadLibs(mContext);
+        //SQLiteDatabase.loadLibs(mContext);
         database = new DBManager(mContext);
         LoadData();
     }
